@@ -1,0 +1,115 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .phase10-card-top {
+    clip-path: polygon(0% 0%, 100% 0%, 100% 50%, 0% 100%);
+  }
+
+  .phase10-card-top-cover {
+    clip-path: polygon(0% 0%, 100% 0%, 100% 70%, 0% 100%);
+  }
+
+  .phase10-card-bottom-cover {
+    clip-path: polygon(0% 70%, 100% 0%, 100% 100%, 0% 100%);
+  }
+}
+
+/* 1. Use a more intuitive box-sizing model. */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* 2. Remove the default margin. */
+* {
+  margin: 0;
+}
+
+/* 3. Allow percentage-based heights in the application */
+html, body {
+  height: 100%;
+}
+
+/*
+  Typographic tweaks!
+  4. Improve link appearance.
+  5. Add accessible line-height and improve text rendering.
+*/
+a {
+  outline: none;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Roboto, Arial, Helvetica, sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* 6. Improve media defaults. */
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* 7. Remove built-in form typography styles. */
+input, button, textarea, select {
+  font: inherit;
+}
+
+/* 8. Avoid text overflows. */
+p, h1, h2, h3, h4, h5, h6 {
+  overflow-wrap: break-word;
+}
+
+/* 9. Create a root stacking context. */
+#root {
+  isolation: isolate;
+}
+
+/* 10. Set up colors and font. */
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #171717;
+    --foreground: #ffffff;
+  }
+}
+
+::selection {
+  background-color: var(--foreground);
+  color: var(--background);
+}
+
+/* Scrollbar! */
+html {
+  scrollbar-color: #063684 transparent;
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {
+  background-color: transparent;
+  width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #063684;
+  border: 2px solid #171717;
+  border-radius: 1000px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #063684;
+}
+
+/* Cards on the Phase 10 box */
+#phase10Card1 {
+  clip-path: polygon(0% 0%, 100% 0%, 100% 50%, 0% 100%);
+}
