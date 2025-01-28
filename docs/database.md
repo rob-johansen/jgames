@@ -26,19 +26,15 @@
 
    `\c <DB_NAME>`
    
-5. Install the `pgcrypto` extension:
-
-   `CREATE EXTENSION IF NOT EXISTS pgcrypto;`
-   
-6. Grant `DB_USER` access to all tables:
+5. Grant `DB_USER` access to all tables:
 
    `GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO <DB_USER>;`
    
-7. Make `DB_USER` the owner of `DB_NAME`:
+6. Make `DB_USER` the owner of `DB_NAME`:
     
     `ALTER DATABASE <DB_NAME> OWNER TO <DB_USER>;`
     
-8. Quit as the `postgres` user:
+7. Quit as the `postgres` user:
 
    `\q`
    

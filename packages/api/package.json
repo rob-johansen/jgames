@@ -1,16 +1,24 @@
 {
   "dependencies": {
+    "@jgames/types": "workspace:*",
+    "@jgames/validations": "workspace:*",
+    "cookie-parser": "1.4.7",
+    "express": "5.0.1",
     "pg": "8.13.1",
     "pg-camelcase": "0.0.3",
-    "tsx": "4.19.2",
     "winston": "3.17.0"
   },
   "devDependencies": {
-    "@types/pg": "8.11.10"
+    "@types/cookie-parser": "1.4.8",
+    "@types/express": "5.0.0",
+    "@types/pg": "8.11.10",
+    "dotenv": "16.4.7",
+    "tsx": "4.19.2"
   },
   "name": "api",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "db-migrate-dev": "tsx --require dotenv/config ./src/data/migrations/migrate.ts",
+    "start-api-dev": "tsx watch --clear-screen=false --require dotenv/config ./src/api.ts"
   },
   "version": "0.0.1"
 }

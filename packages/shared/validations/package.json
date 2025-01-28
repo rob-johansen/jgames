@@ -1,0 +1,23 @@
+{
+  "dependencies": {
+    "@jgames/types": "workspace:*"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "4.3.4",
+    "vite": "6.0.11",
+    "vite-tsconfig-paths": "5.1.4"
+  },
+  "exports": {
+    "import": "./dist/index.mjs",
+    "require": "./dist/index.js"
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "name": "@jgames/validations",
+  "scripts": {
+    "build": "vite build",
+    "watch": "vite build --watch"
+  },
+  "types": "dist/index.d.ts",
+  "version": "0.0.1"
+}
