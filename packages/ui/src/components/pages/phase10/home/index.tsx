@@ -1,6 +1,6 @@
 'use client'
 
-import { ChangeEvent, KeyboardEvent, useRef } from 'react'
+import { ChangeEvent, KeyboardEvent, useEffect, useRef } from 'react'
 import { observer } from 'mobx-react-lite'
 import type React from 'react'
 
@@ -21,6 +21,10 @@ export const Home = (): React.JSX.Element => {
 const View = observer(({ vm }: Props): React.JSX.Element => {
   const nameInput = useRef<HTMLInputElement>(null)
 
+  useEffect(() => {
+    nameInput.current?.focus()
+  }, [])
+
   return (
     <div>
       <span className="absolute font-bold font-quicksand right-[30px] text-[1.5rem] top-[20px]">
@@ -39,6 +43,7 @@ const View = observer(({ vm }: Props): React.JSX.Element => {
             }
           }}
           ref={nameInput}
+          value={vm.state.name}
         />
         <Button
           loading={vm.state.loading}
