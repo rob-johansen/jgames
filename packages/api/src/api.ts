@@ -8,7 +8,7 @@ import { RequestError } from '@jgames/types'
 import { router as phase10JoinV1 } from '@/routes/phase10/v1/join'
 import type { ApiRequest } from '@jgames/types'
 
-const PORT = process.env.PORT || 2222
+const PORT = 2222
 
 const api = express()
 api.disable('x-powered-by')
