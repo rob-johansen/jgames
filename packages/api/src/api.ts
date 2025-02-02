@@ -2,6 +2,7 @@ import cookieParser from 'cookie-parser'
 import express from 'express'
 import type { NextFunction, Response } from 'express'
 
+import '@/wss/wss'
 import { getFunnyError } from '@/libs/errors'
 import { logger } from '@/logger'
 import { RequestError } from '@jgames/types'

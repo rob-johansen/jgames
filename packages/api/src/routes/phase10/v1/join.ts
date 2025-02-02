@@ -20,9 +20,6 @@ router.post('/', async (
   try {
     const id = await addWaitingPlayer(name)
     res.status(201).send({ id })
-
-    // TODO: Send a ws message to all players that `name` has joined.
-
     return
   } catch (err) {
     if (err.code === '23505') {

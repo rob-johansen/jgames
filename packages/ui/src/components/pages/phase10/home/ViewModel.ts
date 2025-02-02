@@ -1,5 +1,9 @@
 import { makeAutoObservable, runInAction } from 'mobx'
 
+import { isBrowser } from '@/libs/browser'
+import { MessageType } from '@jgames/types'
+import type { WebSocketMessage } from '@jgames/types'
+
 type State = {
   loading: boolean
   name: string
@@ -14,10 +18,12 @@ export class ViewModel {
   }
 
   constructor () {
-    const name = localStorage.getItem('name')
+    if (isBrowser()) {
+      const name = localStorage.getItem('name')
 
-    if (name) {
-      this.state.name = name
+      if (name) {
+        this.state.name = name
+      }
     }
 
     makeAutoObservable(this)
@@ -25,6 +31,23 @@ export class ViewModel {
 
   get state(): State {
     return this._state
+  }
+
+  createWebSocket = (id: string): void => {
+    const ws = new WebSocket(`ws://192.168.1.22:4444?game=phase10&userId=${id}`)
+
+    ws.addEventListener('message', (event) => {
+      const { data, type }: WebSocketMessage = JSON.parse(event.data)
+
+      if (type === MessageType.JOIN) {
+        console.log(data.players)
+        /*
+          TODO:
+            1. Show the list of waiting players.
+            2. If there's only one player in `data.players`, show the "Start Game" button.
+         */
+      }
+    })
   }
 
   onChangeName = (value: string): void => {
@@ -53,7 +76,10 @@ export class ViewModel {
     if (response.ok) {
       localStorage.setItem('name', this.state.name)
 
-      // TODO: Connect to the WebSocket server and show the waiting UI
+      const json = await response.json()
+      localStorage.setItem('userId', json.id)
+
+      this.createWebSocket(json.id)
     } else {
       runInAction(() => {
         this.state.loading = false
