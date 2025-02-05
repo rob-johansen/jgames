@@ -5,16 +5,22 @@ import { MessageType } from '@jgames/types'
 import type { WebSocketMessage } from '@jgames/types'
 
 type State = {
+  first: boolean
   loading: boolean
   name: string
   nameError: string
+  players: string[]
+  waiting: boolean
 }
 
 export class ViewModel {
   private _state: State = {
+    first: false,
     loading: false,
     name: '',
     nameError: '',
+    players: [],
+    waiting: false,
   }
 
   constructor () {
@@ -40,12 +46,10 @@ export class ViewModel {
       const { data, type }: WebSocketMessage = JSON.parse(event.data)
 
       if (type === MessageType.JOIN) {
-        console.log(data.players)
-        /*
-          TODO:
-            1. Show the list of waiting players.
-            2. If there's only one player in `data.players`, show the "Start Game" button.
-         */
+        if (!this.state.first && (data.players as string[]).length === 1) {
+          this.state.first = true
+        }
+        this.state.players = data.players as string[]
       }
     })
   }
@@ -74,12 +78,14 @@ export class ViewModel {
     })
 
     if (response.ok) {
-      localStorage.setItem('name', this.state.name)
-
       const json = await response.json()
-      localStorage.setItem('userId', json.id)
 
-      this.createWebSocket(json.id)
+      runInAction(() => {
+        localStorage.setItem('name', this.state.name)
+        localStorage.setItem('userId', json.id)
+        this.state.waiting = true
+        this.createWebSocket(json.id)
+      })
     } else {
       runInAction(() => {
         this.state.loading = false

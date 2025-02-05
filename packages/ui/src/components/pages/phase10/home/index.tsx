@@ -27,30 +27,54 @@ const View = observer(({ vm }: Props): React.JSX.Element => {
 
   return (
     <div>
-      <span className="absolute font-bold font-quicksand right-[30px] text-[1.5rem] top-[20px]">
+      <h1 className="absolute font-bold font-quicksand right-[30px] text-[2rem] top-[20px]">
         Phase 10
-      </span>
+      </h1>
       <div className="absolute h-[90px] inset-0 m-auto w-[300px]">
-        <TextField
-          error={vm.state.nameError}
-          id="name"
-          label="Name"
-          onChange={(event: ChangeEvent<HTMLInputElement>) => vm.onChangeName(event.target.value)}
-          onKeyDown={(event: KeyboardEvent<HTMLInputElement>): void => {
-            if (event.key === 'Enter') {
-              nameInput.current?.blur()
-              vm.onClickJoin()
-            }
-          }}
-          ref={nameInput}
-          value={vm.state.name}
-        />
-        <Button
-          loading={vm.state.loading}
-          onClick={vm.onClickJoin}
-        >
-          Join
-        </Button>
+        {vm.state.waiting ? (
+          <>
+            <h2 className="font-bold font-quicksand right-[30px] text-[1.5rem]">
+              Waiting
+            </h2>
+            {vm.state.players.map((player) => {
+              return (
+                <div className="my-[4px]" key={player}>
+                  {player}
+                </div>
+              )
+            })}
+            {vm.state.first && (
+              <Button
+                className="mt-[12px]"
+              >
+                Start Game
+              </Button>
+            )}
+          </>
+        ) : (
+          <>
+            <TextField
+              error={vm.state.nameError}
+              id="name"
+              label="Name"
+              onChange={(event: ChangeEvent<HTMLInputElement>) => vm.onChangeName(event.target.value)}
+              onKeyDown={(event: KeyboardEvent<HTMLInputElement>): void => {
+                if (event.key === 'Enter') {
+                  nameInput.current?.blur()
+                  vm.onClickJoin()
+                }
+              }}
+              ref={nameInput}
+              value={vm.state.name}
+            />
+            <Button
+              loading={vm.state.loading}
+              onClick={vm.onClickJoin}
+            >
+              Join
+            </Button>
+          </>
+        )}
       </div>
     </div>
   )
