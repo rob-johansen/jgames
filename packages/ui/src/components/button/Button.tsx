@@ -23,13 +23,15 @@ export const Button = ({
 }: Props): React.JSX.Element => {
   const styles = twMerge(
     `
-      active:bg-button-active
-      bg-button-main
+      active:opacity-80
+      bg-gradient-to-br
       flex
       font-bold
+      from-[#4568dc]
+      from-[-0.27%]
       gap-[8px]
       h-[36px]
-      hover:bg-button-hover
+      hover:opacity-90
       items-center
       justify-center
       max-w-[340px]
@@ -38,7 +40,10 @@ export const Button = ({
       relative
       rounded-[6px]
       text-[1rem]
-      text-black tracking-[1px]
+      text-white
+      tracking-[0.5px]
+      to-[#b06ab3]
+      to-[134.14%]
       w-fit
     `,
     variant === 'secondary' &&

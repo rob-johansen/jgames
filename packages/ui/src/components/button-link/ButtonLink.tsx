@@ -21,7 +21,6 @@ export const ButtonLink = ({
   const styles = twMerge(
     `
       active:bg-button-active
-      bg-button-main
       flex
       font-bold
       gap-[8px]
@@ -35,7 +34,8 @@ export const ButtonLink = ({
       relative
       rounded-[6px]
       text-[1rem]
-      text-black tracking-[1px]
+      text-white
+      tracking-[1px]
       w-fit
     `,
     variant === 'secondary' &&

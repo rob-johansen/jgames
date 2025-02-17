@@ -2,7 +2,7 @@ import cookieParser from 'cookie-parser'
 import express from 'express'
 import type { NextFunction, Response } from 'express'
 
-import '@/wss/wss'
+import '@/wss/wss' // This import causes the WebSocket server to start up.
 import { getFunnyError } from '@/libs/errors'
 import { logger } from '@/logger'
 import { RequestError } from '@jgames/types'

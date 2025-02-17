@@ -43,13 +43,15 @@ export class ViewModel {
     const ws = new WebSocket(`ws://192.168.1.22:4444?game=phase10&userId=${id}`)
 
     ws.addEventListener('message', (event) => {
-      const { data, type }: WebSocketMessage = JSON.parse(event.data)
+      const message: WebSocketMessage = JSON.parse(event.data)
 
-      if (type === MessageType.JOIN) {
-        if (!this.state.first && (data.players as string[]).length === 1) {
+      if (message.type === MessageType.JOIN) {
+        const players = message.data.players as string[]
+
+        if (!this.state.first && (players).length === 1) {
           this.state.first = true
         }
-        this.state.players = data.players as string[]
+        this.state.players = players
       }
     })
   }

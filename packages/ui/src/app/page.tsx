@@ -66,7 +66,7 @@ export default function Home(): React.JSX.Element {
         </div>
       </div>
       <ButtonLink
-        className="absolute bottom-[30px] left-[35px]"
+        className="absolute active:opacity-80 bg-gradient-to-br border border-white bottom-[30px] from-[#4568dc] from-[-0.27%] hover:opacity-90 left-[35px] to-[#b06ab3] to-[134.14%]"
         href="/phase10"
       >
         Play

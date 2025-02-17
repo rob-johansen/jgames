@@ -26,7 +26,7 @@ const View = observer(({ vm }: Props): React.JSX.Element => {
   }, [])
 
   return (
-    <div>
+    <div className="font-quicksand">
       <h1 className="absolute font-bold font-quicksand right-[30px] text-[2rem] top-[20px]">
         Phase 10
       </h1>
@@ -45,7 +45,7 @@ const View = observer(({ vm }: Props): React.JSX.Element => {
             })}
             {vm.state.first && (
               <Button
-                className="mt-[12px]"
+                className="mt-[24px]"
               >
                 Start Game
               </Button>
