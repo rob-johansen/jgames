@@ -2,6 +2,7 @@ import { makeAutoObservable, runInAction } from 'mobx'
 
 import { isBrowser } from '@/libs/browser'
 import { MessageType } from '@jgames/types'
+import { showToast } from '@/components/toast/Toast'
 import type { WebSocketMessage } from '@jgames/types'
 
 type State = {
@@ -48,10 +49,17 @@ export class ViewModel {
       if (message.type === MessageType.JOIN) {
         const players = message.data.players as string[]
 
-        if (!this.state.first && (players).length === 1) {
-          this.state.first = true
-        }
-        this.state.players = players
+        runInAction(() => {
+          if (!this.state.first && (players).length === 1) {
+            this.state.first = true
+          }
+          this.state.players = players
+        })
+      }
+
+      if (message.type === MessageType.START) {
+        const game = message.data.game
+        console.log('Got the game via WebSockets:', game)
       }
     })
   }
@@ -85,6 +93,7 @@ export class ViewModel {
       runInAction(() => {
         localStorage.setItem('name', this.state.name)
         localStorage.setItem('userId', json.id)
+        this.state.loading = false
         this.state.waiting = true
         this.createWebSocket(json.id)
       })
@@ -95,6 +104,29 @@ export class ViewModel {
           ? 'This player already joined'
           : 'There was an error (try again)'
         document.getElementById('name')?.focus()
+      })
+    }
+  }
+
+  onClickStartGame = async (): Promise<void> => {
+    this.state.loading = true
+
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/phase10/v1/start`, {
+      body: JSON.stringify({}),
+      credentials: 'include',
+      headers: {'Content-Type': 'application/json'},
+      method: 'POST',
+      mode: 'cors'
+    })
+
+    if (response.status === 400) {
+      showToast({
+        message: 'You need one more players to start',
+        type: 'error'
+      })
+
+      runInAction(() => {
+        this.state.loading = false
       })
     }
   }

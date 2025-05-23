@@ -6,6 +6,7 @@ import type React from 'react'
 
 import { Button } from '@/components/button/Button'
 import { TextField } from '@/components/text-field/TextField'
+import { Toast } from '@/components/toast/Toast'
 import { ViewModel } from './ViewModel'
 
 type Props = {
@@ -46,6 +47,8 @@ const View = observer(({ vm }: Props): React.JSX.Element => {
             {vm.state.first && (
               <Button
                 className="mt-[24px]"
+                loading={vm.state.loading}
+                onClick={vm.onClickStartGame}
               >
                 Start Game
               </Button>
@@ -76,6 +79,7 @@ const View = observer(({ vm }: Props): React.JSX.Element => {
           </>
         )}
       </div>
+      <Toast />
     </div>
   )
 })

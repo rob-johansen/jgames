@@ -4,7 +4,7 @@ import type { Response } from 'express'
 import { addWaitingPlayer } from '@/data/queries/phase10/waiting'
 import { RequestError } from '@jgames/types'
 import { validateName } from '@jgames/validations'
-import type { PostRequest, User } from '@jgames/types'
+import type { Player, PostRequest } from '@jgames/types'
 
 export const router: Router = Router()
 
@@ -12,7 +12,7 @@ export const router: Router = Router()
  * Adds a player to the Phase 10 waiting table
  */
 router.post('/', async (
-  req: PostRequest<Pick<User, 'name'>>,
+  req: PostRequest<Pick<Player, 'name'>>,
   res: Response<{ id: string }>,
 ): Promise<void> => {
   const name = validateName(req.body.name)

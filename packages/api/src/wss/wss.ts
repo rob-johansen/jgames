@@ -41,7 +41,7 @@ class WebSocketServer {
 
       // TODO: Eventually you'll need to use `game` to determine which waiting players to look up.
 
-      this.send({
+      this.sendToAll({
         data: {
           players: (await getWaitingPlayers()).map(({ name }) => name)
         },
@@ -96,8 +96,15 @@ class WebSocketServer {
     logger.info(`jGames WebSocketServer listening for HTTP upgrade on ${PORT}`)
   }
 
-  send = (message: WebSocketMessage): void => {
+  sendToAll = (message: WebSocketMessage): void => {
     for (const connection of this.connections.values()) {
+      connection.socket.send(JSON.stringify(message))
+    }
+  }
+
+  sendToPlayer = (userId: string, message: WebSocketMessage): void => {
+    const connection = this.connections.get(userId)
+    if (connection) {
       connection.socket.send(JSON.stringify(message))
     }
   }

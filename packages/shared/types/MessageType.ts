@@ -1,3 +1,4 @@
 export enum MessageType {
-  JOIN = 'JOIN'
+  JOIN = 'JOIN',
+  START = 'START',
 }

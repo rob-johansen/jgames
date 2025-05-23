@@ -7,6 +7,7 @@ import { getFunnyError } from '@/libs/errors'
 import { logger } from '@/logger'
 import { RequestError } from '@jgames/types'
 import { router as phase10JoinV1 } from '@/routes/phase10/v1/join'
+import { router as phase10StartV1 } from '@/routes/phase10/v1/start'
 import type { ApiRequest } from '@jgames/types'
 
 const PORT = 2222
@@ -27,6 +28,7 @@ api.use((_req: ApiRequest, res: Response, next: NextFunction): void => {
 
 // API Routes
 api.use('/api/phase10/v1/join', phase10JoinV1)
+api.use('/api/phase10/v1/start', phase10StartV1)
 
 // If no route above matches, naturally it's a 404.
 api.use((_req: ApiRequest, res: Response): void => {
