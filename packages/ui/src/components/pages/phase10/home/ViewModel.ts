@@ -3,10 +3,11 @@ import { makeAutoObservable, runInAction } from 'mobx'
 import { isBrowser } from '@/libs/browser'
 import { MessageType } from '@jgames/types'
 import { showToast } from '@/components/toast/Toast'
-import type { WebSocketMessage } from '@jgames/types'
+import type { Game, WebSocketMessage } from '@jgames/types'
 
 type State = {
   first: boolean
+  hasGame: boolean
   loading: boolean
   name: string
   nameError: string
@@ -17,14 +18,18 @@ type State = {
 export class ViewModel {
   private _state: State = {
     first: false,
+    hasGame: false,
     loading: false,
     name: '',
     nameError: '',
     players: [],
     waiting: false,
   }
+  game: Game
+  userId: string
+  ws: WebSocket
 
-  constructor () {
+  constructor() {
     if (isBrowser()) {
       const name = localStorage.getItem('name')
 
@@ -32,8 +37,10 @@ export class ViewModel {
         this.state.name = name
       }
     }
-
-    makeAutoObservable(this)
+    this.game = {} as Game
+    this.userId = ''
+    this.ws = {} as WebSocket
+    makeAutoObservable(this, { game: false, ws: false })
   }
 
   get state(): State {
@@ -41,9 +48,9 @@ export class ViewModel {
   }
 
   createWebSocket = (id: string): void => {
-    const ws = new WebSocket(`ws://192.168.1.22:4444?game=phase10&userId=${id}`)
+    this.ws = new WebSocket(`ws://192.168.1.22:4444?game=phase10&userId=${id}`)
 
-    ws.addEventListener('message', (event) => {
+    this.ws.addEventListener('message', (event) => {
       const message: WebSocketMessage = JSON.parse(event.data)
 
       if (message.type === MessageType.JOIN) {
@@ -58,8 +65,13 @@ export class ViewModel {
       }
 
       if (message.type === MessageType.START) {
-        const game = message.data.game
-        console.log('Got the game via WebSockets:', game)
+        const game = message.data.game as Game
+
+        runInAction(() => {
+          this.game = game
+          this.state.hasGame = true
+          this.state.loading = false
+        })
       }
     })
   }
@@ -95,6 +107,7 @@ export class ViewModel {
         localStorage.setItem('userId', json.id)
         this.state.loading = false
         this.state.waiting = true
+        this.userId = json.id
         this.createWebSocket(json.id)
       })
     } else {

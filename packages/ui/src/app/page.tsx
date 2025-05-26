@@ -20,8 +20,7 @@ export default function Home(): React.JSX.Element {
           <span className="relative text-[0.7rem] top-[-1px]">2</span>
         </div>
         <span className="font-bold left-[12px] relative text-[2rem] text-phase10-card-red top-[-10px]">2</span>
-        <div
-          className="bg-phase10-card-red bottom-[16px] flex font-bold font-quicksand h-[20px] justify-between phase10-card-top-cover pl-[4px] pr-[4px] relative rounded-t scale-[-1] w-full">
+        <div className="bg-phase10-card-red bottom-[16px] flex font-bold font-quicksand h-[20px] justify-between phase10-card-top-cover pl-[4px] pr-[4px] relative rounded-t scale-[-1] w-full">
           <span className="relative scale-[-1] top-[1px]">2</span>
           <span className="relative scale-[-1] text-[0.7rem] top-[-5px]">2</span>
         </div>

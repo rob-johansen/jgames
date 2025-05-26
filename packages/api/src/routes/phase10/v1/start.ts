@@ -49,7 +49,7 @@ router.post('/', async (
       pile: [],
       players,
       results: [],
-      turn: players[0].name
+      turn: players[0].id
     }
 
     const id = await insertGame(game, client)

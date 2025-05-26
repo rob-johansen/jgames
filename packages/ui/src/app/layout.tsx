@@ -6,7 +6,7 @@ import type React from 'react'
 const roboto = Roboto({
   display: 'swap',
   subsets: ['latin'],
-  weight: ['400', '500', '700']
+  weight: ['400', '500', '700', '900']
 })
 
 const quicksand = Quicksand({

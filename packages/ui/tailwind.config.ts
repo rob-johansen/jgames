@@ -20,6 +20,7 @@ export default {
         gray: '#999999',
         phase10: {
           card: {
+            black: '#111111',
             blue: '#0f56b5',
             green: '#11650c',
             purple: '#6a0dad',

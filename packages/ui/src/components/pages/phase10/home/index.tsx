@@ -5,6 +5,7 @@ import { observer } from 'mobx-react-lite'
 import type React from 'react'
 
 import { Button } from '@/components/button/Button'
+import { GamePage } from '@/components/pages/phase10/game'
 import { TextField } from '@/components/text-field/TextField'
 import { Toast } from '@/components/toast/Toast'
 import { ViewModel } from './ViewModel'
@@ -31,54 +32,62 @@ const View = observer(({ vm }: Props): React.JSX.Element => {
       <h1 className="absolute font-bold font-quicksand right-[30px] text-[2rem] top-[20px]">
         Phase 10
       </h1>
-      <div className="absolute h-[90px] inset-0 m-auto w-[300px]">
-        {vm.state.waiting ? (
-          <>
-            <h2 className="font-bold font-quicksand right-[30px] text-[1.5rem]">
-              Waiting
-            </h2>
-            {vm.state.players.map((player) => {
-              return (
-                <div className="my-[4px]" key={player}>
-                  {player}
-                </div>
-              )
-            })}
-            {vm.state.first && (
+      {vm.state.hasGame ? (
+        <GamePage
+          game={vm.game}
+          userId={vm.userId}
+          ws={vm.ws}
+        />
+      ) : (
+        <div className="absolute h-[90px] inset-0 m-auto w-[300px]">
+          {vm.state.waiting ? (
+            <>
+              <h2 className="font-bold font-quicksand right-[30px] text-[1.5rem]">
+                Waiting
+              </h2>
+              {vm.state.players.map((player) => {
+                return (
+                  <div className="my-[4px]" key={player}>
+                    {player}
+                  </div>
+                )
+              })}
+              {vm.state.first && (
+                <Button
+                  className="mt-[24px]"
+                  loading={vm.state.loading}
+                  onClick={vm.onClickStartGame}
+                >
+                  Start Game
+                </Button>
+              )}
+            </>
+          ) : (
+            <>
+              <TextField
+                error={vm.state.nameError}
+                id="name"
+                label="Name"
+                onChange={(event: ChangeEvent<HTMLInputElement>) => vm.onChangeName(event.target.value)}
+                onKeyDown={(event: KeyboardEvent<HTMLInputElement>): void => {
+                  if (event.key === 'Enter') {
+                    nameInput.current?.blur()
+                    vm.onClickJoin()
+                  }
+                }}
+                ref={nameInput}
+                value={vm.state.name}
+              />
               <Button
-                className="mt-[24px]"
                 loading={vm.state.loading}
-                onClick={vm.onClickStartGame}
+                onClick={vm.onClickJoin}
               >
-                Start Game
+                Join
               </Button>
-            )}
-          </>
-        ) : (
-          <>
-            <TextField
-              error={vm.state.nameError}
-              id="name"
-              label="Name"
-              onChange={(event: ChangeEvent<HTMLInputElement>) => vm.onChangeName(event.target.value)}
-              onKeyDown={(event: KeyboardEvent<HTMLInputElement>): void => {
-                if (event.key === 'Enter') {
-                  nameInput.current?.blur()
-                  vm.onClickJoin()
-                }
-              }}
-              ref={nameInput}
-              value={vm.state.name}
-            />
-            <Button
-              loading={vm.state.loading}
-              onClick={vm.onClickJoin}
-            >
-              Join
-            </Button>
-          </>
-        )}
-      </div>
+            </>
+          )}
+        </div>
+      )}
       <Toast />
     </div>
   )

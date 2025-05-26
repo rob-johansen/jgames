@@ -1,5 +1,6 @@
 export type Card = {
   color: string
+  id?: string
   value: number
 }
 
