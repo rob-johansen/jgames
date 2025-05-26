@@ -39,7 +39,7 @@ const View = observer(({ vm }: Props): React.JSX.Element => {
           ws={vm.ws}
         />
       ) : (
-        <div className="absolute h-[90px] inset-0 m-auto w-[300px]">
+        <div className="absolute h-[150px] inset-0 m-auto w-[300px]">
           {vm.state.waiting ? (
             <>
               <h2 className="font-bold font-quicksand right-[30px] text-[1.5rem]">

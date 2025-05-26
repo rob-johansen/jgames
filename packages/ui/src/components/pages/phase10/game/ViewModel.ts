@@ -1,15 +1,18 @@
 import { makeAutoObservable } from 'mobx'
 import { v4 as uuid } from 'uuid'
+import type { DragEvent } from 'react'
 
-import type { Card, Game, Player } from '@jgames/types'
 import { SKIP, WILD } from '@jgames/types'
+import type { Card, Game, Player } from '@jgames/types'
 
 type State = {
+  canDragCards: boolean
   game: Game
 }
 
 export class ViewModel {
   private _state: State = {
+    canDragCards: true,
     game: {} as Game
   }
   userId: string
@@ -58,5 +61,28 @@ export class ViewModel {
     if (color === 'green') return 'text-phase10-card-green'
     if (color === 'purple') return 'text-phase10-card-purple'
     return 'text-phase10-card-red'
+  }
+
+  onDragCard = (event: DragEvent<HTMLDivElement>, dragCardIndex: number): void => {
+    event.dataTransfer.setData('text/plain', `${dragCardIndex}`)
+  }
+
+  onDropCard = (event: DragEvent<HTMLDivElement>, targetCardIndex: number): void => {
+    const dragCardIndex = Number.parseInt(event.dataTransfer.getData('text/plain'))
+    if (dragCardIndex !== targetCardIndex) {
+      const dragCard = this.myCards[dragCardIndex]
+      let cards: Card[] = []
+
+      for (let i = 0; i < this.myCards.length; i++) {
+        if (targetCardIndex < dragCardIndex) { // dragged to the left
+          cards = [...this.myCards.slice(0, targetCardIndex), dragCard, ...this.myCards.slice(targetCardIndex, dragCardIndex), ...this.myCards.slice(dragCardIndex + 1)]
+        } else { // dragged to the right
+          cards = [...this.myCards.slice(0, dragCardIndex), ...this.myCards.slice(dragCardIndex + 1, targetCardIndex + 1), dragCard, ...this.myCards.slice(targetCardIndex + 1)]
+        }
+      }
+
+      this.me.cards = cards
+      event.preventDefault()
+    }
   }
 }

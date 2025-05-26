@@ -37,6 +37,7 @@
 /* 3. Allow percentage-based heights in the application */
 html, body {
   height: 100%;
+  overscroll-behavior-y: none; /* Disable the "pull-down-to-refresh" behavior in iOS Safari */
 }
 
 /*

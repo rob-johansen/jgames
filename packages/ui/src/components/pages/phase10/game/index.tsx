@@ -25,13 +25,20 @@ export const GamePage = ({ game, userId, ws }: Props): React.JSX.Element => {
 
 const View = observer(({ vm }: ViewProps): React.JSX.Element => {
   return (
-    <div className="flex h-screen relative">
+    <div className="flex h-dvh relative">
       <div className="absolute bottom-[50px] flex h-[225px] left-0 m-auto right-0 w-[1180px]">
         {(vm.myCards).map((card, index) => {
           return (
             <div
               className="absolute bg-white border border-[#aaaaaa] bottom-0 cursor-pointer h-[225px] p-[8px] rounded-[8px] select-none drop-shadow-lg text-white w-[150px]"
+              draggable={vm.state.canDragCards}
               key={card.id}
+              {...(vm.state.canDragCards ? {
+                onDragEnter: (event) => event.preventDefault(),
+                onDragOver: (event) => event.preventDefault(),
+                onDragStart: (event) => vm.onDragCard(event, index),
+                onDrop: (event) => vm.onDropCard(event, index)
+              } : {})}
               style={{ left: index * 114 }}
             >
               <div className={`${vm.getCardColor(card.color)} flex font-bold font-quicksand h-[50px] justify-between phase10-card-top-cover pl-[4px] pr-[4px] rounded-t w-full`}>
