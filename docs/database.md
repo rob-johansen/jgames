@@ -42,6 +42,10 @@
 
    `psql -U <DB_USER> <DB_NAME>`
    
+9. If you want to switch to the `phase10` schema, for example:
+    
+    `SET search_path TO phase10;`
+    
 
 ---
 

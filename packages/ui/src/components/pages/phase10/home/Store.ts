@@ -4,6 +4,7 @@ import { isBrowser } from '@/libs/browser'
 import { MessageType } from '@jgames/types'
 import { showToast } from '@/components/toast/Toast'
 import type { Game, WebSocketMessage } from '@jgames/types'
+import type { RootStore } from '@/providers/phase10/RootStore'
 
 type State = {
   first: boolean
@@ -15,40 +16,38 @@ type State = {
   waiting: boolean
 }
 
-export class ViewModel {
-  private _state: State = {
-    first: false,
-    hasGame: false,
-    loading: false,
-    name: '',
-    nameError: '',
-    players: [],
-    waiting: false,
-  }
-  game: Game
+export class HomeStore {
+  root: RootStore
+  state: State
   userId: string
   ws: WebSocket
 
-  constructor() {
+  constructor(root: RootStore) {
+    this.root = root
+    this.state = {
+      first: false,
+      hasGame: false,
+      loading: false,
+      name: '',
+      nameError: '',
+      players: [],
+      waiting: false,
+    }
+    this.userId = ''
+    this.ws = {} as WebSocket
+
     if (isBrowser()) {
       const name = localStorage.getItem('name')
-
       if (name) {
         this.state.name = name
       }
     }
-    this.game = {} as Game
-    this.userId = ''
-    this.ws = {} as WebSocket
-    makeAutoObservable(this, { game: false, ws: false })
-  }
 
-  get state(): State {
-    return this._state
+    makeAutoObservable(this, { ws: false })
   }
 
   createWebSocket = (id: string): void => {
-    this.ws = new WebSocket(`ws://192.168.1.22:4444?game=phase10&userId=${id}`)
+    this.ws = new WebSocket(`${process.env.NEXT_PUBLIC_WS_HOST}?game=phase10&userId=${id}`)
 
     this.ws.addEventListener('message', (event) => {
       const message: WebSocketMessage = JSON.parse(event.data)
@@ -68,7 +67,7 @@ export class ViewModel {
         const game = message.data.game as Game
 
         runInAction(() => {
-          this.game = game
+          this.root.game.setGame(game)
           this.state.hasGame = true
           this.state.loading = false
         })
@@ -134,7 +133,7 @@ export class ViewModel {
 
     if (response.status === 400) {
       showToast({
-        message: 'You need one more players to start',
+        message: 'You need one more player to start',
         type: 'error'
       })
 

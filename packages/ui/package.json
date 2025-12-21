@@ -3,17 +3,17 @@
     "@jgames/types": "workspace:*",
     "mobx": "6.13.5",
     "mobx-react-lite": "4.1.0",
-    "next": "15.3.2",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
+    "next": "16.1.0",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
     "react-hot-toast": "2.5.1",
     "tailwind-merge": "2.6.0",
     "uuid": "11.1.0"
   },
   "devDependencies": {
     "@types/node": "20.17.13",
-    "@types/react": "19.0.7",
-    "@types/react-dom": "19.0.3",
+    "@types/react": "19.2.7",
+    "@types/react-dom": "19.2.3",
     "eslint-config-next": "15.3.2",
     "eslint-plugin-react": "7.37.5",
     "eslint-plugin-react-hooks": "5.2.0",
@@ -23,7 +23,7 @@
   },
   "name": "ui",
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"

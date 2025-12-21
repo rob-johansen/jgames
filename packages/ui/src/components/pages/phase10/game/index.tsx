@@ -1,49 +1,29 @@
 'use client'
 
 import { observer } from 'mobx-react-lite'
-import type React from 'react'
+import { useContext } from 'react'
 
-import { ViewModel } from './ViewModel'
-import type { Game } from '@jgames/types'
 import { SKIP, WILD } from '@jgames/types'
+import { StoreContext } from '@/providers/phase10/StoreContext'
 
-type Props = {
-  game: Game
-  userId: string
-  ws: WebSocket
-}
+export const GamePage = observer(() => {
+  const { game: store } = useContext(StoreContext)
 
-type ViewProps = {
-  vm: ViewModel
-}
-
-export const GamePage = ({ game, userId, ws }: Props): React.JSX.Element => {
-  return (
-    <View vm={new ViewModel(game, userId, ws)} />
-  )
-}
-
-const View = observer(({ vm }: ViewProps): React.JSX.Element => {
   return (
     <div className="flex h-dvh relative">
+      {/* TODO: This <div> will need to be wider when you draw a card and have 11 in your hand. */}
       <div className="absolute bottom-[50px] flex h-[225px] left-0 m-auto right-0 w-[1180px]">
-        {(vm.myCards).map((card, index) => {
+        {(store.myCards).map((card, index) => {
           return (
             <div
-              className="absolute bg-white border border-[#aaaaaa] bottom-0 cursor-pointer h-[225px] p-[8px] rounded-[8px] select-none drop-shadow-lg text-white w-[150px]"
-              draggable={vm.state.canDragCards}
+              className="absolute bg-white border border-[#aaaaaa] bottom-0 cursor-pointer drag-card h-[225px] p-[8px] rounded-[8px] select-none drop-shadow-lg text-white w-[150px]"
+              data-card-id={card.id}
               key={card.id}
-              {...(vm.state.canDragCards ? {
-                onDragEnter: (event) => event.preventDefault(),
-                onDragOver: (event) => event.preventDefault(),
-                onDragStart: (event) => vm.onDragCard(event, index),
-                onDrop: (event) => vm.onDropCard(event, index)
-              } : {})}
               style={{ left: index * 114 }}
             >
-              <div className={`${vm.getCardColor(card.color)} flex font-bold font-quicksand h-[50px] justify-between phase10-card-top-cover pl-[4px] pr-[4px] rounded-t w-full`}>
-                <span className="relative text-[2.25rem] top-[-8px]">{vm.getCardCornerText(card.value)}</span>
-                <span className="relative text-[1.5rem] top-[-2px]">{vm.getCardCornerText(card.value)}</span>
+              <div className={`${store.getCardColor(card.color)} flex font-bold font-quicksand h-[50px] justify-between phase10-card-top-cover pl-[4px] pr-[4px] rounded-t w-full`}>
+                <span className="relative text-[2.25rem] top-[-8px]">{store.getCardCornerText(card.value)}</span>
+                <span className="relative text-[1.5rem] top-[-2px]">{store.getCardCornerText(card.value)}</span>
               </div>
               {card.value === SKIP || card.value === WILD ? (
                 <div className="relative">
@@ -56,13 +36,13 @@ const View = observer(({ vm }: ViewProps): React.JSX.Element => {
                   </div>
                 </div>
               ) : (
-                <div className={`${vm.getCardTextColor(card.color)} absolute font-bold h-fit inset-0 m-auto skew-y-[-7deg] text-[6rem] top-[-10px] w-fit`}>
+                <div className={`${store.getCardTextColor(card.color)} absolute font-bold h-fit inset-0 m-auto skew-y-[-7deg] text-[6rem] top-[-10px] w-fit`}>
                   {card.value}
                 </div>
               )}
-              <div className={`${vm.getCardColor(card.color)} absolute bottom-[8px] flex font-bold font-quicksand h-[50px] justify-between phase10-card-top-cover pl-[4px] pr-[4px] rounded-t scale-[-1] w-[132px]`}>
-                <span className="relative scale-[-1] text-[2.25rem] top-[-2px]">{vm.getCardCornerText(card.value)}</span>
-                <span className="relative scale-[-1] text-[1.5rem] top-[-16px]">{vm.getCardCornerText(card.value)}</span>
+              <div className={`${store.getCardColor(card.color)} absolute bottom-[8px] flex font-bold font-quicksand h-[50px] justify-between phase10-card-top-cover pl-[4px] pr-[4px] rounded-t scale-[-1] w-[132px]`}>
+                <span className="relative scale-[-1] text-[2.25rem] top-[-2px]">{store.getCardCornerText(card.value)}</span>
+                <span className="relative scale-[-1] text-[1.5rem] top-[-16px]">{store.getCardCornerText(card.value)}</span>
               </div>
             </div>
           )

@@ -21,6 +21,7 @@ export default tseslint.config(
       ...react.configs.recommended.rules,
       '@typescript-eslint/no-unused-expressions': 'off',
       'react/prop-types': 'off',
+      'react/react-in-jsx-scope': 'off',
     }
   }
 );

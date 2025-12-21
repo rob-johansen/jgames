@@ -1,26 +1,16 @@
 'use client'
 
-import { ChangeEvent, KeyboardEvent, useEffect, useRef } from 'react'
+import { KeyboardEvent, useContext, useEffect, useRef } from 'react'
 import { observer } from 'mobx-react-lite'
-import type React from 'react'
 
 import { Button } from '@/components/button/Button'
 import { GamePage } from '@/components/pages/phase10/game'
+import { StoreContext } from '@/providers/phase10/StoreContext'
 import { TextField } from '@/components/text-field/TextField'
 import { Toast } from '@/components/toast/Toast'
-import { ViewModel } from './ViewModel'
 
-type Props = {
-  vm: ViewModel
-}
-
-export const Home = (): React.JSX.Element => {
-  return (
-    <View vm={new ViewModel()} />
-  )
-}
-
-const View = observer(({ vm }: Props): React.JSX.Element => {
+export const Home = observer(() => {
+  const { home: store } = useContext(StoreContext)
   const nameInput = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -32,31 +22,27 @@ const View = observer(({ vm }: Props): React.JSX.Element => {
       <h1 className="absolute font-bold font-quicksand right-[30px] text-[2rem] top-[20px]">
         Phase 10
       </h1>
-      {vm.state.hasGame ? (
-        <GamePage
-          game={vm.game}
-          userId={vm.userId}
-          ws={vm.ws}
-        />
+      {store.state.hasGame ? (
+        <GamePage />
       ) : (
         <div className="absolute h-[150px] inset-0 m-auto w-[300px]">
-          {vm.state.waiting ? (
+          {store.state.waiting ? (
             <>
               <h2 className="font-bold font-quicksand right-[30px] text-[1.5rem]">
                 Waiting
               </h2>
-              {vm.state.players.map((player) => {
+              {store.state.players.map((player) => {
                 return (
                   <div className="my-[4px]" key={player}>
                     {player}
                   </div>
                 )
               })}
-              {vm.state.first && (
+              {store.state.first && (
                 <Button
                   className="mt-[24px]"
-                  loading={vm.state.loading}
-                  onClick={vm.onClickStartGame}
+                  loading={store.state.loading}
+                  onClick={store.onClickStartGame}
                 >
                   Start Game
                 </Button>
@@ -65,22 +51,22 @@ const View = observer(({ vm }: Props): React.JSX.Element => {
           ) : (
             <>
               <TextField
-                error={vm.state.nameError}
+                error={store.state.nameError}
                 id="name"
                 label="Name"
-                onChange={(event: ChangeEvent<HTMLInputElement>) => vm.onChangeName(event.target.value)}
+                onChange={(event) => store.onChangeName(event.target.value)}
                 onKeyDown={(event: KeyboardEvent<HTMLInputElement>): void => {
                   if (event.key === 'Enter') {
                     nameInput.current?.blur()
-                    vm.onClickJoin()
+                    store.onClickJoin()
                   }
                 }}
                 ref={nameInput}
-                value={vm.state.name}
+                value={store.state.name}
               />
               <Button
-                loading={vm.state.loading}
-                onClick={vm.onClickJoin}
+                loading={store.state.loading}
+                onClick={store.onClickJoin}
               >
                 Join
               </Button>

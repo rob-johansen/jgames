@@ -76,5 +76,5 @@ export default function Home(): React.JSX.Element {
 
 // 2.25w 3.5h
 // The box: https://imgs.search.brave.com/KLqRXeoD5rn1bPE92y082E4BPOJ_5IgIb5p1FoF5lWs/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5yYWlucG9zLmNv/bS83MDYwL2ExdmV4/ZXlhOGpsX2FjX3Ns/MTUwMF8uanBn
-// Ture purple will replace yellow: #6a0dad
+// Purple will replace yellow: #6a0dad
 // subtract 1, add 45, subtract 3
