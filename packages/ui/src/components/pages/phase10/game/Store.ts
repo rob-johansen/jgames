@@ -1,11 +1,13 @@
-import { makeAutoObservable } from 'mobx'
+import { makeAutoObservable, runInAction } from 'mobx'
 import { v4 as uuid } from 'uuid'
 
+import { showToast } from '@/components/toast/Toast'
 import type { Card, Game, Player } from '@jgames/types'
 import type { RootStore } from '@/providers/phase10/RootStore'
 
 type State = {
   arranging: boolean
+  drawPileLoading: boolean
   game: Game
   movingCard?: string
 }
@@ -19,6 +21,7 @@ export class GameStore {
     this.root = root
     this.state = {
       arranging: false,
+      drawPileLoading: false,
       game: {} as Game,
       movingCard: '',
     }
@@ -44,10 +47,47 @@ export class GameStore {
     return this.state.game.pile[0]
   }
 
+  drawFromPile = () => {
+    const me = this.me
+    const cards = me.cards as Card[]
+    const pileCard = this.state.game.pile.shift() as Card
+
+    if (this.state.game.turn === me.id) {
+      pileCard.id = uuid()
+      cards.push(pileCard)
+    }
+  }
+
   onClickCard = (card: Card): void => {
     if (this.state.arranging) {
       this.state.movingCard = card.id
     }
+  }
+
+  onClickDrawFromPile = async (): Promise<void> => {
+    this.state.drawPileLoading = true
+
+    const params = new URLSearchParams({
+      gameId: this.state.game.id,
+      turnId: this.root.home.userId
+    })
+
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/phase10/v1/draw/pile?${params.toString()}`, {
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      mode: 'cors'
+    })
+
+    if (!response.ok) {
+      showToast({
+        message: 'There was a problem drawing from the pile.',
+        type: 'error'
+      })
+    }
+
+    runInAction(() => {
+      this.state.drawPileLoading = false
+    })
   }
 
   onKeyDown = (event: KeyboardEvent): void => {

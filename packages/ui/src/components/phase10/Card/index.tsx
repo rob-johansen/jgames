@@ -9,16 +9,17 @@ import type { Card as CardType } from '@jgames/types'
 type Props = HTMLProps<HTMLDivElement> & {
   arranging?: boolean
   card: CardType
+  inHand: boolean
   moving?: boolean
   onClick?: (card: CardType) => void
 }
 
 export const Card = observer((props: Props) => {
-  const { arranging, card, moving, onClick, style } = props
+  const { arranging, card, inHand, moving, onClick, style } = props
 
   return (
     <div
-      className={`absolute bg-white border border-[#aaaaaa] bottom-0 h-[225px] drop-shadow-lg p-[8px] rounded-[8px] select-none text-white w-[150px] ${arranging && 'cursor-pointer hover:scale-110'}`}
+      className={`${inHand ? 'absolute bottom-0' : ''} bg-white border border-[#aaaaaa] h-[225px] drop-shadow-lg p-[8px] rounded-[8px] select-none text-white w-[150px] ${arranging && 'cursor-pointer hover:scale-110'}`}
       onClick={() => {
         if (onClick) onClick(card)
       }}

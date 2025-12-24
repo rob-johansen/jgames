@@ -30,7 +30,6 @@ router.post('/', async (
 
     const deck = DECK.map((card) => card)
     shuffle(deck)
-    const pile = [deck.shift() as Card]
 
     for (let i = 1; i <= 10; i++) {
       for (const player of players) {
@@ -44,6 +43,8 @@ router.post('/', async (
         player.skipped = false
       }
     }
+
+    const pile = [deck.shift() as Card]
 
     const game: Omit<Game, 'id'> = {
       deck,

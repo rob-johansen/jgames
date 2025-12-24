@@ -63,6 +63,12 @@ export class HomeStore {
         })
       }
 
+      if (message.type === MessageType.PILE_DRAW) {
+        runInAction(() => {
+          this.root.game.drawFromPile()
+        })
+      }
+
       if (message.type === MessageType.START) {
         const game = message.data.game as Game
 
@@ -93,7 +99,7 @@ export class HomeStore {
         name: this.state.name,
       }),
       credentials: 'include',
-      headers: {'Content-Type': 'application/json'},
+      headers: { 'Content-Type': 'application/json' },
       method: 'POST',
       mode: 'cors'
     })
@@ -126,7 +132,7 @@ export class HomeStore {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/phase10/v1/start`, {
       body: JSON.stringify({}),
       credentials: 'include',
-      headers: {'Content-Type': 'application/json'},
+      headers: { 'Content-Type': 'application/json' },
       method: 'POST',
       mode: 'cors'
     })

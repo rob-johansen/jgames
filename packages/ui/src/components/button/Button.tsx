@@ -25,6 +25,8 @@ export const Button = ({
     `
       active:opacity-80
       bg-gradient-to-br
+      disabled:active:opacity-50
+      disabled:hover:opacity-50
       flex
       font-bold
       from-[#4568dc]
@@ -62,6 +64,7 @@ export const Button = ({
       border-transparent
       cursor-not-allowed
       hover:bg-[#bbbbbb]
+      opacity-50
       text-[#eeeeee]
     `,
     loading &&
