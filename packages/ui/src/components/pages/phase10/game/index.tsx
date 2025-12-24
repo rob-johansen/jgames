@@ -4,8 +4,7 @@ import { observer } from 'mobx-react-lite'
 import { useContext, useEffect } from 'react'
 
 import { Button } from '@/components/button/Button'
-import { Icon, ChevronLeft, ChevronRight } from '@/components/icon'
-import { SKIP, WILD } from '@jgames/types'
+import { Card } from '@/components/phase10/Card'
 import { StoreContext } from '@/providers/phase10/StoreContext'
 
 export const GamePage = observer(() => {
@@ -19,56 +18,35 @@ export const GamePage = observer(() => {
 
   return (
     <div className="flex h-dvh relative">
+      <div className="absolute bottom-[425px] flex gap-x-[24px] h-[225px] left-0 m-auto right-0 w-[324px]">
+        <div className="bg-phase10-cover-blue drop-shadow-lg font-quicksand h-[225px] overflow-hidden rounded-[8px] select-none text-white w-[150px]">
+          <div className='flex flex-col font-bold items-center left-[8px] relative rotate-[80deg] text-[3rem] top-[45px]'>
+            <span>Phase</span>
+            <span className="relative top-[-32px]">10</span>
+          </div>
+          <div className="bg-phase10-card-red h-[10px] left-[-84px] relative rotate-[80deg] top-[-40px] w-[240px]" />
+          <div className="bg-phase10-card-blue h-[10px] left-[-98px] relative rotate-[80deg] top-[-40px] w-[240px]" />
+          <div className="bg-phase10-card-green h-[10px] left-[-112px] relative rotate-[80deg] top-[-40px] w-[240px]" />
+          <div className="bg-phase10-card-purple h-[10px] left-[-126px] relative rotate-[80deg] top-[-40px] w-[240px]" />
+        </div>
+        {store.topCardOnPile && (
+          <div>
+            <Card card={store.topCardOnPile} />
+          </div>
+        )}
+      </div>
       {/* TODO: This <div> will need to be wider when you draw a card and have 11 in your hand. */}
       <div className="absolute bottom-[50px] flex h-[225px] left-0 m-auto right-0 w-[1180px]">
         {(store.myCards).map((card, index) => {
           return (
-            <div
-              className={`absolute bg-white border border-[#aaaaaa] bottom-0 h-[225px] p-[8px] rounded-[8px] select-none drop-shadow-lg text-white w-[150px] ${store.state.arranging && 'cursor-pointer hover:scale-110'}`}
-              data-card-id={card.id}
+            <Card
+              arranging={store.state.arranging}
+              card={card}
               key={card.id}
+              moving={store.showMoving(card.id)}
               onClick={() => store.onClickCard(card)}
               style={{ left: index * 114 }}
-            >
-              <div className={`${store.getCardColor(card.color)} flex font-bold font-quicksand h-[50px] justify-between phase10-card-top-cover pl-[4px] pr-[4px] rounded-t w-full`}>
-                <span className="relative text-[2.25rem] top-[-8px]">{store.getCardCornerText(card.value)}</span>
-                <span className="relative text-[1.5rem] top-[-2px]">{store.getCardCornerText(card.value)}</span>
-              </div>
-              {card.value === SKIP || card.value === WILD ? (
-                <div className="relative">
-                  <div className="bg-phase10-card-red h-[24px] mt-[-2px] skew-y-[-7deg] w-full"/>
-                  <div className="bg-phase10-card-blue h-[24px] mt-[5px] relative skew-y-[-7deg] w-full"/>
-                  <div className="bg-phase10-card-green h-[24px] mt-[5px] relative skew-y-[-7deg] w-full"/>
-                  <div className="bg-phase10-card-purple h-[24px] mt-[5px] relative skew-y-[-7deg] w-full"/>
-                  <div className="absolute font-black h-fit inset-0 m-auto phase10-skip-wild-shadow skew-y-[-7deg] text-[2.875rem] text-phase10-card-black w-fit">
-                    {card.value === SKIP ? 'SKIP' : 'WILD'}
-                  </div>
-                </div>
-              ) : (
-                <div className={`${store.getCardTextColor(card.color)} absolute font-bold h-fit inset-0 m-auto skew-y-[-7deg] text-[6rem] top-[-10px] w-fit`}>
-                  {card.value}
-                </div>
-              )}
-              <div className={`${store.getCardColor(card.color)} absolute bottom-[8px] flex font-bold font-quicksand h-[50px] justify-between phase10-card-top-cover pl-[4px] pr-[4px] rounded-t scale-[-1] w-[132px]`}>
-                <span className="relative scale-[-1] text-[2.25rem] top-[-2px]">{store.getCardCornerText(card.value)}</span>
-                <span className="relative scale-[-1] text-[1.5rem] top-[-16px]">{store.getCardCornerText(card.value)}</span>
-              </div>
-              {store.showMoving(card.id) && (
-                <div className="absolute flex left-[0] top-[94px]">
-                  {/* TODO: These don't need to be buttons... */}
-                  <button
-                    className="bg-white border border-slate-400 cursor-default from-white h-[36px] hover:bg-slate-200 px-[0] rounded-r-none rounded-[6px] to-white w-[18px]"
-                  >
-                    <Icon primary="#475569" source={ChevronLeft}/>
-                  </button>
-                  <button
-                    className="bg-white border border-slate-400 cursor-default from-white h-[36px] hover:bg-slate-200 px-[0] rounded-l-none rounded-[6px] to-white w-[18px]"
-                  >
-                    <Icon primary="#475569" source={ChevronRight}/>
-                  </button>
-                </div>
-              )}
-            </div>
+            />
           )
         })}
         <Button

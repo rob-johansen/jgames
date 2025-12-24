@@ -1,7 +1,6 @@
 import { makeAutoObservable } from 'mobx'
 import { v4 as uuid } from 'uuid'
 
-import { SKIP, WILD } from '@jgames/types'
 import type { Card, Game, Player } from '@jgames/types'
 import type { RootStore } from '@/providers/phase10/RootStore'
 
@@ -28,33 +27,21 @@ export class GameStore {
     makeAutoObservable(this, { ws: false })
   }
 
-  get myCards(): Card[] {
-    return this.me.cards as Card[]
-  }
-
   get me(): Player {
     return this.state.game.players.find((player) => player.id === this.root.home.userId) as Player
   }
 
-  getCardColor = (color: string): string => {
-    if (color === 'blue') return 'bg-phase10-card-blue'
-    if (color === 'green') return 'bg-phase10-card-green'
-    if (color === 'purple') return 'bg-phase10-card-purple'
-    if (color === 'red') return 'bg-phase10-card-red'
-    return 'bg-phase10-card-black'
+  get myCards(): Card[] {
+    return this.me.cards as Card[]
   }
 
-  getCardCornerText = (value: number): string => {
-    if (value === SKIP) return 'S'
-    if (value === WILD) return 'W'
-    return `${value}`
+  get myTurn(): boolean {
+    const turn = this.state.game.turn
+    return typeof turn === 'string' && turn === this.me.id
   }
 
-  getCardTextColor = (color: string): string => {
-    if (color === 'blue') return 'text-phase10-card-blue'
-    if (color === 'green') return 'text-phase10-card-green'
-    if (color === 'purple') return 'text-phase10-card-purple'
-    return 'text-phase10-card-red'
+  get topCardOnPile(): Card | undefined {
+    return this.state.game.pile[0]
   }
 
   onClickCard = (card: Card): void => {

@@ -30,6 +30,7 @@ router.post('/', async (
 
     const deck = DECK.map((card) => card)
     shuffle(deck)
+    const pile = [deck.shift() as Card]
 
     for (let i = 1; i <= 10; i++) {
       for (const player of players) {
@@ -46,7 +47,7 @@ router.post('/', async (
 
     const game: Omit<Game, 'id'> = {
       deck,
-      pile: [],
+      pile,
       players,
       results: [],
       turn: players[0].id
@@ -63,7 +64,7 @@ router.post('/', async (
         data: {
           game: {
             id,
-            pile: [],
+            pile,
             players: players.map((plr) => {
               return plr.id === player.id ? plr : { ...plr, cards: 10 }
             }),
