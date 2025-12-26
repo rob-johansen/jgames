@@ -52,6 +52,10 @@ export class HomeStore {
     this.ws.addEventListener('message', (event) => {
       const message: WebSocketMessage = JSON.parse(event.data)
 
+      if (message.type === MessageType.DECK_DRAW) {
+        // TODO: Notify everyone that the turn player drew from the deck (show a blue, info toast)
+      }
+
       if (message.type === MessageType.JOIN) {
         const players = message.data.players as string[]
 

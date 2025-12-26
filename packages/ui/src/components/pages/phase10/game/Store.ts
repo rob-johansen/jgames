@@ -7,6 +7,7 @@ import type { RootStore } from '@/providers/phase10/RootStore'
 
 type State = {
   arranging: boolean
+  drawDeckLoading: boolean
   drawPileLoading: boolean
   game: Game
   movingCard?: string
@@ -21,6 +22,7 @@ export class GameStore {
     this.root = root
     this.state = {
       arranging: false,
+      drawDeckLoading: false,
       drawPileLoading: false,
       game: {} as Game,
       movingCard: '',
@@ -38,9 +40,9 @@ export class GameStore {
     return this.me.cards as Card[]
   }
 
-  get myTurn(): boolean {
+  get showDraw(): boolean {
     const turn = this.state.game.turn
-    return typeof turn === 'string' && turn === this.me.id
+    return typeof turn === 'string' && turn === this.me.id && this.state.game.draw
   }
 
   get topCardOnPile(): Card | undefined {
@@ -64,6 +66,40 @@ export class GameStore {
     }
   }
 
+  onClickDrawFromDeck = async (): Promise<void> => {
+    this.state.drawDeckLoading = true
+
+    const params = new URLSearchParams({
+      gameId: this.state.game.id,
+      turnId: this.root.home.userId
+    })
+
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/phase10/v1/draw/deck?${params.toString()}`, {
+      credentials: 'include',
+      headers: {'Content-Type': 'application/json'},
+      mode: 'cors'
+    })
+
+    if (response.ok) {
+      const card = await response.json() as Card
+
+      runInAction(() => {
+        card.id = uuid()
+        this.myCards.push(card)
+        this.state.game.draw = false
+      })
+    } else {
+      showToast({
+        message: 'There was a problem drawing from the deck.',
+        type: 'error'
+      })
+    }
+
+    runInAction(() => {
+      this.state.drawDeckLoading = false
+    })
+  }
+
   onClickDrawFromPile = async (): Promise<void> => {
     this.state.drawPileLoading = true
 
@@ -78,7 +114,13 @@ export class GameStore {
       mode: 'cors'
     })
 
-    if (!response.ok) {
+    if (response.ok) {
+      runInAction(() => {
+        this.state.game.draw = false
+        // NOTE: The card is added to the player's hand in the `drawFromPile()` method above,
+        //       which is called when `MessageType.PILE_DRAW` arrives via WebSocket.
+      })
+    } else {
       showToast({
         message: 'There was a problem drawing from the pile.',
         type: 'error'

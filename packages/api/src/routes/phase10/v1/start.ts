@@ -48,6 +48,7 @@ router.post('/', async (
 
     const game: Omit<Game, 'id'> = {
       deck,
+      draw: true,
       pile,
       players,
       results: [],
@@ -64,6 +65,7 @@ router.post('/', async (
       wss.sendToPlayer(player.id, {
         data: {
           game: {
+            draw: game.draw,
             id,
             pile,
             players: players.map((plr) => {

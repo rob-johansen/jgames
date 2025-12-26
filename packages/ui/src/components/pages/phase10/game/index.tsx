@@ -19,7 +19,7 @@ export const GamePage = observer(() => {
   return (
     <div className="flex h-dvh relative">
       <div className="absolute bottom-[425px] flex gap-x-[24px] h-[269px] left-0 m-auto right-0 w-[324px]">
-        <div className="flex flex-col">
+        <div className="flex flex-col gap-y-[8px] items-center">
           <div className="bg-phase10-cover-blue drop-shadow-lg font-quicksand h-[225px] overflow-hidden rounded-[8px] select-none text-white w-[150px]">
             <div className='flex flex-col font-bold items-center left-[8px] relative rotate-[80deg] text-[3rem] top-[45px]'>
               <span>Phase</span>
@@ -30,6 +30,15 @@ export const GamePage = observer(() => {
             <div className="bg-phase10-card-green h-[10px] left-[-112px] relative rotate-[80deg] top-[-40px] w-[240px]" />
             <div className="bg-phase10-card-purple h-[10px] left-[-126px] relative rotate-[80deg] top-[-40px] w-[240px]" />
           </div>
+          {store.showDraw && (
+            <Button
+              disabled={store.state.drawPileLoading}
+              loading={store.state.drawDeckLoading}
+              onClick={store.onClickDrawFromDeck}
+            >
+              Draw
+            </Button>
+          )}
         </div>
         {store.topCardOnPile ? (
           <div className="flex flex-col gap-y-[8px] items-center">
@@ -37,8 +46,9 @@ export const GamePage = observer(() => {
               card={store.topCardOnPile}
               inHand={false}
             />
-            {store.myTurn && (
+            {store.showDraw && (
               <Button
+                disabled={store.state.drawDeckLoading}
                 loading={store.state.drawPileLoading}
                 onClick={store.onClickDrawFromPile}
               >
