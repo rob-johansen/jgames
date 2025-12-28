@@ -1,13 +1,9 @@
 import { twMerge } from 'tailwind-merge'
-import type React from 'react'
 
 import type { IconProps } from '@/components/icon/Icon'
 
-export const CircleClose = ({
-  className,
-  primary = '#d72b0d'
-}: IconProps): React.JSX.Element => {
-  className = twMerge('h-[16px] shrink-0 w-[16px]', className)
+export const CircleClose = ({ className, primary = '#d72b0d' }: IconProps) => {
+  className = twMerge('h-[20px] shrink-0 w-[20px]', className)
   return (
     <svg className={className} viewBox="0 0 512 512">
       <path

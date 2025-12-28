@@ -166,6 +166,19 @@ export class GameStore {
     }
   }
 
+  notifyDeckDraw = () => {
+    if (this.state.game.turn !== this.me.id) {
+      const player = this.state.game.players.find((player) => player.id === this.state.game.turn)
+      const message = player ? `${player.name} drew a card from the deck` : 'A card was drawn from the deck'
+
+      showToast({
+        duration: 7500,
+        message,
+        type: 'info',
+      })
+    }
+  }
+
   setGame = (game: Game): void => {
     this.state.game = game
     for (const card of this.myCards) {

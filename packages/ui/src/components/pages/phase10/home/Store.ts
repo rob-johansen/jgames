@@ -53,7 +53,7 @@ export class HomeStore {
       const message: WebSocketMessage = JSON.parse(event.data)
 
       if (message.type === MessageType.DECK_DRAW) {
-        // TODO: Notify everyone that the turn player drew from the deck (show a blue, info toast)
+        this.root.game.notifyDeckDraw()
       }
 
       if (message.type === MessageType.JOIN) {
