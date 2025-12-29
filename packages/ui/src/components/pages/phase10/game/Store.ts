@@ -2,15 +2,20 @@ import { makeAutoObservable, runInAction } from 'mobx'
 import { v4 as uuid } from 'uuid'
 
 import { showToast } from '@/components/toast/Toast'
+import { SKIP, WILD } from '@jgames/types'
 import type { Card, Game, Player } from '@jgames/types'
 import type { RootStore } from '@/providers/phase10/RootStore'
 
 type State = {
   arranging: boolean
+  discarding: boolean
+  discardingCard?: Card
   drawDeckLoading: boolean
   drawPileLoading: boolean
   game: Game
   movingCard?: string
+  showDrawModal: boolean
+  showNotTurnModal: boolean
 }
 
 export class GameStore {
@@ -22,14 +27,30 @@ export class GameStore {
     this.root = root
     this.state = {
       arranging: false,
+      discarding: false,
       drawDeckLoading: false,
       drawPileLoading: false,
       game: {} as Game,
       movingCard: '',
+      showDrawModal: false,
+      showNotTurnModal: false,
     }
     this.ws = root.home.ws
 
     makeAutoObservable(this, { ws: false })
+  }
+
+  get canDiscard(): boolean {
+    return this.myTurn && !this.state.game.draw
+  }
+
+  get discardDescription(): string {
+    const card = this.state.discardingCard
+    if (!card) return ''
+
+    if (card.value === SKIP) return 'SKIP'
+    if (card.value === WILD) return 'WILD'
+    return `${card.color} ${card.value}`
   }
 
   get me(): Player {
@@ -40,9 +61,16 @@ export class GameStore {
     return this.me.cards as Card[]
   }
 
+  get myTurn(): boolean {
+    return this.state.game.turn === this.me.id
+  }
+
+  get scaling(): boolean {
+    return this.state.arranging || this.state.discarding
+  }
+
   get showDraw(): boolean {
-    const turn = this.state.game.turn
-    return typeof turn === 'string' && turn === this.me.id && this.state.game.draw
+    return this.myTurn && this.state.game.draw
   }
 
   get topCardOnPile(): Card | undefined {
@@ -63,6 +91,8 @@ export class GameStore {
   onClickCard = (card: Card): void => {
     if (this.state.arranging) {
       this.state.movingCard = card.id
+    } else if (this.state.discarding) {
+      this.state.discardingCard = card
     }
   }
 
@@ -132,6 +162,36 @@ export class GameStore {
     })
   }
 
+  onCloseDrawModal = () => {
+    this.state.showDrawModal = false
+  }
+
+  onCloseDiscardConfirm = () => {
+    this.state.discardingCard = undefined
+  }
+
+  onCloseNotTurnModal = () => {
+    this.state.showNotTurnModal = false
+  }
+
+  onEscapeDiscardConfirm = (open: boolean) => {
+    if (!open) {
+      this.state.discardingCard = undefined
+    }
+  }
+
+  onEscapeDraw = (open: boolean) => {
+    if (!open) {
+      this.state.showDrawModal = false
+    }
+  }
+
+  onEscapeNotTurnModal = (open: boolean) => {
+    if (!open) {
+      this.state.showNotTurnModal = false
+    }
+  }
+
   onKeyDown = (event: KeyboardEvent): void => {
     if (!this.state.movingCard) return
 
@@ -192,12 +252,35 @@ export class GameStore {
 
   toggleArranging = (): void => {
     this.state.arranging = !this.state.arranging
+    this.state.discarding = false
+    this.state.discardingCard = undefined
 
     if (this.state.arranging) {
       window.addEventListener('keydown', this.onKeyDown)
     } else {
       this.state.movingCard = ''
       window.removeEventListener('keydown', this.onKeyDown)
+    }
+  }
+
+  toggleDiscarding = () => {
+    this.state.arranging = false
+    this.state.movingCard = ''
+
+    if (!this.myTurn) {
+      this.state.showNotTurnModal = true
+      return
+    }
+
+    if (!this.canDiscard) {
+      this.state.showDrawModal = true
+      return
+    }
+
+    this.state.discarding = !this.state.discarding
+
+    if (!this.state.discarding) {
+      this.state.discardingCard = undefined
     }
   }
 }

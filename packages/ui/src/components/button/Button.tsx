@@ -24,13 +24,10 @@ export const Button = ({
   const styles = twMerge(
     `
       active:opacity-80
-      bg-gradient-to-br
       disabled:active:opacity-50
       disabled:hover:opacity-50
       flex
       font-bold
-      from-[#4568dc]
-      from-[-0.27%]
       gap-[8px]
       h-[36px]
       hover:opacity-90
@@ -44,18 +41,24 @@ export const Button = ({
       text-[1rem]
       text-white
       tracking-[0.5px]
+      w-fit
+    `,
+    variant === 'primary' &&
+    `
+      bg-gradient-to-br
+      from-[#4568dc]
+      from-[-0.27%]
       to-[#b06ab3]
       to-[134.14%]
-      w-fit
     `,
     variant === 'secondary' &&
     `
-      active:bg-blue/[0.2]
-      bg-transparent
+      active:bg-[#e2dff3]/[0.875]
+      bg-white
       border
       border-blue
-      hover:bg-blue/[0.1]
-      text-blue
+      hover:bg-[#efedf8]/[0.625]
+      text-[#4568dc]
     `,
     disabled &&
     `

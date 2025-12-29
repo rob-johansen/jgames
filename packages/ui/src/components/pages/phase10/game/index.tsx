@@ -5,6 +5,7 @@ import { useContext, useEffect } from 'react'
 
 import { Button } from '@/components/button/Button'
 import { Card } from '@/components/phase10/Card'
+import { Modal } from '@/components/Modal'
 import { StoreContext } from '@/providers/phase10/StoreContext'
 
 export const GamePage = observer(() => {
@@ -60,28 +61,88 @@ export const GamePage = observer(() => {
           <div className="border border-[#aaaaaa] h-[225px] rounded-[8px] w-[150px]" />
         )}
       </div>
-      <div className="absolute bottom-[50px] flex h-[225px] left-0 m-auto right-0" style={{ width: store.myCards.length * 117 }}>
+      <div className="absolute bottom-[60px] flex h-[225px] left-0 m-auto right-0" style={{ width: store.myCards.length * 117 }}>
         {(store.myCards).map((card, index) => {
           return (
             <Card
-              arranging={store.state.arranging}
               card={card}
               inHand={true}
               key={card.id}
               moving={store.showMoving(card.id)}
               onClick={() => store.onClickCard(card)}
+              scaling={store.scaling}
               style={{ left: index * 114 }}
             />
           )
         })}
-        <Button
-          className="absolute bottom-[-42px] right-[0]"
-          disabled={store.state.drawPileLoading}
-          onClick={store.toggleArranging}
-        >
-          {store.state.arranging ? 'Stop Arranging' : 'Arrange Cards'}
-        </Button>
+        <div className="absolute bottom-[-48px] flex gap-x-[8px] right-[0]">
+          <Button
+            disabled={store.state.drawPileLoading}
+            onClick={store.toggleArranging}
+          >
+            {store.state.arranging ? 'Stop Arranging' : 'Arrange Cards'}
+          </Button>
+          <Button
+            disabled={store.state.drawPileLoading}
+            onClick={store.toggleDiscarding}
+          >
+            {store.state.discarding ? 'Cancel Discard' : 'Discard'}
+          </Button>
+        </div>
       </div>
+      {store.state.showNotTurnModal && (
+        <Modal
+          onEscape={store.onEscapeNotTurnModal}
+          title="It’s not your turn!"
+        >
+          <div className="flex justify-end">
+            <Button onClick={store.onCloseNotTurnModal}>
+              OK
+            </Button>
+          </div>
+        </Modal>
+      )}
+      {store.state.showDrawModal && (
+        <Modal
+          onEscape={store.onEscapeDraw}
+          title="Draw First"
+        >
+          You must draw before you can discard!
+          <div className="flex justify-end mt-[12px]">
+            <Button onClick={store.onCloseDrawModal}>
+              OK
+            </Button>
+          </div>
+        </Modal>
+      )}
+      {store.state.discardingCard && (
+        <Modal
+          className="min-w-[300px]"
+          onEscape={store.onEscapeDiscardConfirm}
+          title={`Discard a ${store.discardDescription}?`}
+        >
+          <div className="flex justify-center">
+            <Card
+              card={store.state.discardingCard}
+              inHand={false}
+              moving={false}
+              onClick={() => {}}
+              scaling={false}
+            />
+          </div>
+          <div className="flex gap-x-[12px] justify-end mt-[28px]">
+            <Button
+              onClick={store.onCloseDiscardConfirm}
+              variant="secondary"
+            >
+              Cancel
+            </Button>
+            <Button>
+              Discard
+            </Button>
+          </div>
+        </Modal>
+      )}
     </div>
   )
 })
