@@ -19,3 +19,15 @@ export const insertGame = async (game: Omit<Game, 'id'>, client: PoolClient): Pr
   const result: QueryResult<{ id: string }> = await client.query(sql, [deck, game.draw, pile, players, results, game.turn])
   return result.rows[0].id
 }
+
+export const selectGame = async (gameId: string, userId: string, client: PoolClient): Promise<Game | undefined> => {
+  const sql = `
+    SELECT *
+    FROM phase10.games
+    WHERE id = $1
+    AND turn = $2
+  `
+
+  const result: QueryResult<Game> = await client.query(sql, [gameId, userId])
+  return result.rows[0]
+}

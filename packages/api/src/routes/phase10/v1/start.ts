@@ -2,7 +2,7 @@ import { Router } from 'express'
 import type { PoolClient } from 'pg'
 import type { Response } from 'express'
 
-import { DECK, shuffle } from '@/libs/cards'
+import { DECK, shuffle } from '@/libs/card'
 import { deleteWaitingPlayers } from '@/data/queries/phase10/waiting'
 import { endTxn, startTxn } from '@/data/db'
 import { insertGame } from '@/data/queries/phase10/game'
@@ -32,11 +32,14 @@ router.post('/', async (
     shuffle(deck)
 
     for (let i = 1; i <= 10; i++) {
+      let number = 1
+
       for (const player of players) {
         if (!Array.isArray(player.cards)) {
           player.cards = []
         }
         player.cards.push(deck.shift() as Card)
+        player.number = number++
         player.phase = 1
         player.played = []
         player.points = 0

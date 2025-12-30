@@ -3,9 +3,10 @@ import express from 'express'
 import type { NextFunction, Response } from 'express'
 
 import '@/wss/wss' // This import causes the WebSocket server to start up.
-import { getFunnyError } from '@/libs/errors'
+import { getFunnyError } from '@/libs/error'
 import { logger } from '@/logger'
 import { RequestError } from '@jgames/types'
+import { router as phase10DiscardV1 } from '@/routes/phase10/v1/discard'
 import { router as phase10DrawV1 } from '@/routes/phase10/v1/draw'
 import { router as phase10JoinV1 } from '@/routes/phase10/v1/join'
 import { router as phase10StartV1 } from '@/routes/phase10/v1/start'
@@ -28,6 +29,7 @@ api.use((_req: ApiRequest, res: Response, next: NextFunction): void => {
 })
 
 // API Routes
+api.use('/api/phase10/v1/discard', phase10DiscardV1)
 api.use('/api/phase10/v1/draw', phase10DrawV1)
 api.use('/api/phase10/v1/join', phase10JoinV1)
 api.use('/api/phase10/v1/start', phase10StartV1)
@@ -48,7 +50,7 @@ api.use((err: RequestError, _req: ApiRequest, res: Response, _next: NextFunction
     return
   }
 
-  logger.error('500 error: ', err)
+  logger.error('500 error: %O', err)
   res.status(500).send({error: getFunnyError()})
 })
 
