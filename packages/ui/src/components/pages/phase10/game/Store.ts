@@ -10,6 +10,7 @@ type State = {
   arranging: boolean
   discarding: boolean
   discardingCard?: Card
+  discardLoading: boolean
   drawDeckLoading: boolean
   drawPileLoading: boolean
   game: Game
@@ -28,6 +29,7 @@ export class GameStore {
     this.state = {
       arranging: false,
       discarding: false,
+      discardLoading: false,
       drawDeckLoading: false,
       drawPileLoading: false,
       game: {} as Game,
@@ -147,8 +149,8 @@ export class GameStore {
     if (response.ok) {
       runInAction(() => {
         this.state.game.draw = false
-        // NOTE: The card is added to the player's hand in the `drawFromPile()` method above,
-        //       which is called when `MessageType.PILE_DRAW` arrives via WebSocket.
+        // NOTE: The card is added to the player's hand in the `drawFromPile()` method
+        // above, which is called when `MessageType.PILE_DRAW` arrives via WebSocket.
       })
     } else {
       showToast({
@@ -172,6 +174,53 @@ export class GameStore {
 
   onCloseNotTurnModal = () => {
     this.state.showNotTurnModal = false
+  }
+
+  onConfirmDiscard = async (): Promise<void> => {
+    this.state.discardLoading = true
+    const discardId = this.state.discardingCard?.id
+
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/phase10/v1/discard`, {
+      body: JSON.stringify({
+        card: {
+          color: this.state.discardingCard?.color,
+          value: this.state.discardingCard?.value,
+        },
+        gameId: this.state.game.id,
+        userId: this.root.home.userId,
+      }),
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      method: 'POST',
+      mode: 'cors'
+    })
+
+    if (response.ok) {
+      const cards = this.myCards
+      let index = -1
+
+      for (let i = 0; i < cards.length; i++) {
+        const card = cards[i]
+        if (card.id === discardId) {
+          index = i
+          break
+        }
+      }
+
+      if (index !== -1) {
+        runInAction(() => {
+          cards.splice(index, 1)
+        })
+      }
+
+      // NOTE: The pile (and other game state) is updated by the `updateAfterDiscard()`
+      // method below, which is called when `MessageType.DISCARD` arrives via WebSocket.
+    } else {
+      showToast({
+        message: 'There was an error discarding',
+        type: 'error',
+      })
+    }
   }
 
   onEscapeDiscardConfirm = (open: boolean) => {
@@ -282,5 +331,16 @@ export class GameStore {
     if (!this.state.discarding) {
       this.state.discardingCard = undefined
     }
+  }
+
+  updateAfterDiscard = (card: Card, turn: string) => {
+    card.id = uuid()
+    this.state.game.draw = true
+    this.state.game.pile.unshift(card)
+    this.state.game.turn = turn
+
+    this.state.discarding = false
+    this.state.discardingCard = undefined
+    this.state.discardLoading = false
   }
 }

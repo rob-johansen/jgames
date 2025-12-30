@@ -5,6 +5,7 @@ import type { Response } from 'express'
 import { discard } from '@/data/queries/phase10/discard'
 import { endTxn, startTxn } from '@/data/db'
 import { getNextTurn } from '@/libs/turn'
+import { logger } from '@/logger'
 import { MessageType } from '@jgames/types'
 import { RequestError } from '@jgames/types'
 import { selectGame } from '@/data/queries/phase10/game'
@@ -35,12 +36,19 @@ router.post('/', async (
 
     const turn = getNextTurn(userId, game.players)
     if (!turn) {
-      throw new RequestError('There was an error discarding')
+      throw new RequestError('')
     }
 
-    commit = await discard({ card, client, gameId, turn })
+    // TODO: Remove the card from the requester's hand!
+
+    try {
+      commit = await discard({card, client, gameId, turn})
+    } catch (err) {
+      logger.error('Error discarding: %O', err)
+    }
+
     if (!commit) {
-      throw new RequestError('There was an error discarding')
+      throw new RequestError('')
     }
 
     res.status(204).end()

@@ -14,7 +14,8 @@ export const discard = async (props: DiscardProps): Promise<boolean> => {
 
   const sql = `
     UPDATE phase10.games
-    SET pile = jsonb_build_array(jsonb_build_object('color', $1, 'value', $2)) || pile,
+    SET draw = TRUE,
+        pile = jsonb_build_array(jsonb_build_object('color', $1::text, 'value', $2::integer)) || pile,
         turn = $3
     WHERE id = $4
   `

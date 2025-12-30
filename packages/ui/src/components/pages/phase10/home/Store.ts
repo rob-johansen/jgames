@@ -3,7 +3,7 @@ import { makeAutoObservable, runInAction } from 'mobx'
 import { isBrowser } from '@/libs/browser'
 import { MessageType } from '@jgames/types'
 import { showToast } from '@/components/toast/Toast'
-import type { Game, WebSocketMessage } from '@jgames/types'
+import type { Card, Game, WebSocketMessage } from '@jgames/types'
 import type { RootStore } from '@/providers/phase10/RootStore'
 
 type State = {
@@ -54,6 +54,12 @@ export class HomeStore {
 
       if (message.type === MessageType.DECK_DRAW) {
         this.root.game.notifyDeckDraw()
+      }
+
+      if (message.type === MessageType.DISCARD) {
+        const card = message.data.card as Card
+        const turn = message.data.turn as string
+        this.root.game.updateAfterDiscard(card, turn)
       }
 
       if (message.type === MessageType.JOIN) {
