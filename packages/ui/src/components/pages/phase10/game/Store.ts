@@ -8,6 +8,7 @@ import type { RootStore } from '@/providers/phase10/RootStore'
 
 type State = {
   arranging: boolean
+  choosingSkip: boolean
   discarding: boolean
   discardingCard?: Card
   discardLoading: boolean
@@ -28,6 +29,7 @@ export class GameStore {
     this.root = root
     this.state = {
       arranging: false,
+      choosingSkip: false,
       discarding: false,
       discardLoading: false,
       drawDeckLoading: false,
@@ -94,6 +96,7 @@ export class GameStore {
     if (this.state.arranging) {
       this.state.movingCard = card.id
     } else if (this.state.discarding) {
+      this.state.choosingSkip = card.value === SKIP
       this.state.discardingCard = card
     }
   }

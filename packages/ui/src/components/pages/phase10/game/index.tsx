@@ -5,6 +5,7 @@ import { useContext, useEffect } from 'react'
 
 import { Button } from '@/components/button/Button'
 import { Card } from '@/components/phase10/Card'
+import { ChooseSkip } from '@/components/phase10/modals/ChooseSkip'
 import { Modal } from '@/components/Modal'
 import { StoreContext } from '@/providers/phase10/StoreContext'
 
@@ -116,35 +117,42 @@ export const GamePage = observer(() => {
         </Modal>
       )}
       {store.state.discardingCard && (
-        <Modal
-          className="min-w-[300px]"
-          onEscape={store.onEscapeDiscardConfirm}
-          title={`Discard a ${store.discardDescription}?`}
-        >
-          <div className="flex justify-center">
-            <Card
-              card={store.state.discardingCard}
-              inHand={false}
-              moving={false}
-              onClick={() => {}}
-              scaling={false}
-            />
-          </div>
-          <div className="flex gap-x-[12px] justify-end mt-[28px]">
-            <Button
-              onClick={store.onCloseDiscardConfirm}
-              variant="secondary"
+        <>
+          {store.state.choosingSkip ? (
+            <ChooseSkip />
+          ) : (
+            <Modal
+              className="min-w-[300px]"
+              onEscape={store.onEscapeDiscardConfirm}
+              title={`Discard a ${store.discardDescription}?`}
             >
-              Cancel
-            </Button>
-            <Button
-              onClick={store.onConfirmDiscard}
-              loading={store.state.discardLoading}
-            >
-              Discard
-            </Button>
-          </div>
-        </Modal>
+              <div className="flex justify-center">
+                <Card
+                  card={store.state.discardingCard}
+                  inHand={false}
+                  moving={false}
+                  onClick={() => {
+                  }}
+                  scaling={false}
+                />
+              </div>
+              <div className="flex gap-x-[12px] justify-end mt-[28px]">
+                <Button
+                  onClick={store.onCloseDiscardConfirm}
+                  variant="secondary"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={store.onConfirmDiscard}
+                  loading={store.state.discardLoading}
+                >
+                  Discard
+                </Button>
+              </div>
+            </Modal>
+          )}
+        </>
       )}
     </div>
   )
