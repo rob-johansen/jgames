@@ -1,9 +1,14 @@
 import { Router } from 'express'
+import type { PoolClient } from 'pg'
 import type { Response } from 'express'
 
+import { addCard } from '@/libs/hand'
 import { drawFromDeck, drawFromPile } from '@/data/queries/phase10/draw'
+import { endTxn, startTxn } from '@/data/db'
 import { MessageType } from '@jgames/types'
 import { RequestError } from '@jgames/types'
+import { selectGame } from '@/data/queries/phase10/game'
+import { updatePlayers } from '@/data/queries/phase10/players'
 import { validateId } from '@jgames/validations'
 import { wss } from '@/wss/wss'
 import type { ApiRequest, Card } from '@jgames/types'
@@ -17,12 +22,33 @@ router.get('/deck', async (
   const gameId = validateId(req.query.gameId)
   const turnId = validateId(req.query.turnId)
 
-  const card = await drawFromDeck(gameId, turnId)
-  if (!card) throw new RequestError('There was a problem drawing from the deck.')
+  let client: PoolClient | undefined
+  let commit = false
 
-  res.status(200).send(card)
+  try {
+    client = await startTxn()
 
-  wss.sendToAll({ data: {}, type: MessageType.DECK_DRAW })
+    const card = await drawFromDeck(gameId, turnId, client)
+    if (!card) throw new RequestError('There was a problem drawing from the deck.')
+
+    const game = await selectGame(gameId, turnId, client)
+    if (!game) {
+      throw new RequestError('')
+    }
+
+    addCard(card, turnId, game.players)
+
+    commit = await updatePlayers(game, client)
+    if (!commit) {
+      throw new RequestError('')
+    }
+
+    res.status(200).send(card)
+
+    wss.sendToAll({ data: {}, type: MessageType.DECK_DRAW })
+  } finally {
+    await endTxn(client, { commit })
+  }
 })
 
 router.get('/pile', async (
@@ -32,10 +58,31 @@ router.get('/pile', async (
   const gameId = validateId(req.query.gameId)
   const turnId = validateId(req.query.turnId)
 
-  const success = await drawFromPile(gameId, turnId)
-  if (!success) throw new RequestError('There was a problem drawing from the pile.')
+  let client: PoolClient | undefined
+  let commit = false
 
-  res.status(204).end()
+  try {
+    client = await startTxn()
 
-  wss.sendToAll({ data: {}, type: MessageType.PILE_DRAW })
+    const card = await drawFromPile(gameId, turnId, client)
+    if (!card) throw new RequestError('There was a problem drawing from the pile.')
+
+    const game = await selectGame(gameId, turnId, client)
+    if (!game) {
+      throw new RequestError('')
+    }
+
+    addCard(card, turnId, game.players)
+
+    commit = await updatePlayers(game, client)
+    if (!commit) {
+      throw new RequestError('')
+    }
+
+    res.status(204).end()
+
+    wss.sendToAll({ data: {}, type: MessageType.PILE_DRAW })
+  } finally {
+    await endTxn(client, { commit })
+  }
 })

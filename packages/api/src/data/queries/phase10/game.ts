@@ -1,5 +1,4 @@
-import { PoolClient } from 'pg'
-import type { QueryResult } from 'pg'
+import type { PoolClient, QueryResult } from 'pg'
 
 import type { Game } from '@jgames/types'
 

@@ -259,6 +259,8 @@ export class GameStore {
       newIndex = currentIndex - 1
     } else if (event.key === 'ArrowRight') {
       newIndex = currentIndex + 1
+    } else {
+      return
     }
 
     if (currentIndex >= 0) {

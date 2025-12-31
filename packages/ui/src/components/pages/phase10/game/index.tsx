@@ -80,7 +80,7 @@ export const GamePage = observer(() => {
             disabled={store.state.drawPileLoading}
             onClick={store.toggleArranging}
           >
-            {store.state.arranging ? 'Stop Arranging' : 'Arrange Cards'}
+            {store.state.arranging ? 'Stop Arranging' : 'Arrange'}
           </Button>
           <Button
             disabled={store.state.drawPileLoading}

@@ -2,6 +2,18 @@ import { RequestError } from '@jgames/types'
 import type { Card, Player } from '@jgames/types'
 
 /**
+ * Adds a card to the hand of a given player (intended for draw)
+ */
+export const addCard = (card: Card, userId: string, players: Player[]) => {
+  const player = players.find((p) => p.id === userId)
+  if (!player) {
+    throw new RequestError('Error adding card to player’s hand (player not found)')
+  }
+  const cards = player.cards as Card[]
+  cards.push(card)
+}
+
+/**
  * Removes a card from the hand of a given player (intended for discard)
  */
 export const removeCard = (card: Card, userId: string, players: Player[]) => {
