@@ -131,8 +131,7 @@ export const GamePage = observer(() => {
                   card={store.state.discardingCard}
                   inHand={false}
                   moving={false}
-                  onClick={() => {
-                  }}
+                  onClick={() => {}}
                   scaling={false}
                 />
               </div>

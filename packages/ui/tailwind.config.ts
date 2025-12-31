@@ -29,7 +29,7 @@ export default {
           cover: {
             blue: '#063684',
           },
-        }
+        },
       },
     },
     fontFamily: {
