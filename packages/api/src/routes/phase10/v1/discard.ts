@@ -7,6 +7,7 @@ import { endTxn, startTxn } from '@/data/db'
 import { getNextTurn } from '@/libs/turn'
 import { logger } from '@/logger'
 import { MessageType } from '@jgames/types'
+import { removeCard } from '@/libs/hand'
 import { RequestError } from '@jgames/types'
 import { selectGame } from '@/data/queries/phase10/game'
 import { validateCard, validateId } from '@jgames/validations'
@@ -39,10 +40,10 @@ router.post('/', async (
       throw new RequestError('')
     }
 
-    // TODO: Remove the card from the requester's hand!
+    removeCard(card, userId, game.players)
 
     try {
-      commit = await discard({card, client, gameId, turn})
+      commit = await discard({ card, client, game, turn })
     } catch (err) {
       logger.error('Error discarding: %O', err)
     }
