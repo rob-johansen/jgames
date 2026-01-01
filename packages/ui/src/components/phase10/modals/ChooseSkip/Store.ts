@@ -6,6 +6,7 @@ import type { RootStore } from '@/providers/phase10/RootStore'
 type State = {
   checked: string
   error: boolean
+  loading: boolean
 }
 
 export class ChooseSkipStore {
@@ -17,6 +18,7 @@ export class ChooseSkipStore {
     this.state = {
       checked: '',
       error: false,
+      loading: false,
     }
     makeAutoObservable(this)
   }
@@ -35,6 +37,14 @@ export class ChooseSkipStore {
 
   onChange = (playerId: string) => {
     this.state.checked = playerId
+    this.state.error = false
+  }
+
+  onClickSkip = async () => {
+    if (!this.state.checked) {
+      this.state.error = true
+      return
+    }
   }
 
   onEscape = (open: boolean) => {

@@ -143,8 +143,8 @@ export const GamePage = observer(() => {
                   Cancel
                 </Button>
                 <Button
-                  onClick={store.onConfirmDiscard}
                   loading={store.state.discardLoading}
+                  onClick={store.onConfirmDiscard}
                 >
                   Discard
                 </Button>

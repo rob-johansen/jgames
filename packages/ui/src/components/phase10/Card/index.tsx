@@ -19,7 +19,7 @@ export const Card = observer((props: Props) => {
 
   return (
     <div
-      className={`${inHand ? 'absolute bottom-0' : ''} bg-white border border-[#aaaaaa] h-[225px] drop-shadow-lg p-[8px] rounded-[8px] select-none text-white w-[150px] ${scaling && 'cursor-pointer hover:scale-110'}`}
+      className={`${inHand ? 'absolute bottom-0' : 'relative'} bg-white border border-[#aaaaaa] h-[225px] drop-shadow-lg p-[8px] rounded-[8px] select-none text-white w-[150px] ${scaling && 'cursor-pointer hover:scale-110'}`}
       onClick={() => {
         if (onClick) onClick(card)
       }}

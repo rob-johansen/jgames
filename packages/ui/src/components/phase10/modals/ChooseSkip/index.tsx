@@ -4,6 +4,7 @@ import { useContext, useState } from 'react'
 import { Button } from '@/components/button/Button'
 import { Card } from '@/components/phase10/Card'
 import { ChooseSkipStore } from './Store'
+import { Error } from '@/components/Error'
 import { Modal } from '@/components/Modal'
 import { RadioButton } from '@/components/RadioButton'
 import { SKIP } from '@jgames/types'
@@ -45,6 +46,9 @@ export const ChooseSkip = observer(() => {
         </div>
       </div>
       <div className="flex gap-x-[12px] justify-end mt-[20px]">
+        <Error className={`${store.state.error ? 'visible' : 'invisible'}`}>
+          Please choose a player
+        </Error>
         <Button
           onClick={() => store.onEscape(false)}
           variant="secondary"
@@ -52,8 +56,8 @@ export const ChooseSkip = observer(() => {
           Cancel
         </Button>
         <Button
-          // onClick={store.onConfirmDiscard}
-          // loading={store.state.discardLoading}
+          loading={store.state.loading}
+          onClick={store.onClickSkip}
         >
           Skip
         </Button>
