@@ -79,6 +79,12 @@ export class HomeStore {
         })
       }
 
+      if (message.type === MessageType.SKIP) {
+        const skipId = message.data.skipId as string
+        const turn = message.data.turn as string
+        this.root.game.updateAfterSkip(skipId, turn)
+      }
+
       if (message.type === MessageType.START) {
         const game = message.data.game as Game
 

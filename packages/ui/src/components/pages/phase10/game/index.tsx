@@ -7,6 +7,7 @@ import { Button } from '@/components/button/Button'
 import { Card } from '@/components/phase10/Card'
 import { ChooseSkip } from '@/components/phase10/modals/ChooseSkip'
 import { Modal } from '@/components/Modal'
+import { SKIP } from '@jgames/types'
 import { StoreContext } from '@/providers/phase10/StoreContext'
 
 export const GamePage = observer(() => {
@@ -62,6 +63,17 @@ export const GamePage = observer(() => {
           <div className="border border-[#aaaaaa] h-[225px] rounded-[8px] w-[150px]" />
         )}
       </div>
+      {store.me.skipped && (
+        <div className="absolute bottom-[226px] left-0 m-auto right-0 rotate-90 w-[225px]">
+          <Card
+            card={{ color: '', value: SKIP }}
+            inHand={false}
+            moving={false}
+            onClick={() => {}}
+            scaling={false}
+          />
+        </div>
+      )}
       <div className="absolute bottom-[60px] flex h-[225px] left-0 m-auto right-0" style={{ width: store.myCards.length * 117 }}>
         {(store.myCards).map((card, index) => {
           return (

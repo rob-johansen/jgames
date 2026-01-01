@@ -3,5 +3,6 @@ export enum MessageType {
   DISCARD = 'DISCARD',
   JOIN = 'JOIN',
   PILE_DRAW = 'PILE_DRAW',
+  SKIP = 'SKIP',
   START = 'START',
 }

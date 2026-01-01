@@ -13,3 +13,14 @@ export const getNextTurn = (currentTurn: string, players: Player[]): string | un
 
   return map.get(next)
 }
+
+export const skipPlayer = (playerId: string, players: Player[]): boolean => {
+  for (const player of players) {
+    if (playerId === player.id) {
+      player.skipped = true
+      return true
+    }
+  }
+
+  return false
+}

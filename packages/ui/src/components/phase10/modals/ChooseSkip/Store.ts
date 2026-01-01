@@ -1,12 +1,12 @@
-import { makeAutoObservable } from 'mobx'
+import { makeAutoObservable, runInAction } from 'mobx'
 
+import { showToast } from '@/components/toast/Toast'
 import type { Player } from '@jgames/types'
 import type { RootStore } from '@/providers/phase10/RootStore'
 
 type State = {
   checked: string
   error: boolean
-  loading: boolean
 }
 
 export class ChooseSkipStore {
@@ -18,7 +18,6 @@ export class ChooseSkipStore {
     this.state = {
       checked: '',
       error: false,
-      loading: false,
     }
     makeAutoObservable(this)
   }
@@ -45,10 +44,52 @@ export class ChooseSkipStore {
       this.state.error = true
       return
     }
+
+    this.root.game.state.discardLoading = true
+    const discardId = this.root.game.state.discardingCard?.id
+
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/phase10/v1/skip`, {
+      body: JSON.stringify({
+        gameId: this.root.game.state.game.id,
+        skipId: this.state.checked,
+        userId: this.root.home.userId,
+      }),
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      method: 'POST',
+      mode: 'cors'
+    })
+
+    if (response.ok) {
+      const cards = this.root.game.myCards
+      let index = -1
+
+      for (let i = 0; i < cards.length; i++) {
+        const card = cards[i]
+        if (card.id === discardId) {
+          index = i
+          break
+        }
+      }
+
+      if (index !== -1) {
+        runInAction(() => {
+          cards.splice(index, 1)
+        })
+      }
+
+      // NOTE: The pile (and other game state) is updated by the `updateAfterSkip()` method
+      // in the GameStore, which is called when `MessageType.SKIP` arrives via WebSocket.
+    } else {
+      showToast({
+        message: 'There was an error skipping',
+        type: 'error',
+      })
+    }
   }
 
   onEscape = (open: boolean) => {
-    if (!open) {
+    if (!open && !this.root.game.state.discardLoading) {
       this.root.game.state.choosingSkip = false
       this.root.game.state.discardingCard = undefined
     }

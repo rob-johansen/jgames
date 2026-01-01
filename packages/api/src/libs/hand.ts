@@ -1,6 +1,9 @@
 import { RequestError } from '@jgames/types'
 import type { Card, Player } from '@jgames/types'
 
+// TODO: The functions in this file probably shouldn't throw `RequestError` themselves. Instead, they
+//       should maybe return something that tells the caller what happened (and the caller can throw).
+
 /**
  * Adds a card to the hand of a given player (intended for draw)
  */

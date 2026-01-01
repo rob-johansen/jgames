@@ -50,13 +50,14 @@ export const ChooseSkip = observer(() => {
           Please choose a player
         </Error>
         <Button
+          disabled={store.root.game.state.discardLoading}
           onClick={() => store.onEscape(false)}
           variant="secondary"
         >
           Cancel
         </Button>
         <Button
-          loading={store.state.loading}
+          loading={store.root.game.state.discardLoading}
           onClick={store.onClickSkip}
         >
           Skip

@@ -74,7 +74,7 @@ export class GameStore {
   }
 
   get showDraw(): boolean {
-    return this.myTurn && this.state.game.draw
+    return this.myTurn && this.state.game.draw && !this.me.skipped
   }
 
   get topCardOnPile(): Card | undefined {
@@ -335,6 +335,22 @@ export class GameStore {
 
     if (!this.state.discarding) {
       this.state.discardingCard = undefined
+    }
+  }
+
+  updateAfterSkip = (skipId: string, turn: string) => {
+    this.state.game.draw = true
+    this.state.game.turn = turn
+
+    this.state.choosingSkip = false
+    this.state.discarding = false
+    this.state.discardingCard = undefined
+    this.state.discardLoading = false
+
+    for (const player of this.state.game.players) {
+      if (player.id === skipId) {
+        player.skipped = true
+      }
     }
   }
 

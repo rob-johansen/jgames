@@ -71,4 +71,9 @@ equivalent to what JavaScript's `Date.now()` function produces:
 time  bigint  NOT NULL DEFAULT trunc(EXTRACT(EPOCH FROM now()) * 1000)
 ```
 
+### Add SKIP to Deck
 
+```sql
+UPDATE phase10.games
+SET deck = jsonb_build_array(jsonb_build_object('color', '', 'value', 13)) || deck;
+```
