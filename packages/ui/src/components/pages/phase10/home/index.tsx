@@ -7,7 +7,7 @@ import { Button } from '@/components/button/Button'
 import { GamePage } from '@/components/pages/phase10/game'
 import { StoreContext } from '@/providers/phase10/StoreContext'
 import { TextField } from '@/components/text-field/TextField'
-import { Toast } from '@/components/toast/Toast'
+import { Toast } from '@/components/Toast'
 
 export const Home = observer(() => {
   const { home: store } = useContext(StoreContext)

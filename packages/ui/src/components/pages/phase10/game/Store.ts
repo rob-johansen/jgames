@@ -1,7 +1,7 @@
 import { makeAutoObservable, runInAction } from 'mobx'
 import { v4 as uuid } from 'uuid'
 
-import { showToast } from '@/components/toast/Toast'
+import { showToast } from '@/components/Toast'
 import { SKIP, WILD } from '@jgames/types'
 import type { Card, Game, Player } from '@jgames/types'
 import type { RootStore } from '@/providers/phase10/RootStore'

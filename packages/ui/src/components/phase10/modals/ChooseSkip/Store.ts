@@ -1,6 +1,6 @@
 import { makeAutoObservable, runInAction } from 'mobx'
 
-import { showToast } from '@/components/toast/Toast'
+import { showToast } from '@/components/Toast'
 import type { Player } from '@jgames/types'
 import type { RootStore } from '@/providers/phase10/RootStore'
 

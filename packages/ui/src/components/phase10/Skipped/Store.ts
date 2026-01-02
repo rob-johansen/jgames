@@ -1,6 +1,6 @@
 import { makeAutoObservable } from 'mobx'
 
-import { showToast } from '@/components/toast/Toast'
+import { showToast } from '@/components/Toast'
 import type { RootStore } from '@/providers/phase10/RootStore'
 
 type State = {

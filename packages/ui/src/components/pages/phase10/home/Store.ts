@@ -2,7 +2,7 @@ import { makeAutoObservable, runInAction } from 'mobx'
 
 import { isBrowser } from '@/libs/browser'
 import { MessageType } from '@jgames/types'
-import { showToast } from '@/components/toast/Toast'
+import { showToast } from '@/components/Toast'
 import type { Card, Game, WebSocketMessage } from '@jgames/types'
 import type { RootStore } from '@/providers/phase10/RootStore'
 
@@ -161,7 +161,7 @@ export class HomeStore {
 
     if (response.status === 400) {
       showToast({
-        message: 'You need one more player to start',
+        message: 'You need another player!',
         type: 'error'
       })
 

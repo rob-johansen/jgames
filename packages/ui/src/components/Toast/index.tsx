@@ -27,9 +27,9 @@ export const showToast = ({
     (instance: ToastType) => (
       <div
         className={twMerge(
-          'bg-[#258750]/10 border border-[#258750] flex gap-[10px] h-[50px] items-center px-[24px] rounded-full shadow-[0_8px_12px_rgba(100,100,100,0.16)] w-fit',
-          error && 'bg-[#d72b0d]/10 border-[#d72b0d]',
-          info && 'bg-[#1e90ff]/10 border-[#1e90ff]',
+          'bg-[#e6f1e9] border border-[#258750] flex gap-[10px] h-[50px] items-center px-[24px] rounded-full shadow-[0_8px_12px_rgba(100,100,100,0.16)] w-fit',
+          error && 'bg-[#fbe5e3] border-[#d72b0d]',
+          info && 'bg-[#e5f1ff] border-[#1e90ff]',
           !instance.visible && 'hidden'
         )}
       >
@@ -37,7 +37,7 @@ export const showToast = ({
         <span className={twMerge(
           'font-bold text-[#258750]',
           error && 'text-[#d72b0d]',
-          info && 'text-[#1e90ff]'
+          info && 'text-[#007df6]'
         )}>
           {message}
         </span>
