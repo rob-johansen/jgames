@@ -62,6 +62,12 @@ export class HomeStore {
         this.root.game.updateAfterDiscard(card, turn)
       }
 
+      if (message.type === MessageType.DISCARD_SKIP) {
+        const userId = message.data.userId as string
+        const turn = message.data.turn as string
+        this.root.game.updateAfterDiscardSkip(userId, turn)
+      }
+
       if (message.type === MessageType.JOIN) {
         const players = message.data.players as string[]
 

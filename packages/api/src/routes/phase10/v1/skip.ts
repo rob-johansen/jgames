@@ -2,7 +2,6 @@ import { Router } from 'express'
 import type { PoolClient } from 'pg'
 import type { Response } from 'express'
 
-import { discard } from '@/data/queries/phase10/discard'
 import { endTxn, startTxn } from '@/data/db'
 import { getNextTurn, skipPlayer } from '@/libs/turn'
 import { logger } from '@/logger'
@@ -10,10 +9,11 @@ import { MessageType } from '@jgames/types'
 import { removeCard } from '@/libs/hand'
 import { RequestError } from '@jgames/types'
 import { selectGame } from '@/data/queries/phase10/game'
+import { skip } from '@/data/queries/phase10/skip'
 import { SKIP } from '@jgames/types'
 import { validateId } from '@jgames/validations'
 import { wss } from '@/wss/wss'
-import type { Card, PostRequest } from '@jgames/types'
+import type { PostRequest } from '@jgames/types'
 
 export const router: Router = Router()
 
@@ -46,18 +46,18 @@ router.post('/', async (
       throw new RequestError('')
     }
 
-    const card: Card = { color: '', value: SKIP }
-
-    removeCard(card, userId, game.players)
+    removeCard({ color: '', value: SKIP }, userId, game.players)
 
     if (!skipPlayer(skipId, game.players)) {
       throw new RequestError('', 400)
     }
 
+    game.turn = turn
+
     try {
-      commit = await discard({ card, client, game, turn })
+      commit = await skip(game, client)
     } catch (err) {
-      logger.error('Error discarding SKIP: %O', err)
+      logger.error('Error playing SKIP: %O', err)
     }
 
     if (!commit) {

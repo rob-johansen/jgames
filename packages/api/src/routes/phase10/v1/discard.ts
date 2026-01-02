@@ -105,7 +105,7 @@ router.post('/skip', async (
     }
 
     player.skipped = false
-    game.pile.push({ color: '', value: SKIP })
+    game.pile.unshift({ color: '', value: SKIP })
     game.turn = turn
 
     commit = await discardSkip(game, client)

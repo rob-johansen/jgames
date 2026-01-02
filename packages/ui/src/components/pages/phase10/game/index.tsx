@@ -33,7 +33,7 @@ export const GamePage = observer(() => {
             <div className="bg-phase10-card-green h-[10px] left-[-112px] relative rotate-[80deg] top-[-40px] w-[240px]" />
             <div className="bg-phase10-card-purple h-[10px] left-[-126px] relative rotate-[80deg] top-[-40px] w-[240px]" />
           </div>
-          {store.showDraw && (
+          {store.showDeckDraw && (
             <Button
               disabled={store.state.drawPileLoading}
               loading={store.state.drawDeckLoading}
@@ -49,7 +49,7 @@ export const GamePage = observer(() => {
               card={store.topCardOnPile}
               inHand={false}
             />
-            {store.showDraw && (
+            {store.showPileDraw && (
               <Button
                 disabled={store.state.drawDeckLoading}
                 loading={store.state.drawPileLoading}

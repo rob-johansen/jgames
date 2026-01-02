@@ -78,8 +78,8 @@ export class ChooseSkipStore {
         })
       }
 
-      // NOTE: The pile (and other game state) is updated by the `updateAfterSkip()` method
-      // in the GameStore, which is called when `MessageType.SKIP` arrives via WebSocket.
+      // NOTE: The other game state is updated by the `updateAfterSkip()` method in the
+      // GameStore, which is called when `MessageType.SKIP` arrives via WebSocket.
     } else {
       showToast({
         message: 'There was an error skipping',
