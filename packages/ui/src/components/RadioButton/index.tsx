@@ -28,13 +28,13 @@ export const RadioButton = React.forwardRef(
   ): React.JSX.Element => {
     return (
       <Label
-        className={twMerge('cursor-pointer disabled:hover:text-neutral-400 flex group hover:text-phase10-card-purple items-center text-neutral-800 w-fit', className, props.checked && 'text-phase10-card-purple')}
+        className={twMerge('cursor-pointer flex group hover:text-phase10-card-purple items-center text-neutral-800 w-fit', className, props.checked && 'text-phase10-card-purple', props.disabled && 'cursor-not-allowed hover:text-neutral-500 text-neutral-500')}
         disabled={props.disabled}
         error={error}
       >
         <input
           {...props}
-          className={twMerge('appearance-none border-[1px] border-slate-400 checked:border-phase10-card-purple cursor-pointer disabled:bg-neutral-100 disabled:border-neutral-600 disabled:cursor-not-allowed disabled:shadow-none disabled:hover:border-[none] disabled:group-hover:shadow-[none] group-hover:shadow-[0_0_0_5px_rgba(106,13,173,0.08)] h-[24px] hover:border-brand-400 mr-[12px] outline-none rounded-full transition w-[24px]', error && 'border-error')}
+          className={twMerge('appearance-none border-[1px] border-slate-400 checked:border-phase10-card-purple cursor-pointer disabled:bg-slate-50 disabled:border-slate-300 disabled:cursor-not-allowed disabled:shadow-none disabled:hover:border-[none] disabled:group-hover:shadow-[none] group-hover:shadow-[0_0_0_5px_rgba(106,13,173,0.08)] h-[24px] hover:border-brand-400 mr-[12px] outline-none rounded-full transition w-[24px]', error && 'border-error')}
           ref={ref}
           style={{ backgroundImage: `url("${getCheckIcon(props)}")`, backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}
           type="radio"

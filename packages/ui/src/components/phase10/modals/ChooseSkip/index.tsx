@@ -34,9 +34,10 @@ export const ChooseSkip = observer(() => {
                 <RadioButton
                   checked={store.state.checked === player.id}
                   className={`${index > 0 && 'mt-[20px]'}`}
+                  disabled={player.skipped}
                   error={store.state.error}
                   key={player.id}
-                  label={player.name}
+                  label={`${player.name}${player.skipped ? ' (skipped)' : ''}`}
                   name="skip"
                   onChange={() => store.onChange(player.id)}
                 />
