@@ -66,12 +66,10 @@ router.post('/', async (
 
     res.status(204).end()
 
-    for (const player of game.players) {
-      wss.sendToPlayer(player.id, {
-        data: { skipId, turn },
-        type: MessageType.SKIP
-      })
-    }
+    wss.sendToAll({
+      data: { skipId, turn },
+      type: MessageType.SKIP
+    })
   } finally {
     await endTxn(client, { commit })
   }

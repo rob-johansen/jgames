@@ -26,3 +26,19 @@ export const discard = async (props: DiscardProps): Promise<boolean> => {
   const result = await client.query(sql, [card.color, card.value, players, turn, game.id])
   return result.rowCount === 1
 }
+
+export const discardSkip = async (game: Game, client: PoolClient): Promise<boolean> => {
+  const sql = `
+    UPDATE phase10.games
+    SET pile = $1,
+        players = $2,
+        turn = $3
+    WHERE id = $4
+  `
+
+  const pile = JSON.stringify(game.pile)
+  const players = JSON.stringify(game.players)
+
+  const result = await client.query(sql, [pile, players, game.turn, game.id])
+  return result.rowCount === 1
+}
