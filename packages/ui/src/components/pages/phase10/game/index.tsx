@@ -7,7 +7,7 @@ import { Button } from '@/components/button/Button'
 import { Card } from '@/components/phase10/Card'
 import { ChooseSkip } from '@/components/phase10/modals/ChooseSkip'
 import { Modal } from '@/components/Modal'
-import { SKIP } from '@jgames/types'
+import { Skipped } from '@/components/phase10/Skipped'
 import { StoreContext } from '@/providers/phase10/StoreContext'
 
 export const GamePage = observer(() => {
@@ -64,14 +64,8 @@ export const GamePage = observer(() => {
         )}
       </div>
       {store.me.skipped && (
-        <div className="absolute bottom-[226px] left-0 m-auto right-0 rotate-90 w-[225px]">
-          <Card
-            card={{ color: '', value: SKIP }}
-            inHand={false}
-            moving={false}
-            onClick={() => {}}
-            scaling={false}
-          />
+        <div className="absolute bottom-[264px] left-0 m-auto right-0 w-[150px]">
+          <Skipped/>
         </div>
       )}
       <div className="absolute bottom-[60px] flex h-[225px] left-0 m-auto right-0" style={{ width: store.myCards.length * 117 }}>
@@ -96,7 +90,7 @@ export const GamePage = observer(() => {
             {store.state.arranging ? 'Stop Arranging' : 'Arrange'}
           </Button>
           <Button
-            disabled={store.state.drawPileLoading}
+            disabled={store.state.drawPileLoading || store.me.skipped}
             onClick={store.toggleDiscarding}
           >
             {store.state.discarding ? 'Cancel Discard' : 'Discard'}
