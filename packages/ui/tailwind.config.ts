@@ -8,6 +8,11 @@ export default {
   ],
   theme: {
     extend: {
+      boxShadow: {
+        phase: '0 0 8px 2px rgba(0, 0, 0, 0.1)',
+        phaseToggle: '0 0 5px 1px rgba(0, 0, 0, 0.2)',
+        phaseToggleInset: 'inset 0 0 8px 1px rgba(0, 0, 0, 0.25)',
+      },
       colors: {
         background: 'var(--background)',
         button: {
@@ -30,6 +35,7 @@ export default {
             blue: '#063684',
           },
         },
+        success: '#258750'
       },
     },
     fontFamily: {

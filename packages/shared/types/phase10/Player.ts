@@ -1,4 +1,5 @@
 import type { Card } from './Card'
+import type { Phase } from './Phase'
 
 export type Player = {
   cards: Card[] | number
@@ -6,7 +7,7 @@ export type Player = {
   name: string
   number: number
   phase: number
-  played: Card[]
+  played: Phase
   points: number
   skipped: boolean
 }

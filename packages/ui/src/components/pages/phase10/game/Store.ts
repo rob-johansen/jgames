@@ -18,6 +18,7 @@ type State = {
   movingCard?: string
   showDrawModal: boolean
   showNotTurnModal: boolean
+  showPhase: boolean
 }
 
 export class GameStore {
@@ -38,6 +39,7 @@ export class GameStore {
       movingCard: '',
       showDrawModal: false,
       showNotTurnModal: false,
+      showPhase: false,
     }
     this.ws = root.home.ws
 
@@ -169,6 +171,10 @@ export class GameStore {
     runInAction(() => {
       this.state.drawPileLoading = false
     })
+  }
+
+  onClickPhase = () => {
+    this.state.showPhase = true
   }
 
   onCloseDrawModal = () => {

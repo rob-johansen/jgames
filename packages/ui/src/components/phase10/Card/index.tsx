@@ -1,4 +1,5 @@
 import { observer } from 'mobx-react-lite'
+import { twMerge } from 'tailwind-merge'
 import type { HTMLProps } from 'react'
 
 import { getColor, getCornerText, getTextColor } from '@/libs/phase10/card'
@@ -15,11 +16,11 @@ type Props = HTMLProps<HTMLDivElement> & {
 }
 
 export const Card = observer((props: Props) => {
-  const { card, inHand, moving, onClick, scaling, style } = props
+  const { card, className, inHand, moving, onClick, scaling, style } = props
 
   return (
     <div
-      className={`${inHand ? 'absolute bottom-0' : 'relative'} bg-white border border-[#aaaaaa] h-[225px] drop-shadow-lg p-[8px] rounded-[8px] select-none text-white w-[150px] ${scaling && 'cursor-pointer hover:scale-110'}`}
+      className={twMerge(`${inHand ? 'absolute bottom-0' : 'relative'} bg-white border border-[#aaaaaa] h-[225px] drop-shadow-lg p-[8px] rounded-[8px] select-none text-white w-[150px] ${scaling && 'cursor-pointer hover:scale-110'}`, className)}
       onClick={() => {
         if (onClick) onClick(card)
       }}

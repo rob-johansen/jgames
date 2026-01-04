@@ -9,7 +9,7 @@ import { insertGame } from '@/data/queries/phase10/game'
 import { MessageType } from '@jgames/types'
 import { RequestError } from '@jgames/types'
 import { wss } from '@/wss/wss'
-import type { Card, Game, PostRequest } from '@jgames/types'
+import type { Card, Game, Phase, PostRequest } from '@jgames/types'
 
 export const router: Router = Router()
 
@@ -41,7 +41,7 @@ router.post('/', async (
         player.cards.push(deck.shift() as Card)
         player.number = number++
         player.phase = 1
-        player.played = []
+        player.played = { set3a: [], set3b: [] } as Phase<1>
         player.points = 0
         player.skipped = false
       }
