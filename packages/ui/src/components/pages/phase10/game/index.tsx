@@ -123,9 +123,8 @@ export const GamePage = observer(() => {
       {store.state.showDrawModal && (
         <Modal
           onEscape={store.onEscapeDraw}
-          title="Draw First"
+          title="Draw a card first!"
         >
-          You must draw before you can discard!
           <div className="flex justify-end mt-[12px]">
             <Button onClick={store.onCloseDrawModal}>
               Close

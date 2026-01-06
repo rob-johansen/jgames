@@ -46,10 +46,6 @@ export class GameStore {
     makeAutoObservable(this, { ws: false })
   }
 
-  get canDiscard(): boolean {
-    return this.myTurn && !this.state.game.draw
-  }
-
   get discardDescription(): string {
     const card = this.state.discardingCard
     if (!card) return ''
@@ -63,6 +59,10 @@ export class GameStore {
     return this.state.game.players.find((player) => player.id === this.root.home.userId) as Player
   }
 
+  get mustDraw(): boolean {
+    return this.myTurn && this.state.game.draw
+  }
+
   get myCards(): Card[] {
     return this.me.cards as Card[]
   }
@@ -72,7 +72,7 @@ export class GameStore {
   }
 
   get scaling(): boolean {
-    return this.state.arranging || this.state.discarding
+    return this.state.arranging || this.state.discarding || this.state.showPhase
   }
 
   get showDeckDraw(): boolean {
@@ -104,6 +104,23 @@ export class GameStore {
     } else if (this.state.discarding) {
       this.state.choosingSkip = card.value === SKIP
       this.state.discardingCard = card
+    } else if (this.state.showPhase) {
+      const cards = this.myCards
+      const index = cards.findIndex((c) => c.id === card.id)
+
+      if (index === -1) {
+        showToast({
+          message: 'There was a problem moving that card.',
+          type: 'error'
+        })
+        return
+      }
+
+      const [target] = cards.splice(index, 1)
+
+      if (this.me.phase === 1) {
+        this.root.phase1.addCardFromHand(target, index)
+      }
     }
   }
 
@@ -336,7 +353,7 @@ export class GameStore {
       return
     }
 
-    if (!this.canDiscard) {
+    if (this.mustDraw) {
       this.state.showDrawModal = true
       return
     }

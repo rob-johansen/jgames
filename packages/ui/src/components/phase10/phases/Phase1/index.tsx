@@ -23,6 +23,7 @@ export const Phase1 = observer(() => {
                 className={`${index > 0 ? 'ml-[-100px]' : ''}`}
                 inHand={false}
                 key={card.id}
+                onClick={() => store.onClickCard(card)}
               />
             )
           })}
@@ -52,6 +53,7 @@ export const Phase1 = observer(() => {
                 className={`${index > 0 ? 'ml-[-100px]' : ''}`}
                 inHand={false}
                 key={card.id}
+                onClick={() => store.onClickCard(card)}
               />
             )
           })}
@@ -60,10 +62,10 @@ export const Phase1 = observer(() => {
       <div className="flex gap-x-[8px] items-center justify-center mt-[32px]">
         <Button
           disabled={store.state.loading}
-          onClick={store.onClickCancel}
+          onClick={store.onClickClose}
           variant="secondary"
         >
-          Cancel
+          Close
         </Button>
         <Button
           loading={store.state.loading}

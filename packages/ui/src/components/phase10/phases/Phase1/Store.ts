@@ -1,5 +1,6 @@
 import { makeAutoObservable } from 'mobx'
 
+import { showToast } from '@/components/Toast'
 import type { Card } from '@jgames/types'
 import type { RootStore } from '@/providers/phase10/RootStore'
 
@@ -19,17 +20,54 @@ export class Phase1Store {
     this.state = {
       left: true,
       loading: false,
-      set1: [
-        { color: 'red', id: '123', value: 11 },
-        { color: 'purple', id: '456', value: 11 },
-        { color: 'purple', id: '789', value: 11 },
-      ],
+      set1: [],
       set2: [],
     }
     makeAutoObservable(this)
   }
 
-  onClickCancel = () => {
+  addCardFromHand = (card: Card, index: number) => {
+    const set = this.state.left ? this.state.set1 : this.state.set2
+
+    if (set.length === 3) {
+      showToast({
+        message: 'You already have 3 cards in that set!',
+        type: 'error'
+      })
+      this.root.game.myCards.splice(index, 0, card)
+    } else {
+      set.push(card)
+    }
+  }
+
+  onClickCard = (card: Card) => {
+    if (this.state.loading) return
+
+    let index = this.state.set1.findIndex((c) => c.id === card.id)
+    let set: Card[] = []
+
+    if (index !== -1) {
+      set = this.state.set1
+    } else {
+      index = this.state.set2.findIndex((c) => c.id === card.id)
+      if (index !== -1) {
+        set = this.state.set2
+      }
+    }
+
+    if (set.length === 0) {
+      showToast({
+        message: 'There was a problem moving that card.',
+        type: 'error'
+      })
+      return
+    }
+
+    const [target] = set.splice(index, 1)
+    this.root.game.myCards.push(target)
+  }
+
+  onClickClose = () => {
     this.root.game.state.showPhase = false
   }
 
@@ -38,7 +76,15 @@ export class Phase1Store {
   }
 
   onClickPlay = async () => {
+    if (!this.root.game.myTurn) {
+      this.root.game.state.showNotTurnModal = true
+      return
+    }
 
+    if (this.root.game.mustDraw) {
+      this.root.game.state.showDrawModal = true
+      return
+    }
   }
 
   onClickRight = () => {
