@@ -2,6 +2,7 @@
   "dependencies": {
     "@floating-ui/react": "0.27.16",
     "@jgames/types": "workspace:*",
+    "@jgames/validations": "workspace:*",
     "mobx": "6.13.5",
     "mobx-react-lite": "4.1.0",
     "next": "16.1.0",

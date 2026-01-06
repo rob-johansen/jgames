@@ -1,12 +1,12 @@
 import { makeAutoObservable } from 'mobx'
 
 import { showToast } from '@/components/Toast'
+import { validatePhase1 } from '@jgames/validations'
 import type { Card } from '@jgames/types'
 import type { RootStore } from '@/providers/phase10/RootStore'
 
 type State = {
   left: boolean
-  loading: boolean
   set1: Card[]
   set2: Card[]
 }
@@ -19,7 +19,6 @@ export class Phase1Store {
     this.root = root
     this.state = {
       left: true,
-      loading: false,
       set1: [],
       set2: [],
     }
@@ -27,6 +26,8 @@ export class Phase1Store {
   }
 
   addCardFromHand = (card: Card, index: number) => {
+    // TODO: If `card.value` is `SKIP`, put the card back in their hand and show an error toast about it.
+
     const set = this.state.left ? this.state.set1 : this.state.set2
 
     if (set.length === 3) {
@@ -41,7 +42,7 @@ export class Phase1Store {
   }
 
   onClickCard = (card: Card) => {
-    if (this.state.loading) return
+    if (this.root.game.state.playingPhase) return
 
     let index = this.state.set1.findIndex((c) => c.id === card.id)
     let set: Card[] = []
@@ -85,6 +86,21 @@ export class Phase1Store {
       this.root.game.state.showDrawModal = true
       return
     }
+
+    try {
+      validatePhase1({ set3a: this.state.set1, set3b: this.state.set2 })
+    } catch (err) {
+      console.log('Error validating phase 1:', err)
+      showToast({
+        message: 'That’s not two sets of 3!',
+        type: 'error'
+      })
+      return
+    }
+
+    this.root.game.state.playingPhase = true
+
+    // TODO: Fire off the API request (once it's implemented)!
   }
 
   onClickRight = () => {

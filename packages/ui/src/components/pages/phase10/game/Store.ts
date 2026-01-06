@@ -16,6 +16,7 @@ type State = {
   drawPileLoading: boolean
   game: Game
   movingCard?: string
+  playingPhase: boolean
   showDrawModal: boolean
   showNotTurnModal: boolean
   showPhase: boolean
@@ -37,6 +38,7 @@ export class GameStore {
       drawPileLoading: false,
       game: {} as Game,
       movingCard: '',
+      playingPhase: false,
       showDrawModal: false,
       showNotTurnModal: false,
       showPhase: false,
@@ -53,6 +55,10 @@ export class GameStore {
     if (card.value === SKIP) return 'SKIP'
     if (card.value === WILD) return 'WILD'
     return `${card.color} ${card.value}`
+  }
+
+  get discardDisabled(): boolean {
+    return this.state.drawPileLoading || this.me.skipped || this.state.playingPhase
   }
 
   get me(): Player {
@@ -72,7 +78,7 @@ export class GameStore {
   }
 
   get scaling(): boolean {
-    return this.state.arranging || this.state.discarding || this.state.showPhase
+    return this.state.arranging || this.state.discarding || (this.state.showPhase && !this.state.playingPhase)
   }
 
   get showDeckDraw(): boolean {
@@ -105,6 +111,8 @@ export class GameStore {
       this.state.choosingSkip = card.value === SKIP
       this.state.discardingCard = card
     } else if (this.state.showPhase) {
+      if (this.state.playingPhase) return
+
       const cards = this.myCards
       const index = cards.findIndex((c) => c.id === card.id)
 

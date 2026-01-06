@@ -61,14 +61,14 @@ export const Phase1 = observer(() => {
       </div>
       <div className="flex gap-x-[8px] items-center justify-center mt-[32px]">
         <Button
-          disabled={store.state.loading}
+          disabled={store.root.game.state.playingPhase}
           onClick={store.onClickClose}
           variant="secondary"
         >
           Close
         </Button>
         <Button
-          loading={store.state.loading}
+          loading={store.root.game.state.playingPhase}
           onClick={store.onClickPlay}
         >
           Play

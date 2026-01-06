@@ -95,13 +95,12 @@ export const GamePage = observer(() => {
             {store.state.arranging ? 'Stop Arranging' : 'Arrange'}
           </Button>
           <Button
-            // disabled={store.state.drawPileLoading || store.me.skipped}
             onClick={store.onClickPhase}
           >
             Phase
           </Button>
           <Button
-            disabled={store.state.drawPileLoading || store.me.skipped}
+            disabled={store.discardDisabled}
             onClick={store.toggleDiscarding}
           >
             {store.state.discarding ? 'Cancel Discard' : 'Discard'}

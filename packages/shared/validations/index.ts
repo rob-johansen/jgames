@@ -1,7 +1,8 @@
 import { ClientError, SKIP, WILD } from '@jgames/types'
-import type { Card } from '@jgames/types'
+import type { Card, Phase } from '@jgames/types'
 
 export const MAX_NAME_LENGTH = 25
+export const PHASE_CARDS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, WILD]
 export const UUID_LENGTH = 36
 
 export const validateCard = (card?: Card): Card => {
@@ -26,6 +27,14 @@ export const validateCard = (card?: Card): Card => {
   return card
 }
 
+export const validateId = (id?: string): string => {
+  if (!id || id.length !== UUID_LENGTH || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) {
+    throw new ClientError('Invalid ID')
+  }
+
+  return id
+}
+
 export const validateName = (name?: string): string => {
   if (!name) {
     throw new ClientError('Please provide a name')
@@ -38,10 +47,20 @@ export const validateName = (name?: string): string => {
   return name
 }
 
-export const validateId = (id?: string): string => {
-  if (!id || id.length !== UUID_LENGTH || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) {
-    throw new ClientError('Invalid ID')
+export const validatePhase1 = (phase?: Phase<1>): Phase<1> => {
+  if (!phase || !Array.isArray(phase.set3a) || !Array.isArray(phase.set3b) || phase.set3a.length !== 3 || phase.set3b.length !== 3) {
+    throw new ClientError('Invalid phase 1')
   }
 
-  return id
+  const set1 = new Set(phase.set3a.map(c => c.value))
+  const set2 = new Set(phase.set3b.map(c => c.value))
+
+  if (
+    (set1.size === 1 || (set1.size === 2 && set1.has(WILD))) &&
+    (set2.size === 1 || (set2.size === 2 && set2.has(WILD)))
+  ) {
+    return phase
+  }
+
+  throw new ClientError('Invalid phase 1')
 }
