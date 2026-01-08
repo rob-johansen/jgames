@@ -2,7 +2,7 @@ import { Router } from 'express'
 import type { PoolClient } from 'pg'
 import type { Response } from 'express'
 
-import { addCard } from '@/libs/hand'
+import { addCard } from '@/libs/phase10/hand'
 import { drawFromDeck, drawFromPile } from '@/data/queries/phase10/draw'
 import { endTxn, startTxn } from '@/data/db'
 import { MessageType } from '@jgames/types'

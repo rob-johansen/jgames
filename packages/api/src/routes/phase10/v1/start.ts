@@ -2,7 +2,7 @@ import { Router } from 'express'
 import type { PoolClient } from 'pg'
 import type { Response } from 'express'
 
-import { DECK, shuffle } from '@/libs/card'
+import { DECK, shuffle } from '@/libs/phase10/card'
 import { deleteWaitingPlayers } from '@/data/queries/phase10/waiting'
 import { endTxn, startTxn } from '@/data/db'
 import { insertGame } from '@/data/queries/phase10/game'

@@ -3,6 +3,7 @@ export enum MessageType {
   DISCARD = 'DISCARD',
   DISCARD_SKIP = 'DISCARD_SKIP',
   JOIN = 'JOIN',
+  PHASE_PLAY = 'PHASE_PLAY',
   PILE_DRAW = 'PILE_DRAW',
   SKIP = 'SKIP',
   START = 'START',
