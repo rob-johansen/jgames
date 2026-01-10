@@ -126,6 +126,13 @@ export class GameStore {
 
       const [target] = cards.splice(index, 1)
 
+      if (target.value === SKIP) {
+        // SKIP is not part of any phase. If the player clicked a SKIP with the phase area visible, we
+        // just put it back in their hand at the same spot (so it looks like the click had no effect).
+        cards.splice(index, 0, target)
+        return
+      }
+
       if (this.me.phase === 1) {
         this.root.phase1.addCardFromHand(target, index)
       }

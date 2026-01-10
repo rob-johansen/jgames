@@ -26,8 +26,6 @@ export class Phase1Store {
   }
 
   addCardFromHand = (card: Card, index: number) => {
-    // TODO: If `card.value` is `SKIP`, put the card back in their hand and show an error toast about it.
-
     const set = this.state.left ? this.state.set1 : this.state.set2
 
     if (set.length === 3) {
