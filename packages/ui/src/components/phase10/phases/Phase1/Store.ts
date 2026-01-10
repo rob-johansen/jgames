@@ -100,7 +100,27 @@ export class Phase1Store {
 
     this.root.game.state.playingPhase = true
 
-    // TODO: Fire off the API request (once it's implemented)!
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/phase10/v1/phase1/play`, {
+      body: JSON.stringify({
+        gameId: this.root.game.state.game.id,
+        phase: {
+          set3a: this.state.set1.map(({ color, value }) => ({ color, value })),
+          set3b: this.state.set2.map(({ color, value }) => ({ color, value })),
+        },
+        userId: this.root.home.userId,
+      }),
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      method: 'POST',
+      mode: 'cors'
+    })
+
+    if (!response.ok) {
+      showToast({
+        message: 'There was an error playing phase 1',
+        type: 'error',
+      })
+    }
   }
 
   onClickRight = () => {

@@ -46,7 +46,10 @@ router.post('/play', async (
     res.status(204).end()
 
     wss.sendToAll({
-      data: { phase: 1, userId },
+      data: {
+        number: 1,
+        phase
+      },
       type: MessageType.PHASE_PLAY
     })
   } finally {

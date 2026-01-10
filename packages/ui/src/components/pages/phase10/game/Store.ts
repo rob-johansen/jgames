@@ -3,7 +3,7 @@ import { v4 as uuid } from 'uuid'
 
 import { showToast } from '@/components/Toast'
 import { SKIP, WILD } from '@jgames/types'
-import type { Card, Game, Player } from '@jgames/types'
+import type { Card, Game, Phase, Player } from '@jgames/types'
 import type { RootStore } from '@/providers/phase10/RootStore'
 
 type State = {
@@ -318,11 +318,17 @@ export class GameStore {
   notifyDeckDraw = () => {
     if (this.state.game.turn !== this.me.id) {
       const player = this.state.game.players.find((player) => player.id === this.state.game.turn)
-      const message = player ? `${player.name} drew a card from the deck` : 'A card was drawn from the deck'
+      if (!player) {
+        showToast({
+          message: 'There was a player error (deck draw)',
+          type: 'error',
+        })
+        return
+      }
 
       showToast({
         duration: 7500,
-        message,
+        message: `${player.name} drew a card from the deck`,
         type: 'info',
       })
     }
@@ -373,23 +379,6 @@ export class GameStore {
     }
   }
 
-  updateAfterSkip = (skipId: string, turn: string) => {
-    this.state.game.draw = true
-    this.state.game.turn = turn
-
-    this.state.choosingSkip = false
-    this.state.discarding = false
-    this.state.discardingCard = undefined
-    this.state.discardLoading = false
-
-    for (const player of this.state.game.players) {
-      if (player.id === skipId) {
-        player.skipped = true
-        break
-      }
-    }
-  }
-
   updateAfterDiscard = (card: Card, turn: string) => {
     card.id = uuid()
     this.state.game.draw = true
@@ -408,6 +397,49 @@ export class GameStore {
     for (const player of this.state.game.players) {
       if (player.id === userId) {
         player.skipped = false
+        break
+      }
+    }
+  }
+
+  updateAfterPhasePlay = (number: number, phase: Phase) => {
+    const player = this.state.game.players.find((player) => player.id === this.state.game.turn)
+
+    if (!player) {
+      showToast({
+        message: `There was a player error (phase ${number} played)`,
+        type: 'error',
+      })
+      return
+    }
+
+    player.phase = number === 10 ? 10 : number + 1
+    player.played = phase
+
+    if (this.state.game.turn === this.me.id) {
+      this.state.playingPhase = false
+      this.state.showPhase = false
+    } else {
+      showToast({
+        duration: 7500,
+        message: `${player.name} played phase ${number}!`,
+        type: 'info',
+      })
+    }
+  }
+
+  updateAfterSkip = (skipId: string, turn: string) => {
+    this.state.game.draw = true
+    this.state.game.turn = turn
+
+    this.state.choosingSkip = false
+    this.state.discarding = false
+    this.state.discardingCard = undefined
+    this.state.discardLoading = false
+
+    for (const player of this.state.game.players) {
+      if (player.id === skipId) {
+        player.skipped = true
         break
       }
     }

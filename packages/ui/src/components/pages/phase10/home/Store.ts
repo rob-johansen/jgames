@@ -3,7 +3,7 @@ import { makeAutoObservable, runInAction } from 'mobx'
 import { isBrowser } from '@/libs/browser'
 import { MessageType } from '@jgames/types'
 import { showToast } from '@/components/Toast'
-import type { Card, Game, WebSocketMessage } from '@jgames/types'
+import type { Card, Game, Phase, WebSocketMessage } from '@jgames/types'
 import type { RootStore } from '@/providers/phase10/RootStore'
 
 type State = {
@@ -77,6 +77,12 @@ export class HomeStore {
           }
           this.state.players = players
         })
+      }
+
+      if (message.type === MessageType.PHASE_PLAY) {
+        const number = message.data.number as number
+        const phase = message.data.phase as Phase
+        this.root.game.updateAfterPhasePlay(number, phase)
       }
 
       if (message.type === MessageType.PILE_DRAW) {

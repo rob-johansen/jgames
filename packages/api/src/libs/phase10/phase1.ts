@@ -30,6 +30,7 @@ export const play = (phase: Phase<1>, userId: string, players: Player[]): boolea
     return false
   }
 
+  player.phase = 2
   player.played = phase
 
   return true
