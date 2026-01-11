@@ -77,10 +77,10 @@ export const GamePage = observer(() => {
         {(store.myCards).map((card, index) => {
           return (
             <Card
+              arranging={store.showArranging(card.id)}
               card={card}
               inHand={true}
               key={card.id}
-              moving={store.showMoving(card.id)}
               onClick={() => store.onClickCard(card)}
               scaling={store.scaling}
               style={{ left: index * 114 }}
@@ -95,9 +95,9 @@ export const GamePage = observer(() => {
             {store.state.arranging ? 'Stop Arranging' : 'Arrange'}
           </Button>
           <Button
-            onClick={store.onClickPhase}
+            onClick={store.togglePhase}
           >
-            Phase
+            {store.state.showPhase ? 'Close phase' : 'Phase'}
           </Button>
           <Button
             disabled={store.discardDisabled}
@@ -143,9 +143,9 @@ export const GamePage = observer(() => {
             >
               <div className="flex justify-center">
                 <Card
+                  arranging={false}
                   card={store.state.discardingCard}
                   inHand={false}
-                  moving={false}
                   onClick={() => {}}
                   scaling={false}
                 />

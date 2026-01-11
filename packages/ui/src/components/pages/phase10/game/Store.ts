@@ -8,6 +8,7 @@ import type { RootStore } from '@/providers/phase10/RootStore'
 
 type State = {
   arranging: boolean
+  arrangingCard?: string
   choosingSkip: boolean
   discarding: boolean
   discardingCard?: Card
@@ -15,7 +16,6 @@ type State = {
   drawDeckLoading: boolean
   drawPileLoading: boolean
   game: Game
-  movingCard?: string
   playingPhase: boolean
   showDrawModal: boolean
   showNotTurnModal: boolean
@@ -31,13 +31,13 @@ export class GameStore {
     this.root = root
     this.state = {
       arranging: false,
+      arrangingCard: '',
       choosingSkip: false,
       discarding: false,
       discardLoading: false,
       drawDeckLoading: false,
       drawPileLoading: false,
       game: {} as Game,
-      movingCard: '',
       playingPhase: false,
       showDrawModal: false,
       showNotTurnModal: false,
@@ -106,7 +106,7 @@ export class GameStore {
 
   onClickCard = (card: Card): void => {
     if (this.state.arranging) {
-      this.state.movingCard = card.id
+      this.state.arrangingCard = card.id
     } else if (this.state.discarding) {
       this.state.choosingSkip = card.value === SKIP
       this.state.discardingCard = card
@@ -205,10 +205,6 @@ export class GameStore {
     })
   }
 
-  onClickPhase = () => {
-    this.state.showPhase = true
-  }
-
   onCloseDrawModal = () => {
     this.state.showDrawModal = false
   }
@@ -287,14 +283,14 @@ export class GameStore {
   }
 
   onKeyDown = (event: KeyboardEvent): void => {
-    if (!this.state.movingCard) return
+    if (!this.state.arrangingCard) return
 
     const cards = this.myCards
     let currentIndex = -1
     let newIndex = -1
 
     for (let i = 0; i < cards.length; i++) {
-      if (cards[i].id === this.state.movingCard) {
+      if (cards[i].id === this.state.arrangingCard) {
         currentIndex = i
         break
       }
@@ -348,26 +344,28 @@ export class GameStore {
     }
   }
 
-  showMoving = (id?: string): boolean => {
-    return id === this.state.movingCard
+  showArranging = (id?: string): boolean => {
+    return id === this.state.arrangingCard
   }
 
   toggleArranging = (): void => {
     this.state.arranging = !this.state.arranging
     this.state.discarding = false
     this.state.discardingCard = undefined
+    this.state.showPhase = false
 
     if (this.state.arranging) {
       window.addEventListener('keydown', this.onKeyDown)
     } else {
-      this.state.movingCard = ''
+      this.state.arrangingCard = ''
       window.removeEventListener('keydown', this.onKeyDown)
     }
   }
 
   toggleDiscarding = () => {
     this.state.arranging = false
-    this.state.movingCard = ''
+    this.state.arrangingCard = ''
+    this.state.showPhase = false
 
     if (!this.myTurn) {
       this.state.showNotTurnModal = true
@@ -384,6 +382,13 @@ export class GameStore {
     if (!this.state.discarding) {
       this.state.discardingCard = undefined
     }
+  }
+
+  togglePhase = () => {
+    this.state.arranging = false
+    this.state.arrangingCard = ''
+    this.state.discarding = false
+    this.state.showPhase = !this.state.showPhase
   }
 
   updateAfterDiscard = (card: Card, turn: string) => {

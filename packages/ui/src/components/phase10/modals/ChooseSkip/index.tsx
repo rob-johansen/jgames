@@ -21,9 +21,9 @@ export const ChooseSkip = observer(() => {
     >
       <div className="flex justify-center">
         <Card
+          arranging={false}
           card={{ color: '', value: SKIP }}
           inHand={false}
-          moving={false}
           onClick={() => {}}
           scaling={false}
         />

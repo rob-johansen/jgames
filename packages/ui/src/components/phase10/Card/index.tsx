@@ -8,15 +8,15 @@ import { SKIP, WILD } from '@jgames/types'
 import type { Card as CardType } from '@jgames/types'
 
 type Props = HTMLProps<HTMLDivElement> & {
+  arranging?: boolean
   card: CardType
   inHand: boolean
-  moving?: boolean
   onClick?: (card: CardType) => void
   scaling?: boolean
 }
 
 export const Card = observer((props: Props) => {
-  const { card, className, inHand, moving, onClick, scaling, style } = props
+  const { arranging, card, className, inHand, onClick, scaling, style } = props
 
   return (
     <div
@@ -49,7 +49,7 @@ export const Card = observer((props: Props) => {
         <span className="relative scale-[-1] text-[2.25rem] top-[-2px]">{getCornerText(card.value)}</span>
         <span className="relative scale-[-1] text-[1.5rem] top-[-16px]">{getCornerText(card.value)}</span>
       </div>
-      {moving && (
+      {arranging && (
         <div className="absolute bg-white flex border border-slate-400 h-[36px] items-center left-[0] rounded-[6px] top-[94px] w-[36px]">
           <Icon primary="#475569" source={ChevronLeft} />
           <Icon primary="#475569" source={ChevronRight} />

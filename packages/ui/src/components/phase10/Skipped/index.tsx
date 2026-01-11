@@ -15,9 +15,9 @@ export const Skipped = observer(() => {
     <div className="flex gap-x-[48px] items-center">
       <div className="rotate-90">
         <Card
+          arranging={false}
           card={{ color: '', value: SKIP }}
           inHand={false}
-          moving={false}
           onClick={() => {}}
           scaling={false}
         />
