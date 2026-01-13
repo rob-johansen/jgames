@@ -95,9 +95,13 @@ export const GamePage = observer(() => {
             {store.state.arranging ? 'Stop Arranging' : 'Arrange'}
           </Button>
           <Button
+            disabled={store.state.playedPhase}
             onClick={store.togglePhase}
           >
             {store.state.showPhase ? 'Close phase' : 'Phase'}
+          </Button>
+          <Button>
+            Hit
           </Button>
           <Button
             disabled={store.discardDisabled}

@@ -16,6 +16,7 @@ type State = {
   drawDeckLoading: boolean
   drawPileLoading: boolean
   game: Game
+  playedPhase: boolean
   playingPhase: boolean
   showDrawModal: boolean
   showNotTurnModal: boolean
@@ -38,6 +39,7 @@ export class GameStore {
       drawDeckLoading: false,
       drawPileLoading: false,
       game: {} as Game,
+      playedPhase: false,
       playingPhase: false,
       showDrawModal: false,
       showNotTurnModal: false,
@@ -429,6 +431,7 @@ export class GameStore {
     player.played = phase
 
     if (this.state.game.turn === this.me.id) {
+      this.state.playedPhase = true
       this.state.playingPhase = false
       this.state.showPhase = false
     } else {
