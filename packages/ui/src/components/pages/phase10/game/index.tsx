@@ -6,6 +6,7 @@ import { useContext, useEffect } from 'react'
 import { Button } from '@/components/button/Button'
 import { Card } from '@/components/phase10/Card'
 import { ChooseSkip } from '@/components/phase10/modals/ChooseSkip'
+import { Hit } from '@/components/phase10/Hit'
 import { Modal } from '@/components/Modal'
 import { Phase1 } from '@/components/phase10/phases/Phase1'
 import { Skipped } from '@/components/phase10/Skipped'
@@ -25,48 +26,54 @@ export const GamePage = observer(() => {
       {store.state.showPhase ? (
         <>{store.me.phase === 1 && <Phase1 />}</>
       ) : (
-        <div className="absolute bottom-[425px] flex gap-x-[24px] h-[269px] left-0 m-auto right-0 w-[324px]">
-          <div className="flex flex-col gap-y-[8px] items-center">
-            <div className="bg-phase10-cover-blue drop-shadow-lg font-quicksand h-[225px] overflow-hidden rounded-[8px] select-none text-white w-[150px]">
-              <div className='flex flex-col font-bold items-center left-[8px] relative rotate-[80deg] text-[3rem] top-[45px]'>
-                <span>Phase</span>
-                <span className="relative top-[-32px]">10</span>
+        <>
+          {store.state.showHit ? (
+            <Hit />
+          ) : (
+            <div className="absolute bottom-[425px] flex gap-x-[24px] h-[269px] left-0 m-auto right-0 w-[324px]">
+              <div className="flex flex-col gap-y-[8px] items-center">
+                <div className="bg-phase10-cover-blue drop-shadow-lg font-quicksand h-[225px] overflow-hidden rounded-[8px] select-none text-white w-[150px]">
+                  <div className='flex flex-col font-bold items-center left-[8px] relative rotate-[80deg] text-[3rem] top-[45px]'>
+                    <span>Phase</span>
+                    <span className="relative top-[-32px]">10</span>
+                  </div>
+                  <div className="bg-phase10-card-red h-[10px] left-[-84px] relative rotate-[80deg] top-[-40px] w-[240px]"/>
+                  <div className="bg-phase10-card-blue h-[10px] left-[-98px] relative rotate-[80deg] top-[-40px] w-[240px]"/>
+                  <div className="bg-phase10-card-green h-[10px] left-[-112px] relative rotate-[80deg] top-[-40px] w-[240px]"/>
+                  <div className="bg-phase10-card-purple h-[10px] left-[-126px] relative rotate-[80deg] top-[-40px] w-[240px]"/>
+                </div>
+                {store.showDeckDraw && (
+                  <Button
+                    disabled={store.state.drawPileLoading}
+                    loading={store.state.drawDeckLoading}
+                    onClick={store.onClickDrawFromDeck}
+                  >
+                    Draw
+                  </Button>
+                )}
               </div>
-              <div className="bg-phase10-card-red h-[10px] left-[-84px] relative rotate-[80deg] top-[-40px] w-[240px]"/>
-              <div className="bg-phase10-card-blue h-[10px] left-[-98px] relative rotate-[80deg] top-[-40px] w-[240px]"/>
-              <div className="bg-phase10-card-green h-[10px] left-[-112px] relative rotate-[80deg] top-[-40px] w-[240px]"/>
-              <div className="bg-phase10-card-purple h-[10px] left-[-126px] relative rotate-[80deg] top-[-40px] w-[240px]"/>
-            </div>
-            {store.showDeckDraw && (
-              <Button
-                disabled={store.state.drawPileLoading}
-                loading={store.state.drawDeckLoading}
-                onClick={store.onClickDrawFromDeck}
-              >
-                Draw
-              </Button>
-            )}
-          </div>
-          {store.topCardOnPile ? (
-            <div className="flex flex-col gap-y-[8px] items-center">
-              <Card
-                card={store.topCardOnPile}
-                inHand={false}
-              />
-              {store.showPileDraw && (
-                <Button
-                  disabled={store.state.drawDeckLoading}
-                  loading={store.state.drawPileLoading}
-                  onClick={store.onClickDrawFromPile}
-                >
-                  Draw
-                </Button>
+              {store.topCardOnPile ? (
+                <div className="flex flex-col gap-y-[8px] items-center">
+                  <Card
+                    card={store.topCardOnPile}
+                    inHand={false}
+                  />
+                  {store.showPileDraw && (
+                    <Button
+                      disabled={store.state.drawDeckLoading}
+                      loading={store.state.drawPileLoading}
+                      onClick={store.onClickDrawFromPile}
+                    >
+                      Draw
+                    </Button>
+                  )}
+                </div>
+              ) : (
+                <div className="border border-[#aaaaaa] h-[225px] rounded-[8px] w-[150px]"/>
               )}
             </div>
-          ) : (
-            <div className="border border-[#aaaaaa] h-[225px] rounded-[8px] w-[150px]"/>
           )}
-        </div>
+        </>
       )}
       {store.me.skipped && (
         <div className="absolute bottom-[264px] left-0 m-auto right-0 w-[150px]">
@@ -100,7 +107,9 @@ export const GamePage = observer(() => {
           >
             {store.state.showPhase ? 'Close phase' : 'Phase'}
           </Button>
-          <Button>
+          <Button
+            onClick={store.toggleHit}
+          >
             Hit
           </Button>
           <Button

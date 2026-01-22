@@ -19,6 +19,7 @@ type State = {
   playedPhase: boolean
   playingPhase: boolean
   showDrawModal: boolean
+  showHit: boolean
   showNotTurnModal: boolean
   showPhase: boolean
 }
@@ -42,6 +43,7 @@ export class GameStore {
       playedPhase: false,
       playingPhase: false,
       showDrawModal: false,
+      showHit: false,
       showNotTurnModal: false,
       showPhase: false,
     }
@@ -354,6 +356,7 @@ export class GameStore {
     this.state.arranging = !this.state.arranging
     this.state.discarding = false
     this.state.discardingCard = undefined
+    this.state.showHit = false
     this.state.showPhase = false
 
     if (this.state.arranging) {
@@ -367,6 +370,7 @@ export class GameStore {
   toggleDiscarding = () => {
     this.state.arranging = false
     this.state.arrangingCard = ''
+    this.state.showHit = false
     this.state.showPhase = false
 
     if (!this.myTurn) {
@@ -386,10 +390,21 @@ export class GameStore {
     }
   }
 
+  toggleHit = () => {
+    this.root.hit.setCards()
+
+    this.state.arranging = false
+    this.state.arrangingCard = ''
+    this.state.discarding = false
+    this.state.showHit = !this.state.showHit
+    this.state.showPhase = false
+  }
+
   togglePhase = () => {
     this.state.arranging = false
     this.state.arrangingCard = ''
     this.state.discarding = false
+    this.state.showHit = false
     this.state.showPhase = !this.state.showPhase
   }
 
@@ -429,6 +444,12 @@ export class GameStore {
 
     player.phase = number === 10 ? 10 : number + 1
     player.played = phase
+
+    if ((player.played as Phase<1>).set3a) {
+      const phaze: Phase<1> = player.played as Phase<1>
+      for (const card of phaze.set3a) { card.id = uuid() }
+      for (const card of phaze.set3b) { card.id = uuid() }
+    }
 
     if (this.state.game.turn === this.me.id) {
       this.state.playedPhase = true
