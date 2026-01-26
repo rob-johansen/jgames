@@ -110,7 +110,7 @@ export const GamePage = observer(() => {
           <Button
             onClick={store.toggleHit}
           >
-            Hit
+            {store.state.showHit ? 'Close hit' : 'Hit'}
           </Button>
           <Button
             disabled={store.discardDisabled}

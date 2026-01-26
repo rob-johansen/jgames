@@ -391,7 +391,11 @@ export class GameStore {
   }
 
   toggleHit = () => {
-    this.root.hit.setCards()
+    if (!this.state.showHit) {
+      // The hit area is not currently visible, which
+      // means it's about to be, so we set the cards.
+      this.root.hit.setCards()
+    }
 
     this.state.arranging = false
     this.state.arrangingCard = ''
