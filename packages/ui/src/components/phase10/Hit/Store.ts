@@ -31,8 +31,25 @@ export class HitStore {
     return this.root.game.state.game.players[this.state.playerIndex]
   }
 
+  get previousPlayerIndex(): number {
+    return this.state.playerIndex - 1 >= 0 ? this.state.playerIndex - 1 : this.root.game.state.game.players.length - 1
+  }
+
   onClickBack = () => {
-    // TODO and WYLO: Add logic for moving back to the previous `phaseIndex` or the previous `playerIndex` (then wire up the left arrow button)...
+    const player = this.player
+
+    if (player.phase === 1) {
+      return this.setCards(this.previousPlayerIndex, 1)
+    }
+
+    if (player.phase === 2) {
+      if ((player.played as Phase<1>).set3a.length > 0) {
+        if (this.state.phaseIndex === 1) {
+          return this.setCards(this.state.playerIndex, 0)
+        }
+      }
+      return this.setCards(this.previousPlayerIndex, 1)
+    }
   }
 
   onClickCard = (card: Card) => {
