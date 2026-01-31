@@ -140,6 +140,38 @@ export class GameStore {
       if (this.me.phase === 1) {
         this.root.phase1.addCardFromHand(target, index)
       }
+    } else if (this.state.showHit) {
+      if (!this.state.playedPhase) {
+        showToast({
+          message: 'You must play your phase before you can hit.',
+          type: 'error'
+        })
+        return
+      }
+
+      // TODO: When they're sending a hit to the backend, return early (like with `this.state.playingPhase` above).
+
+      const cards = this.myCards
+      const index = cards.findIndex((c) => c.id === card.id)
+
+      if (index === -1) {
+        showToast({
+          message: 'There was a problem moving that card.',
+          type: 'error'
+        })
+        return
+      }
+
+      const [target] = cards.splice(index, 1)
+
+      if (target.value === SKIP) {
+        // SKIP can't be added to a hit area. If the player clicked a SKIP with a hit area visible, we
+        // just put it back in their hand at the same spot (so it looks like the click had no effect).
+        cards.splice(index, 0, target)
+        return
+      }
+
+      this.root.hit.addCardFromHand(target, index)
     }
   }
 
@@ -391,6 +423,12 @@ export class GameStore {
   }
 
   toggleHit = () => {
+    if (this.state.showHit && this.root.hit.mustHit) {
+      // The hit area is currently visible, and you've added a card to it, so you
+      // can't close the hit area yet (and the `mustHit` getter shows a toast).
+      return
+    }
+
     if (!this.state.showHit) {
       // The hit area is not currently visible, which
       // means it's about to be, so we set the cards.

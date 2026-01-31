@@ -94,6 +94,8 @@ export const GamePage = observer(() => {
             />
           )
         })}
+        {/* TODO: These buttons had wrapping text after playing your phase... */}
+        {/* TODO: Also, when the hit area is open, and you've added a card to it, clicking the other buttons here is closing the hit area... */}
         <div className="absolute bottom-[-48px] flex gap-x-[8px] right-[0]">
           <Button
             disabled={store.state.drawPileLoading}
