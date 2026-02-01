@@ -385,6 +385,12 @@ export class GameStore {
   }
 
   toggleArranging = (): void => {
+    if (this.state.showHit && this.root.hit.mustHit) {
+      // The hit area is currently visible, and you've added a card to it, so you
+      // can't close the hit area yet (and the `mustHit` getter shows a toast).
+      return
+    }
+
     this.state.arranging = !this.state.arranging
     this.state.discarding = false
     this.state.discardingCard = undefined
@@ -400,6 +406,12 @@ export class GameStore {
   }
 
   toggleDiscarding = () => {
+    if (this.state.showHit && this.root.hit.mustHit) {
+      // The hit area is currently visible, and you've added a card to it, so you
+      // can't close the hit area yet (and the `mustHit` getter shows a toast).
+      return
+    }
+
     this.state.arranging = false
     this.state.arrangingCard = ''
     this.state.showHit = false
@@ -443,6 +455,12 @@ export class GameStore {
   }
 
   togglePhase = () => {
+    if (this.state.showHit && this.root.hit.mustHit) {
+      // The hit area is currently visible, and you've added a card to it, so you
+      // can't close the hit area yet (and the `mustHit` getter shows a toast).
+      return
+    }
+
     this.state.arranging = false
     this.state.arrangingCard = ''
     this.state.discarding = false
