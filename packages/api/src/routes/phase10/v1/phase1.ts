@@ -3,16 +3,74 @@ import type { PoolClient } from 'pg'
 import type { Response } from 'express'
 
 import { endTxn, startTxn } from '@/data/db'
+import { hit, play } from '@/libs/phase10/phase1'
 import { MessageType } from '@jgames/types'
-import { play } from '@/libs/phase10/phase1'
 import { RequestError } from '@jgames/types'
 import { selectGame } from '@/data/queries/phase10/game'
 import { updatePlayers } from '@/data/queries/phase10/players'
 import { validateCard, validateId, validatePhase1 } from '@jgames/validations'
 import { wss } from '@/wss/wss'
-import type { Phase, PostRequest } from '@jgames/types'
+import type { Card, Phase, PostRequest } from '@jgames/types'
 
 export const router: Router = Router()
+
+router.post('/hit', async (
+  req: PostRequest<{
+    gameId: string,
+    hitteeId: string,
+    hitterId: string
+  } & Partial<Phase<1>>>,
+  res: Response<void>,
+) => {
+  const gameId = validateId(req.body.gameId)
+  const hitteeId = validateId(req.body.hitteeId)
+  const hitterId = validateId(req.body.hitterId)
+
+  let cards: Card[] | undefined
+  let set3a = false
+    if (req.body.set3a) {
+    cards = req.body.set3a
+    set3a = true
+  }
+  if (req.body.set3b) {
+    cards = req.body.set3b
+  }
+
+  if (!cards) throw new RequestError('', 400)
+  for (const card of cards) { validateCard(card) }
+
+  let client: PoolClient | undefined
+  let commit = false
+
+  try {
+    client = await startTxn()
+
+    const game = await selectGame(gameId, hitterId, client)
+    if (!game) throw new RequestError('', 400)
+
+    if (!hit({ cards, hitteeId, hitterId, players: game.players, set3a })) {
+      throw new RequestError('', 400)
+    }
+
+    commit = await updatePlayers(game, client)
+    if (!commit) throw new RequestError('')
+
+    res.status(204).end()
+
+    wss.sendToAll({
+      data: {
+        cards,
+        hitteeId,
+        hitterId,
+        number: 1,
+        set3a
+      },
+      type: MessageType.HIT
+    })
+  } finally {
+    await endTxn(client, { commit })
+  }
+})
 
 router.post('/play', async (
   req: PostRequest<{ phase: Phase<1>, gameId: string, userId: string }>,
@@ -39,9 +97,7 @@ router.post('/play', async (
     }
 
     commit = await updatePlayers(game, client)
-    if (!commit) {
-      throw new RequestError('')
-    }
+    if (!commit) throw new RequestError('')
 
     res.status(204).end()
 

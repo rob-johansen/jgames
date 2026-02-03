@@ -2,6 +2,7 @@ export enum MessageType {
   DECK_DRAW = 'DECK_DRAW',
   DISCARD = 'DISCARD',
   DISCARD_SKIP = 'DISCARD_SKIP',
+  HIT = 'HIT',
   JOIN = 'JOIN',
   PHASE_PLAY = 'PHASE_PLAY',
   PILE_DRAW = 'PILE_DRAW',
