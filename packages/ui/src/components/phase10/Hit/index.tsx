@@ -1,6 +1,7 @@
 import { observer } from 'mobx-react-lite'
 import { useContext } from 'react'
 
+import { Button } from '@/components/button/Button'
 import { Card } from '@/components/phase10/Card'
 import { Icon, ChevronLeft, ChevronRight } from '@/components/icon'
 import { StoreContext } from '@/providers/phase10/StoreContext'
@@ -49,6 +50,22 @@ export const Hit = observer(() => {
         >
           <Icon className="size-[24px]" primary="#171717" source={ChevronRight} />
         </button>
+      </div>
+      <div className="absolute bottom-[20px] flex gap-x-[8px] items-center justify-center right-[20px]">
+        <Button
+          disabled={store.root.game.state.hitting}
+          onClick={store.root.game.toggleHit}
+          variant="secondary"
+        >
+          Close
+        </Button>
+        <Button
+          disabled={store.state.added.length === 0}
+          loading={store.root.game.state.hitting}
+          onClick={store.onClickConfirm}
+        >
+          Confirm
+        </Button>
       </div>
     </div>
   )

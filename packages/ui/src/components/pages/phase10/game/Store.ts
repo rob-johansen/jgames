@@ -16,6 +16,7 @@ type State = {
   drawDeckLoading: boolean
   drawPileLoading: boolean
   game: Game
+  hitting: boolean
   playedPhase: boolean
   playingPhase: boolean
   showDrawModal: boolean
@@ -40,6 +41,7 @@ export class GameStore {
       drawDeckLoading: false,
       drawPileLoading: false,
       game: {} as Game,
+      hitting: false,
       playedPhase: false,
       playingPhase: false,
       showDrawModal: false,
@@ -62,7 +64,7 @@ export class GameStore {
   }
 
   get discardDisabled(): boolean {
-    return this.state.drawPileLoading || this.me.skipped || this.state.playingPhase
+    return this.state.drawPileLoading || this.me.skipped || this.state.playingPhase || this.state.hitting
   }
 
   get me(): Player {

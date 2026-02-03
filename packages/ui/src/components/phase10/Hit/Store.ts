@@ -115,6 +115,12 @@ export class HitStore {
     this.root.game.myCards.push(card)
   }
 
+  onClickConfirm = async () => {
+    this.root.game.state.hitting = true
+
+    // TODO and WYLO: Fire off a request to the `POST /api/phase10/v1/phase1/hit` endpoint...
+  }
+
   onClickNext = () => {
     if (this.mustHit) return
 
