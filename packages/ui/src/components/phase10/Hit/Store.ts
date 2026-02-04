@@ -118,7 +118,34 @@ export class HitStore {
   onClickConfirm = async () => {
     this.root.game.state.hitting = true
 
-    // TODO and WYLO: Fire off a request to the `POST /api/phase10/v1/phase1/hit` endpoint...
+    const api = 'phase1' // TODO: Change this to `phase2` if the player is on phase 3 ... and so forth.
+
+    const cards: Card[] = []
+
+    for (const card of this.state.added) {
+      const { color, value } = card
+      cards.push({ color, value })
+    }
+
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/phase10/v1/${api}/hit`, {
+      body: JSON.stringify({
+        gameId: this.root.game.state.game.id,
+        hitteeId: this.player.id,
+        hitterId: this.root.game.me.id,
+        ...(this.state.phaseIndex === 0 ? { set3a: cards } : { set3b: cards })
+      }),
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      method: 'POST',
+      mode: 'cors'
+    })
+
+    if (!response.ok) {
+      showToast({
+        message: 'There was an error hitting',
+        type: 'error',
+      })
+    }
   }
 
   onClickNext = () => {
