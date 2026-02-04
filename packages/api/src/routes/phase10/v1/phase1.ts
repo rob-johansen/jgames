@@ -48,7 +48,9 @@ router.post('/hit', async (
     const game = await selectGame(gameId, hitterId, client)
     if (!game) throw new RequestError('', 400)
 
-    if (!hit({ cards, hitteeId, hitterId, players: game.players, set3a })) {
+    // We pass a copy of the cards, because `hit()` needs to empty it,
+    // but we also need to send the cards via `MessageType.HIT` below.
+    if (!hit({ cards: [...cards], hitteeId, hitterId, players: game.players, set3a })) {
       throw new RequestError('', 400)
     }
 
@@ -62,7 +64,7 @@ router.post('/hit', async (
         cards,
         hitteeId,
         hitterId,
-        number: 1,
+        phase: 1,
         set3a
       },
       type: MessageType.HIT

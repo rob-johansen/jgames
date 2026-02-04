@@ -68,6 +68,15 @@ export class HomeStore {
         this.root.game.updateAfterDiscardSkip(userId, turn)
       }
 
+      if (message.type === MessageType.HIT) {
+        const cards = message.data.cards as Card[]
+        const hitteeId = message.data.hitteeId as string
+        const hitterId = message.data.hitterId as string
+        const phase = message.data.phase as number
+        const set3a = message.data.set3a as boolean | undefined
+        this.root.game.updateAfterHit({ cards, hitteeId, hitterId, phase, set3a })
+      }
+
       if (message.type === MessageType.JOIN) {
         const players = message.data.players as string[]
 

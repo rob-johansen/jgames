@@ -3,7 +3,7 @@ import { v4 as uuid } from 'uuid'
 
 import { showToast } from '@/components/Toast'
 import { SKIP, WILD } from '@jgames/types'
-import type { Card, Game, Phase, Player } from '@jgames/types'
+import type { Card, Game, HitMessage, Phase, Player } from '@jgames/types'
 import type { RootStore } from '@/providers/phase10/RootStore'
 
 type State = {
@@ -143,6 +143,8 @@ export class GameStore {
         this.root.phase1.addCardFromHand(target, index)
       }
     } else if (this.state.showHit) {
+      if (this.state.hitting) return
+
       if (!this.state.playedPhase) {
         showToast({
           message: 'You must play your phase before you can hit.',
@@ -150,8 +152,6 @@ export class GameStore {
         })
         return
       }
-
-      // TODO: When they're sending a hit to the backend, return early (like with `this.state.playingPhase` above).
 
       const cards = this.myCards
       const index = cards.findIndex((c) => c.id === card.id)
@@ -490,6 +490,49 @@ export class GameStore {
         player.skipped = false
         break
       }
+    }
+  }
+
+  updateAfterHit = (props: HitMessage) => {
+    const { cards, hitteeId, hitterId, phase, set3a } = props
+    const hitter = this.state.game.players.find((player) => player.id === hitterId)
+    const hittee = this.state.game.players.find((player) => player.id === hitteeId)
+
+    if (!hitter) {
+      showToast({
+        message: `There was an error after hitting (22)`,
+        type: 'error',
+      })
+      return
+    }
+
+    if (!hittee) {
+      showToast({
+        message: `There was an error after hitting (44)`,
+        type: 'error',
+      })
+      return
+    }
+
+    if (this.state.game.turn !== this.me.id) {
+      if (phase === 1) {
+        const played = set3a ? (hittee.played as Phase<1>).set3a : (hittee.played as Phase<1>).set3b
+        for (const card of cards) {
+          card.id = uuid()
+          played.push(card)
+        }
+      }
+    }
+
+    if (this.state.game.turn === this.me.id) {
+      this.root.hit.state.added = []
+      this.state.hitting = false
+    } else {
+      showToast({
+        duration: 7500,
+        message: `${hitter.name} hit ${hittee.name}’s cards!`,
+        type: 'info',
+      })
     }
   }
 
