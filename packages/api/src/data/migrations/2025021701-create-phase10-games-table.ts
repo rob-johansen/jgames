@@ -9,6 +9,7 @@ export const run = async (client: PoolClient): Promise<void> => {
       pile         jsonb    NOT NULL,
       players      jsonb    NOT NULL,
       results      jsonb,
+      token        text     NOT NULL,
       turn         text     NOT NULL,
       PRIMARY KEY  (id)
     )

@@ -9,4 +9,5 @@ export type Game = {
   players: Player[]
   results?: string[]
   turn: string
+  token: string
 }

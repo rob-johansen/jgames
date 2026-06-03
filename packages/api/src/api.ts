@@ -20,7 +20,7 @@ const api = express()
 api.disable('x-powered-by')
 api.use(cookieParser())
 api.use(express.json())
-api.use(express.urlencoded({extended: true}))
+api.use(express.urlencoded({ extended: true }))
 api.use((_req: ApiRequest, res: Response, next: NextFunction): void => {
   res.set('Access-Control-Allow-Origin', process.env.JGAMES_ORIGIN)
   res.set('Access-Control-Allow-Headers', 'Accept, Content-Type, Origin')

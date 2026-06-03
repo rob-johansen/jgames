@@ -24,17 +24,18 @@ router.post('/', async (
     client = await startTxn()
 
     const players = await deleteWaitingPlayers(client)
-    if (players.length < 2) {
-      throw new RequestError('', 400)
-    }
+    if (players.length < 2) throw new RequestError('', 400)
 
     const deck = DECK.map((card) => card)
     shuffle(deck)
+    let turn = ''
 
     for (let i = 1; i <= 10; i++) {
       let number = 1
 
       for (const player of players) {
+        if (number === 1) turn = player.id
+
         if (!Array.isArray(player.cards)) {
           player.cards = []
         }
@@ -55,7 +56,8 @@ router.post('/', async (
       pile,
       players,
       results: [],
-      turn: players[0].id
+      token: turn,
+      turn,
     }
 
     const id = await insertGame(game, client)
@@ -74,7 +76,8 @@ router.post('/', async (
             players: players.map((plr) => {
               return plr.id === player.id ? plr : { ...plr, cards: 10 }
             }),
-            turn: game.turn
+            token: game.token,
+            turn: game.turn,
           } as Game
         },
         type: MessageType.START

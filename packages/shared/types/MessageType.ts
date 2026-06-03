@@ -6,6 +6,7 @@ export enum MessageType {
   JOIN = 'JOIN',
   PHASE_PLAY = 'PHASE_PLAY',
   PILE_DRAW = 'PILE_DRAW',
+  ROUND_END = 'ROUND_END',
   SKIP = 'SKIP',
   START = 'START',
 }

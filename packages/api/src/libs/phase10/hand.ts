@@ -19,7 +19,7 @@ export const addCard = (card: Card, userId: string, players: Player[]) => {
 /**
  * Removes a card from the hand of a given player (intended for discard)
  */
-export const removeCard = (card: Card, userId: string, players: Player[]) => {
+export const removeCard = (card: Card, userId: string, players: Player[]): Player => {
   const player = players.find((p) => p.id === userId)
   if (!player) {
     throw new RequestError('Error removing card from player’s hand (player not found)')
@@ -41,4 +41,6 @@ export const removeCard = (card: Card, userId: string, players: Player[]) => {
   }
 
   cards.splice(index, 1)
+
+  return player
 }
