@@ -14,7 +14,7 @@ import { selectGame, updateGame } from '@/data/queries/phase10/game'
 import { SKIP } from '@jgames/types'
 import { validateCard, validateId } from '@jgames/validations'
 import { wss } from '@/wss/wss'
-import type { Card, PostRequest } from '@jgames/types'
+import type { Card, Game, PostRequest } from '@jgames/types'
 
 export const router: Router = Router()
 
@@ -63,13 +63,34 @@ router.post('/', async (
 
     res.status(204).end()
 
-    wss.sendToAll({
-      data: {
-        card,
-        turn,
-      },
-      type: MessageType.DISCARD
-    })
+    if (roundOver) {
+      for (const playa of game.players) {
+        wss.sendToPlayer(playa.id, {
+          data: {
+            game: {
+              draw: game.draw,
+              id: game.id,
+              pile: game.pile,
+              players: game.players.map((plr) => {
+                return plr.id === playa.id ? plr : { ...plr, cards: 10 }
+              }),
+              token: game.token,
+              turn: game.turn,
+            } as Game,
+            userId
+          },
+          type: MessageType.ROUND_END
+        })
+      }
+    } else {
+      wss.sendToAll({
+        data: {
+          card,
+          turn,
+        },
+        type: MessageType.DISCARD
+      })
+    }
   } finally {
     await endTxn(client, { commit })
   }

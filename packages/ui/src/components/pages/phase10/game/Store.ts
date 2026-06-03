@@ -19,10 +19,12 @@ type State = {
   hitting: boolean
   playedPhase: boolean
   playingPhase: boolean
+  roundEnded: string
   showDrawModal: boolean
   showHit: boolean
   showNotTurnModal: boolean
   showPhase: boolean
+  updatedGame: Game
 }
 
 export class GameStore {
@@ -44,10 +46,12 @@ export class GameStore {
       hitting: false,
       playedPhase: false,
       playingPhase: false,
+      roundEnded: '',
       showDrawModal: false,
       showHit: false,
       showNotTurnModal: false,
       showPhase: false,
+      updatedGame: {} as Game,
     }
     this.ws = root.home.ws
 
@@ -567,6 +571,28 @@ export class GameStore {
         type: 'info',
       })
     }
+  }
+
+  updateAfterRoundEnd = (userId: string, game: Game) => {
+    const player = game.players.find((player) => player.id === this.root.home.userId)
+
+    if (!player) {
+      showToast({
+        message: `There was a player error (round end)`,
+        type: 'error',
+      })
+      return
+    }
+
+    for (const card of player.cards as Card[]) {
+      card.id = uuid()
+    }
+
+    this.state.discarding = false
+    this.state.discardingCard = undefined
+    this.state.discardLoading = false
+    this.state.roundEnded = userId
+    this.state.updatedGame = game
   }
 
   updateAfterSkip = (skipId: string, turn: string) => {

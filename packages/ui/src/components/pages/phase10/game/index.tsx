@@ -9,6 +9,7 @@ import { ChooseSkip } from '@/components/phase10/modals/ChooseSkip'
 import { Hit } from '@/components/phase10/Hit'
 import { Modal } from '@/components/Modal'
 import { Phase1 } from '@/components/phase10/phases/Phase1'
+import { RoundEnded } from '@/components/phase10/modals/RoundEnded'
 import { Skipped } from '@/components/phase10/Skipped'
 import { StoreContext } from '@/providers/phase10/StoreContext'
 
@@ -124,6 +125,9 @@ export const GamePage = observer(() => {
           </Button>
         </div>
       </div>
+      {store.state.roundEnded && (
+        <RoundEnded />
+      )}
       {store.state.showNotTurnModal && (
         <Modal
           onEscape={store.onEscapeNotTurnModal}

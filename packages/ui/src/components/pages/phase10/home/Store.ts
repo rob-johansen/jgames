@@ -100,6 +100,15 @@ export class HomeStore {
         })
       }
 
+      if (message.type === MessageType.ROUND_END) {
+        const game = message.data.game as Game
+        const userId = message.data.userId as string
+
+        runInAction(() => {
+          this.root.game.updateAfterRoundEnd(userId, game)
+        })
+      }
+
       if (message.type === MessageType.SKIP) {
         const skipId = message.data.skipId as string
         const turn = message.data.turn as string
