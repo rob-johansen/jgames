@@ -2,18 +2,19 @@ import { Router } from 'express'
 import type { PoolClient } from 'pg'
 import type { Response } from 'express'
 
+import { endRound } from '@/libs/phase10/round'
 import { endTxn, startTxn } from '@/data/db'
 import { getNextTurn, skipPlayer } from '@/libs/phase10/turn'
 import { logger } from '@/logger'
 import { MessageType } from '@jgames/types'
 import { removeCard } from '@/libs/phase10/hand'
 import { RequestError } from '@jgames/types'
-import { selectGame } from '@/data/queries/phase10/game'
+import { selectGame, updateGame } from '@/data/queries/phase10/game'
 import { skip } from '@/data/queries/phase10/skip'
 import { SKIP } from '@jgames/types'
 import { validateId } from '@jgames/validations'
 import { wss } from '@/wss/wss'
-import type { PostRequest } from '@jgames/types'
+import type { Card, Game, PostRequest } from '@jgames/types'
 
 export const router: Router = Router()
 
@@ -37,27 +38,33 @@ router.post('/', async (
     client = await startTxn()
 
     const game = await selectGame(gameId, userId, client)
-    if (!game) {
-      throw new RequestError('', 400)
-    }
+    if (!game) throw new RequestError('', 400)
 
     const turn = getNextTurn(userId, game.players)
-    if (!turn) {
-      throw new RequestError('')
-    }
+    if (!turn) throw new RequestError('')
 
-    removeCard({ color: '', value: SKIP }, userId, game.players)
+    const player = removeCard({ color: '', value: SKIP }, userId, game.players)
+    const roundOver = (player.cards as Card[]).length === 0
 
-    if (!skipPlayer(skipId, game.players)) {
-      throw new RequestError('', 400)
-    }
+    if (roundOver) {
+      try {
+        endRound(game)
+        commit = await updateGame(game, client)
+      } catch (err) {
+        logger.error('Error ending round after SKIP: %O', err)
+      }
+    } else {
+      if (!skipPlayer(skipId, game.players)) {
+        throw new RequestError('', 400)
+      }
 
-    game.turn = turn
+      game.turn = turn
 
-    try {
-      commit = await skip(game, client)
-    } catch (err) {
-      logger.error('Error playing SKIP: %O', err)
+      try {
+        commit = await skip(game, client)
+      } catch (err) {
+        logger.error('Error playing SKIP: %O', err)
+      }
     }
 
     if (!commit) {
@@ -66,10 +73,31 @@ router.post('/', async (
 
     res.status(204).end()
 
-    wss.sendToAll({
-      data: { skipId, turn },
-      type: MessageType.SKIP
-    })
+    if (roundOver) {
+      for (const playa of game.players) {
+        wss.sendToPlayer(playa.id, {
+          data: {
+            game: {
+              draw: game.draw,
+              id: game.id,
+              pile: game.pile,
+              players: game.players.map((plr) => {
+                return plr.id === playa.id ? plr : { ...plr, cards: 10 }
+              }),
+              token: game.token,
+              turn: game.turn,
+            } as Game,
+            userId
+          },
+          type: MessageType.ROUND_END
+        })
+      }
+    } else {
+      wss.sendToAll({
+        data: { skipId, turn },
+        type: MessageType.SKIP
+      })
+    }
   } finally {
     await endTxn(client, { commit })
   }

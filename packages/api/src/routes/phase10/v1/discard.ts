@@ -84,10 +84,7 @@ router.post('/', async (
       }
     } else {
       wss.sendToAll({
-        data: {
-          card,
-          turn,
-        },
+        data: { card, turn },
         type: MessageType.DISCARD
       })
     }
