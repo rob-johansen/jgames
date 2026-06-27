@@ -50,12 +50,12 @@ api.use((err: RequestError, _req: ApiRequest, res: Response, _next: NextFunction
   // Although `err` is typed as `RequestError`, it might be another type thrown
   // by a third-party API, so we must check for the existence of `statusCode`.
   if (err.statusCode && err.statusCode !== 500) {
-    res.status(err.statusCode).send({error: err.message})
+    res.status(err.statusCode).send({ error: err.message })
     return
   }
 
   logger.error('500 error: %O', err)
-  res.status(500).send({error: getFunnyError()})
+  res.status(500).send({ error: getFunnyError() })
 })
 
 api.listen(PORT, (): void => {

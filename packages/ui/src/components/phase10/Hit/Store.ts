@@ -116,6 +116,11 @@ export class HitStore {
   }
 
   onClickConfirm = async () => {
+    if (!this.root.game.myTurn) {
+      this.root.game.state.showNotTurnModal = true
+      return
+    }
+
     this.root.game.state.hitting = true
 
     const api = 'phase1' // TODO: Change this to `phase2` if the player is on phase 3 ... and so forth.
