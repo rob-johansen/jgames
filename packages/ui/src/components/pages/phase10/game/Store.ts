@@ -146,6 +146,9 @@ export class GameStore {
       if (this.me.phase === 1) {
         this.root.phase1.addCardFromHand(target, index)
       }
+      if (this.me.phase === 2) {
+        this.root.phase2.addCardFromHand(target, index)
+      }
     } else if (this.state.showHit) {
       if (this.state.hitting) return
 
@@ -591,6 +594,7 @@ export class GameStore {
     this.state.discarding = false
     this.state.discardingCard = undefined
     this.state.discardLoading = false
+    this.state.playedPhase = false
     this.state.roundEnded = userId
     this.state.updatedGame = game
   }

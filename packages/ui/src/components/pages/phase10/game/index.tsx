@@ -9,6 +9,7 @@ import { ChooseSkip } from '@/components/phase10/modals/ChooseSkip'
 import { Hit } from '@/components/phase10/Hit'
 import { Modal } from '@/components/Modal'
 import { Phase1 } from '@/components/phase10/phases/Phase1'
+import { Phase2 } from '@/components/phase10/phases/Phase2'
 import { RoundEnded } from '@/components/phase10/modals/RoundEnded'
 import { Skipped } from '@/components/phase10/Skipped'
 import { StoreContext } from '@/providers/phase10/StoreContext'
@@ -25,7 +26,10 @@ export const GamePage = observer(() => {
   return (
     <div className="flex h-dvh relative">
       {store.state.showPhase ? (
-        <>{store.me.phase === 1 && <Phase1 />}</>
+        <>
+          {store.me.phase === 1 && <Phase1 />}
+          {store.me.phase === 2 && <Phase2 />}
+        </>
       ) : (
         <>
           {store.state.showHit ? (
