@@ -1,6 +1,5 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import tsconfigPaths from 'vite-tsconfig-paths'
 
 export default defineConfig({
   build: {
@@ -15,7 +14,6 @@ export default defineConfig({
   logLevel: 'silent',
   plugins: [
     react(),
-    tsconfigPaths(),
     {
       apply: 'build',
       buildEnd(): void {
@@ -32,5 +30,8 @@ export default defineConfig({
       },
       name: 'vite-plugin-dts'
     }
-  ]
+  ],
+  resolve: {
+    tsconfigPaths: true
+  }
 })

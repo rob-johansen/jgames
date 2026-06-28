@@ -1,6 +1,7 @@
 import { makeAutoObservable } from 'mobx'
 
 import { showToast } from '@/components/Toast'
+import { validatePhase2 } from '@jgames/validations'
 import type { Card } from '@jgames/types'
 import type { RootStore } from '@/providers/phase10/RootStore'
 
@@ -70,9 +71,20 @@ export class Phase2Store {
       return
     }
 
-    // TODO and WYLO: Validate phase 2...
+    try {
+      validatePhase2({ set3: this.state.set, run4: this.state.run })
+    } catch (err) {
+      console.log('Error validating phase 2:', err)
+      showToast({
+        message: 'Something’s not right with your set or run!',
+        type: 'error'
+      })
+      return
+    }
 
-    console.log('Attempting to play phase 2...')
+    this.root.game.state.playingPhase = true
+
+    // TODO: Fire off the request...
   }
 
   onClickRight = () => {
