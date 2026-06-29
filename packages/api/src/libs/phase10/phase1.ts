@@ -55,22 +55,23 @@ export const play = (phase: Phase<1>, userId: string, players: Player[]): boolea
   }
 
   const cards = player.cards as Card[]
-  const sets = phase.set3a.concat(phase.set3b)
+  const phaseCards = phase.set3a.concat(phase.set3b)
 
   for (let i = cards.length - 1; i >= 0; i--) {
     const handCard = cards[i]
 
-    for (let j = sets.length - 1; j >= 0; j--) {
-      const setCard = sets[j]
+    for (let j = phaseCards.length - 1; j >= 0; j--) {
+      const phaseCard = phaseCards[j]
 
-      if (handCard.color === setCard.color && handCard.value === setCard.value) {
+      if (handCard.color === phaseCard.color && handCard.value === phaseCard.value) {
         cards.splice(i, 1)
-        sets.splice(j, 1)
+        phaseCards.splice(j, 1)
         break
       }
     }
   }
 
+  // The player should have 5 cards: 10 (hand) + 1 (draw) - 6 (phase) = 5
   if (cards.length !== 5) {
     logger.error('Error playing phase 1 (card move problem)')
     return false
