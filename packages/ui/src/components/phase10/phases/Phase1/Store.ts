@@ -2,7 +2,7 @@ import { makeAutoObservable } from 'mobx'
 
 import { showToast } from '@/components/Toast'
 import { validatePhase1 } from '@jgames/validations'
-import type { Card } from '@jgames/types'
+import type { Card, Phase } from '@jgames/types'
 import type { RootStore } from '@/providers/phase10/RootStore'
 
 type State = {
@@ -104,7 +104,7 @@ export class Phase1Store {
         phase: {
           set3a: this.state.set1.map(({ color, value }) => ({ color, value })),
           set3b: this.state.set2.map(({ color, value }) => ({ color, value })),
-        },
+        } as Phase<1>,
         userId: this.root.home.userId,
       }),
       credentials: 'include',

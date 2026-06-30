@@ -54,13 +54,13 @@ export class HitStore {
     const player = this.player
 
     if (player.phase === 1) {
-      // This player is still on phase 1, meaning we can't use their
-      // hit area. Thus, we put the card right back into our hand.
+      // The player is still on phase 1, meaning they can't use their
+      // hit area. Thus, we put the card right back into their hand.
       this.root.game.myCards.splice(index, 0, card)
       return
     }
 
-    if (player.phase === 2) {
+    if ((player.played as Phase<1>).set3a) {
       // Whether `this.state.phaseIndex` is 0 or 1, `this.state.cards` is a set of 3 and `card`
       // must match it (i.e. it must be a WILD, or match the values of the cards in the set).
       let add = card.value === WILD
@@ -84,6 +84,16 @@ export class HitStore {
       this.state.added.push(card)
       this.state.cards.push(card)
     }
+
+    if ((player.played as Phase<2>).set3) {
+      // TODO: If `this.state.phaseIndex` is 0, the player is adding a card to a set
+      //       Otherwise, the player is adding a card to a run
+      if (this.state.phaseIndex === 0) {
+        console.log('Adding a card to the set...')
+      } else {
+        console.log('Adding a card to the run...so the player must be able to move it...but only to the beginning or end, right?')
+      }
+    }
   }
 
   onClickBack = () => {
@@ -95,14 +105,16 @@ export class HitStore {
       return this.setCards(this.previousPlayerIndex, 1)
     }
 
-    if (player.phase === 2) {
-      if ((player.played as Phase<1>).set3a.length > 0) {
-        if (this.state.phaseIndex === 1) {
-          return this.setCards(this.state.playerIndex, 0)
-        }
+    const phase1 = (player.played as Phase<1>).set3a
+    const phase2 = (player.played as Phase<2>).set3
+
+    if (phase1?.length || phase2?.length) {
+      if (this.state.phaseIndex === 1) {
+        return this.setCards(this.state.playerIndex, 0)
       }
-      return this.setCards(this.previousPlayerIndex, 1)
     }
+
+    return this.setCards(this.nextPlayerIndex, 1)
   }
 
   onClickCard = (card: Card) => {
@@ -162,14 +174,16 @@ export class HitStore {
       return this.setCards(this.nextPlayerIndex, 0)
     }
 
-    if (player.phase === 2) {
-      if ((player.played as Phase<1>).set3a.length > 0) {
-        if (this.state.phaseIndex === 0) {
-          return this.setCards(this.state.playerIndex, 1)
-        }
+    const phase1 = (player.played as Phase<1>).set3a
+    const phase2 = (player.played as Phase<2>).set3
+
+    if (phase1?.length || phase2?.length) {
+      if (this.state.phaseIndex === 0) {
+        return this.setCards(this.state.playerIndex, 1)
       }
-      return this.setCards(this.nextPlayerIndex, 0)
     }
+
+    return this.setCards(this.nextPlayerIndex, 0)
   }
 
   setCards = (playerIndex = 0, phaseIndex = 0) => {
@@ -181,13 +195,18 @@ export class HitStore {
 
     if (player.phase === 1) return
 
-    if (player.phase === 2) {
-      if (phaseIndex === 0 && (player.played as Phase<1>).set3a.length > 0) {
-        this.state.cards = (player.played as Phase<1>).set3a
-      }
-      if (phaseIndex === 1 && (player.played as Phase<1>).set3b.length > 0) {
-        this.state.cards = (player.played as Phase<1>).set3b
-      }
+    if ((player.played as Phase<1>).set3a) {
+      const phase = player.played as Phase<1>
+      if (phaseIndex === 0 && phase.set3a.length > 0) this.state.cards = phase.set3a
+      if (phaseIndex === 1 && phase.set3b.length > 0) this.state.cards = phase.set3b
+      return
+    }
+
+    if ((player.played as Phase<2>).set3) {
+      const phase = player.played as Phase<2>
+      if (phaseIndex === 0 && phase.set3.length > 0) this.state.cards = phase.set3
+      if (phaseIndex === 1 && phase.run4.length > 0) this.state.cards = phase.run4
+      return
     }
   }
 }
