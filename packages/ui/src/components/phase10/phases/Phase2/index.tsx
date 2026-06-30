@@ -10,7 +10,7 @@ export const Phase2 = observer(() => {
   const { phase2: store } = useContext(StoreContext)
 
   return (
-    <div className="absolute border border-slate-300 shadow-phase h-fit left-0 mt-[40px] mx-auto pb-[32px] right-0 rounded-[8px] w-[728px]">
+    <div className="absolute border border-slate-300 shadow-phase h-fit left-0 mt-[40px] mx-auto pb-[32px] right-0 rounded-[8px] w-[788px]">
       <div className="flex gap-x-[24px]">
         <div className="border-b border-b-slate-300 border-r border-r-slate-300 flex h-[273px] items-center justify-center px-[24px] py-[20px] relative rounded-br-[8px] w-[298px]">
           <span className="absolute text-[2.25rem] text-slate-400">
@@ -42,7 +42,7 @@ export const Phase2 = observer(() => {
             <Icon className="size-[24px]" primary={`${store.state.left ? '#94a3b8' : '#171717'}`} source={ChevronRight} />
           </button>
         </div>
-        <div className="border-b border-b-slate-300 border-l border-l-slate-300 flex h-[273px] items-center justify-center px-[24px] py-[20px] relative rounded-bl-[8px] w-[298px]">
+        <div className="border-b border-b-slate-300 border-l border-l-slate-300 flex h-[273px] items-center justify-center px-[24px] py-[20px] relative rounded-bl-[8px] w-[358px]">
           <span className="absolute text-[2.25rem] text-slate-400">
             Run of 4
           </span>
