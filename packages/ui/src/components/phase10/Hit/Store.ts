@@ -78,7 +78,7 @@ export class HitStore {
   addCardToRun = (card: Card, index: number) => {
     if (this.state.cards.length === 12) {
       // The run is full, so we put the card right back into the player's
-      // hand (making it look like they weren't able to click it).
+      // hand (making it look like they weren't able to click the card).
       this.root.game.myCards.splice(index, 0, card)
       return
     }
@@ -140,8 +140,56 @@ export class HitStore {
       return
     }
 
-    // TODO and WYLO: It's a number card, so put it in the correct spot (or return it to their hand if it can't go at the start or end).
-    console.log('Adding a numeric card to the run...if possible...')
+    // The card is a regular number card. Try to place it at the start of the run.
+    let start = 0
+    let offset = 0
+
+    for (const kard of this.state.cards) {
+      if (kard.value === WILD) {
+        offset++
+        continue
+      }
+      start = kard.value
+      break
+    }
+
+    if (offset > 0) {
+      start -= offset
+    }
+
+    if (start - 1 === card.value) {
+      this.state.added.unshift(card)
+      this.state.cards.unshift(card)
+      return
+    }
+
+    // It couldn't be placed at the start, so try the end.
+    let end = 0
+    offset = 0
+
+    for (let i = this.state.cards.length - 1; i >= 0; i--) {
+      const kard = this.state.cards[i]
+      if (kard.value === WILD) {
+        offset++
+        continue
+      }
+      end = kard.value
+      break
+    }
+
+    if (offset > 0) {
+      end += offset
+    }
+
+    if (end + 1 === card.value) {
+      this.state.added.push(card)
+      this.state.cards.push(card)
+      return
+    }
+
+    // The card couldn't be placed at the start or end of the run, so we put it right
+    // back into the player's hand (making it look like they weren't able to click it).
+    this.root.game.myCards.splice(index, 0, card)
   }
 
   addCardToSet = (card: Card, index: number) => {
@@ -258,7 +306,7 @@ export class HitStore {
   }
 
   onEscapePromptCard = (open: boolean) => {
-    if (!open && this.state.wildCard && this.state.wildIndex) {
+    if (!open && this.state.wildCard && typeof this.state.wildIndex !== 'undefined') {
       this.root.game.myCards.splice(this.state.wildIndex, 0, this.state.wildCard)
       this.state.wildCard = undefined
       this.state.wildIndex = undefined
@@ -266,7 +314,7 @@ export class HitStore {
   }
 
   onPlaceWild = (pos: 'start' | 'end') => {
-    if (!this.state.wildCard || !this.state.wildIndex) return
+    if (!this.state.wildCard || typeof this.state.wildIndex === 'undefined') return
 
     if (pos === 'start') {
       this.state.added.unshift(this.state.wildCard)
