@@ -4,6 +4,7 @@ import { useContext } from 'react'
 import { Button } from '@/components/button/Button'
 import { Card } from '@/components/phase10/Card'
 import { Icon, ChevronLeft, ChevronRight } from '@/components/icon'
+import { Modal } from '@/components/Modal'
 import { StoreContext } from '@/providers/phase10/StoreContext'
 
 export const Hit = observer(() => {
@@ -67,6 +68,25 @@ export const Hit = observer(() => {
           Confirm
         </Button>
       </div>
+      {store.state.wildCard && (
+        <Modal
+          onEscape={store.onEscapePromptCard}
+          title="Where would you like to place your WILD?"
+        >
+          <div className="flex gap-x-[12px] justify-between mt-[28px]">
+            <Button
+              onClick={() => store.onPlaceWild('start')}
+            >
+              Start
+            </Button>
+            <Button
+              onClick={() => store.onPlaceWild('end')}
+            >
+              End
+            </Button>
+          </div>
+        </Modal>
+      )}
     </div>
   )
 })

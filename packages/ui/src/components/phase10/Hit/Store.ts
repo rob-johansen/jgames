@@ -10,6 +10,8 @@ type State = {
   cards: Card[]
   phaseIndex: number
   playerIndex: number
+  wildCard?: Card
+  wildIndex?: number
 }
 
 export class HitStore {
@@ -61,39 +63,108 @@ export class HitStore {
     }
 
     if ((player.played as Phase<1>).set3a) {
-      // Whether `this.state.phaseIndex` is 0 or 1, `this.state.cards` is a set of 3 and `card`
-      // must match it (i.e. it must be a WILD, or match the values of the cards in the set).
-      let add = card.value === WILD
-
-      if (!add) {
-        for (const played of this.state.cards) {
-          if (card.value === played.value) {
-            add = true
-            break
-          }
-        }
-      }
-
-      if (!add) {
-        // The card doesn't match the set, so we put it right back into our
-        // hand (making it look like the player was not able to click it).
-        this.root.game.myCards.splice(index, 0, card)
-        return
-      }
-
-      this.state.added.push(card)
-      this.state.cards.push(card)
+      this.addCardToSet(card, index)
     }
 
     if ((player.played as Phase<2>).set3) {
-      // TODO: If `this.state.phaseIndex` is 0, the player is adding a card to a set
-      //       Otherwise, the player is adding a card to a run
       if (this.state.phaseIndex === 0) {
-        console.log('Adding a card to the set...')
+        this.addCardToSet(card, index)
       } else {
-        console.log('Adding a card to the run...so the player must be able to move it...but only to the beginning or end, right?')
+        this.addCardToRun(card, index)
       }
     }
+  }
+
+  addCardToRun = (card: Card, index: number) => {
+    if (this.state.cards.length === 12) {
+      // The run is full, so we put the card right back into the player's
+      // hand (making it look like they weren't able to click it).
+      this.root.game.myCards.splice(index, 0, card)
+      return
+    }
+
+    if (card.value === WILD) {
+      // If the value of the first card is a 1, or a WILD in
+      // the position of a 1, this WILD must go to the end.
+      let target = 0
+      let offset = 0
+
+      for (const kard of this.state.cards) {
+        if (kard.value === WILD) {
+          offset++
+          continue
+        }
+        target = kard.value
+        break
+      }
+
+      if (offset > 0) {
+        target -= offset
+      }
+
+      if (target === 1) {
+        this.state.added.push(card)
+        this.state.cards.push(card)
+        return
+      }
+
+      // If the value of the last card is a 12, or a WILD in
+      // the position of a 12, this WILD must go to the start.
+      target = 0
+      offset = 0
+
+      for (let i = this.state.cards.length - 1; i >= 0; i--) {
+        const kard = this.state.cards[i]
+        if (kard.value === WILD) {
+          offset++
+          continue
+        }
+        target = kard.value
+        break
+      }
+
+      if (offset > 0) {
+        target += offset
+      }
+
+      if (target === 12) {
+        this.state.added.unshift(card)
+        this.state.cards.unshift(card)
+        return
+      }
+
+      // This WILD could go at the start or end,
+      // so ask the player where they want it.
+      this.state.wildCard = card
+      this.state.wildIndex = index
+      return
+    }
+
+    // TODO and WYLO: It's a number card, so put it in the correct spot (or return it to their hand if it can't go at the start or end).
+    console.log('Adding a numeric card to the run...if possible...')
+  }
+
+  addCardToSet = (card: Card, index: number) => {
+    let add = card.value === WILD
+
+    if (!add) {
+      for (const played of this.state.cards) {
+        if (card.value === played.value) {
+          add = true
+          break
+        }
+      }
+    }
+
+    if (!add) {
+      // The card doesn't match the set, so we put it right back into the
+      // player's hand (making it look like they weren't able to click it).
+      this.root.game.myCards.splice(index, 0, card)
+      return
+    }
+
+    this.state.added.push(card)
+    this.state.cards.push(card)
   }
 
   onClickBack = () => {
@@ -184,6 +255,29 @@ export class HitStore {
     }
 
     return this.setCards(this.nextPlayerIndex, 0)
+  }
+
+  onEscapePromptCard = (open: boolean) => {
+    if (!open && this.state.wildCard && this.state.wildIndex) {
+      this.root.game.myCards.splice(this.state.wildIndex, 0, this.state.wildCard)
+      this.state.wildCard = undefined
+      this.state.wildIndex = undefined
+    }
+  }
+
+  onPlaceWild = (pos: 'start' | 'end') => {
+    if (!this.state.wildCard || !this.state.wildIndex) return
+
+    if (pos === 'start') {
+      this.state.added.unshift(this.state.wildCard)
+      this.state.cards.unshift(this.state.wildCard)
+    } else {
+      this.state.added.push(this.state.wildCard)
+      this.state.cards.push(this.state.wildCard)
+    }
+
+    this.state.wildCard = undefined
+    this.state.wildIndex = undefined
   }
 
   setCards = (playerIndex = 0, phaseIndex = 0) => {
