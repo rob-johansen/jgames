@@ -28,11 +28,10 @@ router.post('/hit', async (
 
   let added: Card[] | undefined
   let cards: Card[] | undefined
-  let set3 = false
+  let phasePart = 1
 
   if (req.body.set3) {
     cards = req.body.set3
-    set3 = true
   }
   if (req.body.run4) {
     added = req.body.added
@@ -40,6 +39,7 @@ router.post('/hit', async (
     for (const card of added) { validateCard(card) }
 
     cards = req.body.run4
+    phasePart = 2
   }
 
   if (!cards) throw new RequestError('', 400)
@@ -71,7 +71,7 @@ router.post('/hit', async (
         hitteeId,
         hitterId,
         phase: 2,
-        set3
+        phasePart
       },
       type: MessageType.HIT
     })

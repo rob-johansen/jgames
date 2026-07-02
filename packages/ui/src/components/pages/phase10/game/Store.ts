@@ -528,6 +528,15 @@ export class GameStore {
           card.id = uuid()
           played.push(card)
         }
+      } else if (phase === 2) {
+        const played = phasePart === 1 ? (hittee.played as Phase<2>).set3 : (hittee.played as Phase<2>).run4
+        if (phasePart === 2) {
+          played.length = 0 // The run must be in order, so we reset it and just take what the WebSocket gave us.
+        }
+        for (const card of cards) {
+          card.id = uuid()
+          played.push(card)
+        }
       }
     }
 
