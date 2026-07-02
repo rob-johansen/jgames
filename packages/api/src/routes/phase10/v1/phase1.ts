@@ -28,7 +28,8 @@ router.post('/hit', async (
 
   let cards: Card[] | undefined
   let set3a = false
-    if (req.body.set3a) {
+
+  if (req.body.set3a) {
     cards = req.body.set3a
     set3a = true
   }

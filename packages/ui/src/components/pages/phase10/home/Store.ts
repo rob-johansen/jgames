@@ -73,6 +73,12 @@ export class HomeStore {
         const hitteeId = message.data.hitteeId as string
         const hitterId = message.data.hitterId as string
         const phase = message.data.phase as number
+
+        /*
+          TODO and WYLO: Come up with a better way to idenify which part of the phase was hit ... (set3 for phase 2 would mask set3 for phase 10)
+                         How about `phasePart: 1` or `phasePart: 2`?
+         */
+
         const set3a = message.data.set3a as boolean | undefined
         this.root.game.updateAfterHit({ cards, hitteeId, hitterId, phase, set3a })
       }

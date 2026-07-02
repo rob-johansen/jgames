@@ -66,7 +66,7 @@ export class HitStore {
       this.addCardToSet(card, index)
     }
 
-    if ((player.played as Phase<2>).set3) {
+    if ((player.played as Phase<2>).set3 && (player.played as Phase<2>).run4) {
       if (this.state.phaseIndex === 0) {
         this.addCardToSet(card, index)
       } else {
@@ -224,10 +224,10 @@ export class HitStore {
       return this.setCards(this.previousPlayerIndex, 1)
     }
 
-    const phase1 = (player.played as Phase<1>).set3a
-    const phase2 = (player.played as Phase<2>).set3
+    const phase1 = (player.played as Phase<1>).set3a?.length > 0
+    const phase2 = (player.played as Phase<2>).set3?.length > 0 && (player.played as Phase<2>).run4?.length > 0
 
-    if (phase1?.length || phase2?.length) {
+    if (phase1 || phase2) {
       if (this.state.phaseIndex === 1) {
         return this.setCards(this.state.playerIndex, 0)
       }
@@ -254,13 +254,23 @@ export class HitStore {
 
     this.root.game.state.hitting = true
 
-    const api = 'phase1' // TODO: Change this to `phase2` if the player is on phase 3 ... and so forth.
+    const player = this.player
+    const added: Card[] = this.state.added.map((c) => ({ color: c.color, value: c.value }))
+    let api = ''
+    let body: Partial<Phase> & { added?: Card[] } = {}
 
-    const cards: Card[] = []
+    if ((player.played as Phase<1>).set3a) {
+      api = 'phase1'
+      body = this.state.phaseIndex === 0 ? { set3a: added } : { set3b: added }
+    }
 
-    for (const card of this.state.added) {
-      const { color, value } = card
-      cards.push({ color, value })
+    if ((player.played as Phase<2>).set3 && (player.played as Phase<2>).run4) {
+      api = 'phase2'
+      if (this.state.phaseIndex === 0) {
+        body = { set3: added }
+      } else {
+        body = { added, run4: this.state.cards.map((c) => ({ color: c.color, value: c.value })) }
+      }
     }
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/phase10/v1/${api}/hit`, {
@@ -268,7 +278,7 @@ export class HitStore {
         gameId: this.root.game.state.game.id,
         hitteeId: this.player.id,
         hitterId: this.root.game.me.id,
-        ...(this.state.phaseIndex === 0 ? { set3a: cards } : { set3b: cards })
+        ...body
       }),
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
@@ -293,10 +303,10 @@ export class HitStore {
       return this.setCards(this.nextPlayerIndex, 0)
     }
 
-    const phase1 = (player.played as Phase<1>).set3a
-    const phase2 = (player.played as Phase<2>).set3
+    const phase1 = (player.played as Phase<1>).set3a?.length > 0
+    const phase2 = (player.played as Phase<2>).set3?.length > 0 && (player.played as Phase<2>).run4?.length > 0
 
-    if (phase1?.length || phase2?.length) {
+    if (phase1 || phase2) {
       if (this.state.phaseIndex === 0) {
         return this.setCards(this.state.playerIndex, 1)
       }
@@ -344,7 +354,7 @@ export class HitStore {
       return
     }
 
-    if ((player.played as Phase<2>).set3) {
+    if ((player.played as Phase<2>).set3 && (player.played as Phase<2>).run4) {
       const phase = player.played as Phase<2>
       if (phaseIndex === 0 && phase.set3.length > 0) this.state.cards = phase.set3
       if (phaseIndex === 1 && phase.run4.length > 0) this.state.cards = phase.run4
