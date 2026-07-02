@@ -6,10 +6,10 @@ type HitProps = {
   hitteeId: string
   hitterId: string
   players: Player[]
-  set3a: boolean
+  phasePart: number
 }
 
-export const hit = ({ cards, hitteeId, hitterId, players, set3a }: HitProps): boolean => {
+export const hit = ({ cards, hitteeId, hitterId, players, phasePart }: HitProps): boolean => {
   const hitter = players.find((p) => p.id === hitterId)
   if (!hitter) {
     logger.error('Error hitting phase 1 (hitter not found)')
@@ -23,7 +23,7 @@ export const hit = ({ cards, hitteeId, hitterId, players, set3a }: HitProps): bo
   }
 
   const hitterCards = hitter.cards as Card[]
-  const hitteeCards = set3a ? (hittee.played as Phase<1>).set3a : (hittee.played as Phase<1>).set3b
+  const hitteeCards = phasePart === 1 ? (hittee.played as Phase<1>).set3a : (hittee.played as Phase<1>).set3b
 
   for (let i = hitterCards.length - 1; i >= 0; i--) {
     const handCard = hitterCards[i]

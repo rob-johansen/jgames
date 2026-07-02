@@ -27,14 +27,14 @@ router.post('/hit', async (
   const hitterId = validateId(req.body.hitterId)
 
   let cards: Card[] | undefined
-  let set3a = false
+  let phasePart = 1
 
   if (req.body.set3a) {
     cards = req.body.set3a
-    set3a = true
   }
   if (req.body.set3b) {
     cards = req.body.set3b
+    phasePart = 2
   }
 
   if (!cards) throw new RequestError('', 400)
@@ -51,7 +51,7 @@ router.post('/hit', async (
 
     // We pass a copy of the cards, because `hit()` needs to empty it,
     // but we also need to send the cards via `MessageType.HIT` below.
-    if (!hit({ cards: [...cards], hitteeId, hitterId, players: game.players, set3a })) {
+    if (!hit({ cards: [...cards], hitteeId, hitterId, players: game.players, phasePart })) {
       throw new RequestError('', 400)
     }
 
@@ -66,7 +66,7 @@ router.post('/hit', async (
         hitteeId,
         hitterId,
         phase: 1,
-        set3a
+        phasePart
       },
       type: MessageType.HIT
     })

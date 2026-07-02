@@ -501,7 +501,7 @@ export class GameStore {
   }
 
   updateAfterHit = (props: HitMessage) => {
-    const { cards, hitteeId, hitterId, phase, set3a } = props
+    const { cards, hitteeId, hitterId, phase, phasePart } = props
     const hitter = this.state.game.players.find((player) => player.id === hitterId)
     const hittee = this.state.game.players.find((player) => player.id === hitteeId)
 
@@ -523,7 +523,7 @@ export class GameStore {
 
     if (this.state.game.turn !== this.me.id) {
       if (phase === 1) {
-        const played = set3a ? (hittee.played as Phase<1>).set3a : (hittee.played as Phase<1>).set3b
+        const played = phasePart === 1 ? (hittee.played as Phase<1>).set3a : (hittee.played as Phase<1>).set3b
         for (const card of cards) {
           card.id = uuid()
           played.push(card)

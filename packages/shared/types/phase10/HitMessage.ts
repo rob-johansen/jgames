@@ -5,5 +5,5 @@ export type HitMessage = {
   hitteeId: string,
   hitterId: string,
   phase: number,
-  set3a?: boolean
+  phasePart: number
 }
