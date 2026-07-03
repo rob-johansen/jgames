@@ -2,7 +2,7 @@ import { makeAutoObservable } from 'mobx'
 
 import { showToast } from '@/components/Toast'
 import { validatePhase3 } from '@jgames/validations'
-import type { Card } from '@jgames/types'
+import type { Card, Phase } from '@jgames/types'
 import type { RootStore } from '@/providers/phase10/RootStore'
 
 type State = {
@@ -73,10 +73,27 @@ export class Phase3Store {
 
     this.root.game.state.playingPhase = true
 
-    // TODO: Fire off the request
-    console.log('Firing off the phase 3 request...')
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/phase10/v1/phase3/play`, {
+      body: JSON.stringify({
+        gameId: this.root.game.state.game.id,
+        phase: {
+          set4: this.state.set.map(({ color, value }) => ({ color, value })),
+          run4: this.state.run.map(({ color, value }) => ({ color, value })),
+        } as Phase<3>,
+        userId: this.root.home.userId,
+      }),
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      method: 'POST',
+      mode: 'cors'
+    })
 
-    // TODO: Show a toast if the resonse is not ok
+    if (!response.ok) {
+      showToast({
+        message: 'There was an error playing phase 3',
+        type: 'error',
+      })
+    }
   }
 
   onClickRight = () => {
