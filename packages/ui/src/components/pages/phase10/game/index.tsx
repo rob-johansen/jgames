@@ -10,6 +10,7 @@ import { Hit } from '@/components/phase10/Hit'
 import { Modal } from '@/components/Modal'
 import { Phase1 } from '@/components/phase10/phases/Phase1'
 import { Phase2 } from '@/components/phase10/phases/Phase2'
+import { Phase3 } from '@/components/phase10/phases/Phase3'
 import { RoundEnded } from '@/components/phase10/modals/RoundEnded'
 import { Skipped } from '@/components/phase10/Skipped'
 import { StoreContext } from '@/providers/phase10/StoreContext'
@@ -29,6 +30,7 @@ export const GamePage = observer(() => {
         <>
           {store.me.phase === 1 && <Phase1 />}
           {store.me.phase === 2 && <Phase2 />}
+          {store.me.phase === 3 && <Phase3 />}
         </>
       ) : (
         <>

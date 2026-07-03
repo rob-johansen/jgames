@@ -5,6 +5,7 @@ import { HitStore } from '@/components/phase10/Hit/Store'
 import { HomeStore } from '@/components/pages/phase10/home/Store'
 import { Phase1Store } from '@/components/phase10/phases/Phase1/Store'
 import { Phase2Store } from '@/components/phase10/phases/Phase2/Store'
+import { Phase3Store } from '@/components/phase10/phases/Phase3/Store'
 
 export class RootStore {
   game: GameStore
@@ -12,6 +13,7 @@ export class RootStore {
   home: HomeStore
   phase1: Phase1Store
   phase2: Phase2Store
+  phase3: Phase3Store
 
   constructor() {
     // Other stores depend on HomeStore, so it's instantiated first.
@@ -21,6 +23,7 @@ export class RootStore {
     this.hit = new HitStore(this)
     this.phase1 = new Phase1Store(this)
     this.phase2 = new Phase2Store(this)
+    this.phase3 = new Phase3Store(this)
     makeAutoObservable(this)
   }
 }
