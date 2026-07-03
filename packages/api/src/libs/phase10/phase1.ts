@@ -71,7 +71,7 @@ export const play = (phase: Phase<1>, userId: string, players: Player[]): boolea
     }
   }
 
-  // The player should have 5 cards: 10 (hand) + 1 (draw) - 6 (phase) = 5
+  // The player should have 5 cards left: 11 (hand) - 6 (phase) = 5
   if (cards.length !== 5) {
     logger.error('Error playing phase 1 (card move problem)')
     return false
