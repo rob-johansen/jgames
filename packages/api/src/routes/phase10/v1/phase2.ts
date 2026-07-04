@@ -31,8 +31,7 @@ router.post('/hit', async (
 
   if (req.body.set3) {
     cards = req.body.set3
-  }
-  if (req.body.run4) {
+  } else if (req.body.run4) {
     added = req.body.added
     if (!added) throw new RequestError('', 400)
     for (const card of added) { validateCard(card) }

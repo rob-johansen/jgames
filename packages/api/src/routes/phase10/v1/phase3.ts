@@ -2,15 +2,81 @@ import { type Response, Router } from 'express'
 import type { PoolClient } from 'pg'
 
 import { endTxn, startTxn } from '@/data/db'
-import { play } from '@/libs/phase10/phase3'
+import { hit, play } from '@/libs/phase10/phase3'
 import { MessageType, RequestError } from '@jgames/types'
 import { selectGame } from '@/data/queries/phase10/game'
 import { updatePlayers } from '@/data/queries/phase10/players'
 import { validateCard, validateId, validatePhase3 } from '@jgames/validations'
 import { wss } from '@/wss/wss'
-import type { Phase, PostRequest } from '@jgames/types'
+import type { Card, Phase, PostRequest } from '@jgames/types'
 
 export const router: Router = Router()
+
+router.post('/hit', async (
+  req: PostRequest<{
+    added?: Card[]
+    gameId: string,
+    hitteeId: string,
+    hitterId: string
+  } & Partial<Phase<3>>>,
+  res: Response<void>,
+) => {
+  const gameId = validateId(req.body.gameId)
+  const hitteeId = validateId(req.body.hitteeId)
+  const hitterId = validateId(req.body.hitterId)
+
+  let added: Card[] | undefined
+  let cards: Card[] | undefined
+  let phasePart = 1
+
+  if (req.body.set4) {
+    cards = req.body.set4
+  } else if (req.body.run4) {
+    added = req.body.added
+    if (!added) throw new RequestError('', 400)
+    for (const card of added) { validateCard(card) }
+
+    cards = req.body.run4
+    phasePart = 2
+  }
+
+  if (!cards) throw new RequestError('', 400)
+  for (const card of cards) { validateCard(card) }
+
+  let client: PoolClient | undefined
+  let commit = false
+
+  try {
+    client = await startTxn()
+
+    const game = await selectGame(gameId, hitterId, client)
+    if (!game) throw new RequestError('', 400)
+
+    // We pass a copy of the cards, because `hit()` needs to empty it,
+    // but we also need to send the cards via `MessageType.HIT` below.
+    if (!hit({ added, cards: [...cards], hitteeId, hitterId, players: game.players })) {
+      throw new RequestError('', 400)
+    }
+
+    commit = await updatePlayers(game, client)
+    if (!commit) throw new RequestError('')
+
+    res.status(204).end()
+
+    wss.sendToAll({
+      data: {
+        cards,
+        hitteeId,
+        hitterId,
+        phase: 3,
+        phasePart
+      },
+      type: MessageType.HIT
+    })
+  } finally {
+    await endTxn(client, { commit })
+  }
+})
 
 router.post('/play', async (
   req: PostRequest<{ phase: Phase<3>, gameId: string, userId: string }>,
