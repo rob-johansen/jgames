@@ -12,6 +12,7 @@ import { router as phase10JoinV1 } from '@/routes/phase10/v1/join'
 import { router as phase10Phase1V1 } from '@/routes/phase10/v1/phase1'
 import { router as phase10Phase2V1 } from '@/routes/phase10/v1/phase2'
 import { router as phase10Phase3V1 } from '@/routes/phase10/v1/phase3'
+import { router as phase10Phase4V1 } from '@/routes/phase10/v1/phase4'
 import { router as phase10SkipV1 } from '@/routes/phase10/v1/skip'
 import { router as phase10StartV1 } from '@/routes/phase10/v1/start'
 import type { ApiRequest } from '@jgames/types'
@@ -39,6 +40,7 @@ api.use('/api/phase10/v1/join', phase10JoinV1)
 api.use('/api/phase10/v1/phase1', phase10Phase1V1)
 api.use('/api/phase10/v1/phase2', phase10Phase2V1)
 api.use('/api/phase10/v1/phase3', phase10Phase3V1)
+api.use('/api/phase10/v1/phase4', phase10Phase4V1)
 api.use('/api/phase10/v1/skip', phase10SkipV1)
 api.use('/api/phase10/v1/start', phase10StartV1)
 
