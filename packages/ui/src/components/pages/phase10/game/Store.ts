@@ -149,6 +149,8 @@ export class GameStore {
         this.root.phase2.addCardFromHand(target, index)
       } else if (this.me.phase === 3) {
         this.root.phase3.addCardFromHand(target, index)
+      } else if (this.me.phase === 4) {
+        this.root.phase4.addCardFromHand(target, index)
       }
     } else if (this.state.showHit) {
       if (this.state.hitting) return

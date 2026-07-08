@@ -95,6 +95,7 @@ export const validatePhase2 = (phase?: Phase<2>): Phase<2> => {
     }
 
     if (num1 <= 0 || num1 >= 10) {
+      // If the run started at 10, it would end at 13.
       throw new ClientError('Invalid phase 2')
     }
 
@@ -144,6 +145,7 @@ export const validatePhase3 = (phase?: Phase<3>): Phase<3> => {
     }
 
     if (num1 <= 0 || num1 >= 10) {
+      // If the run started at 10, it would end at 13.
       throw new ClientError('Invalid phase 3')
     }
 
@@ -161,4 +163,57 @@ export const validatePhase3 = (phase?: Phase<3>): Phase<3> => {
   }
 
   throw new ClientError('Invalid phase 3')
+}
+
+export const validatePhase4 = (phase?: Phase<4>): Phase<4> => {
+  if (!phase || !Array.isArray(phase.run7) || phase.run7.length !== 7) {
+    throw new ClientError('Invalid phase 4')
+  }
+
+  const run = phase.run7.map(c => c.value)
+
+  let num1 = 0
+  let offset = 0
+
+  for (const number of run) {
+    if (number === WILD) {
+      offset++
+      continue
+    }
+    num1 = number
+    break
+  }
+
+  if (num1 === 0) {
+    throw new ClientError('A run must have more than just WILD cards.')
+  }
+
+  if (offset > 0) {
+    num1 -= offset
+  }
+
+  if (num1 <= 0 || num1 >= 7) {
+    // If the run started at 7, it would end at 13.
+    throw new ClientError('Invalid phase 4')
+  }
+
+  const num2 = run[1]
+  const num3 = run[2]
+  const num4 = run[3]
+  const num5 = run[4]
+  const num6 = run[5]
+  const num7 = run[6]
+
+  if (
+    (num2 === num1 + 1 || num2 === WILD) &&
+    (num3 === num1 + 2 || num3 === WILD) &&
+    (num4 === num1 + 3 || num4 === WILD) &&
+    (num5 === num1 + 4 || num5 === WILD) &&
+    (num6 === num1 + 5 || num6 === WILD) &&
+    (num7 === num1 + 6 || num7 === WILD)
+  ) {
+    return phase
+  }
+
+  throw new ClientError('Invalid phase 4')
 }
