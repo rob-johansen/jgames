@@ -382,5 +382,11 @@ export class HitStore {
       if (phaseIndex === 1 && phase.run4.length > 0) this.state.cards = phase.run4
       return
     }
+
+    if ((player.played as Phase<4>).run7) {
+      const phase = player.played as Phase<4>
+      if (phase.run7.length > 0) this.state.cards = phase.run7
+      return
+    }
   }
 }

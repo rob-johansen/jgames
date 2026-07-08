@@ -596,6 +596,11 @@ export class GameStore {
       for (const card of phaze.run4) { card.id = uuid() }
     }
 
+    if ((player.played as Phase<4>).run7) {
+      const phaze: Phase<4> = player.played as Phase<4>
+      for (const card of phaze.run7) { card.id = uuid() }
+    }
+
     if (this.state.game.turn === this.me.id) {
       this.state.playedPhase = true
       this.state.playingPhase = false

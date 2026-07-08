@@ -9,7 +9,7 @@ export const play = (phase: Phase<4>, userId: string, players: Player[]): boolea
   }
 
   const cards = player.cards as Card[]
-  const phaseCards = phase.run7
+  const phaseCards = structuredClone(phase.run7)
 
   for (let i = cards.length - 1; i >= 0; i--) {
     const handCard = cards[i]
