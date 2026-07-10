@@ -373,27 +373,20 @@ export class HitStore {
       const phase = player.played as Phase<1>
       if (phaseIndex === 0 && phase.set3a.length > 0) this.state.cards = phase.set3a
       if (phaseIndex === 1 && phase.set3b.length > 0) this.state.cards = phase.set3b
-      return
-    }
-
-    if ((player.played as Phase<2>).set3 && (player.played as Phase<2>).run4) {
+    } else if ((player.played as Phase<2>).set3 && (player.played as Phase<2>).run4) {
       const phase = player.played as Phase<2>
       if (phaseIndex === 0 && phase.set3.length > 0) this.state.cards = phase.set3
       if (phaseIndex === 1 && phase.run4.length > 0) this.state.cards = phase.run4
-      return
-    }
-
-    if ((player.played as Phase<3>).set4 && (player.played as Phase<3>).run4) {
+    } else if ((player.played as Phase<3>).set4 && (player.played as Phase<3>).run4) {
       const phase = player.played as Phase<3>
       if (phaseIndex === 0 && phase.set4.length > 0) this.state.cards = phase.set4
       if (phaseIndex === 1 && phase.run4.length > 0) this.state.cards = phase.run4
-      return
-    }
-
-    if ((player.played as Phase<4>).run7) {
+    } else if ((player.played as Phase<4>).run7) {
       const phase = player.played as Phase<4>
       if (phase.run7.length > 0) this.state.cards = phase.run7
-      return
+    } else if ((player.played as Phase<5>).run8) {
+      const phase = player.played as Phase<5>
+      if (phase.run8.length > 0) this.state.cards = phase.run8
     }
   }
 }

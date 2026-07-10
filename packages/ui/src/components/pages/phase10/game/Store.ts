@@ -588,26 +588,23 @@ export class GameStore {
     player.played = phase
 
     if ((player.played as Phase<1>).set3a) {
-      const phaze: Phase<1> = player.played as Phase<1>
+      const phaze = player.played as Phase<1>
       for (const card of phaze.set3a) { card.id = uuid() }
       for (const card of phaze.set3b) { card.id = uuid() }
-    }
-
-    if ((player.played as Phase<2>).set3 && (player.played as Phase<2>).run4) {
-      const phaze: Phase<2> = player.played as Phase<2>
+    } else if ((player.played as Phase<2>).set3 && (player.played as Phase<2>).run4) {
+      const phaze = player.played as Phase<2>
       for (const card of phaze.set3) { card.id = uuid() }
       for (const card of phaze.run4) { card.id = uuid() }
-    }
-
-    if ((player.played as Phase<3>).set4 && (player.played as Phase<2>).run4) {
-      const phaze: Phase<3> = player.played as Phase<3>
+    } else if ((player.played as Phase<3>).set4 && (player.played as Phase<2>).run4) {
+      const phaze = player.played as Phase<3>
       for (const card of phaze.set4) { card.id = uuid() }
       for (const card of phaze.run4) { card.id = uuid() }
-    }
-
-    if ((player.played as Phase<4>).run7) {
-      const phaze: Phase<4> = player.played as Phase<4>
+    } else if ((player.played as Phase<4>).run7) {
+      const phaze = player.played as Phase<4>
       for (const card of phaze.run7) { card.id = uuid() }
+    } else if ((player.played as Phase<5>).run8) {
+      const phaze = player.played as Phase<5>
+      for (const card of phaze.run8) { card.id = uuid() }
     }
 
     if (this.state.game.turn === this.me.id) {
