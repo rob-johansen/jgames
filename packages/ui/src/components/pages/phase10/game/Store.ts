@@ -114,6 +114,25 @@ export class GameStore {
     }
   }
 
+  notifyDeckDraw = () => {
+    if (this.state.game.turn !== this.me.id) {
+      const player = this.state.game.players.find((player) => player.id === this.state.game.turn)
+      if (!player) {
+        showToast({
+          message: 'There was a player error (deck draw)',
+          type: 'error',
+        })
+        return
+      }
+
+      showToast({
+        duration: 7500,
+        message: `${player.name} drew a card from the deck`,
+        type: 'info',
+      })
+    }
+  }
+
   onClickCard = (card: Card): void => {
     if (this.state.arranging) {
       this.state.arrangingCard = card.id
@@ -151,6 +170,8 @@ export class GameStore {
         this.root.phase3.addCardFromHand(target, index)
       } else if (this.me.phase === 4) {
         this.root.phase4.addCardFromHand(target, index)
+      } else if (this.me.phase === 5) {
+        this.root.phase5.addCardFromHand(target, index)
       }
     } else if (this.state.showHit) {
       if (this.state.hitting) return
@@ -363,25 +384,6 @@ export class GameStore {
     if (currentIndex >= 0 && newIndex >= 0) {
       const [card] = this.myCards.splice(currentIndex, 1)
       this.myCards.splice(newIndex, 0, card)
-    }
-  }
-
-  notifyDeckDraw = () => {
-    if (this.state.game.turn !== this.me.id) {
-      const player = this.state.game.players.find((player) => player.id === this.state.game.turn)
-      if (!player) {
-        showToast({
-          message: 'There was a player error (deck draw)',
-          type: 'error',
-        })
-        return
-      }
-
-      showToast({
-        duration: 7500,
-        message: `${player.name} drew a card from the deck`,
-        type: 'info',
-      })
     }
   }
 

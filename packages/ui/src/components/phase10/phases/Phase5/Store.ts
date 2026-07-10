@@ -1,43 +1,43 @@
 import { makeAutoObservable } from 'mobx'
 
 import { showToast } from '@/components/Toast'
-import { validatePhase4 } from '@jgames/validations'
-import type { Card, Phase } from '@jgames/types'
+import { validatePhase5 } from '@jgames/validations'
+import type { Card } from '@jgames/types'
 import type { RootStore } from '@/providers/phase10/RootStore'
 
 type State = {
-  run7: Card[]
+  run8: Card[]
 }
 
-export class Phase4Store {
+export class Phase5Store {
   root: RootStore
   state: State
 
   constructor(root: RootStore) {
     this.root = root
     this.state = {
-      run7: []
+      run8: []
     }
     makeAutoObservable(this)
   }
 
   addCardFromHand = (card: Card, index: number) => {
-    if (this.state.run7.length === 7) {
+    if (this.state.run8.length === 8) {
       showToast({
-        message: 'You already have 7 cards in the run!',
+        message: 'You already have 8 cards in the run!',
         type: 'error'
       })
       this.root.game.myCards.splice(index, 0, card)
       return
     }
 
-    this.state.run7.push(card)
+    this.state.run8.push(card)
   }
 
   onClickCard = (card: Card) => {
     if (this.root.game.state.playingPhase) return
 
-    const index = this.state.run7.findIndex((c) => c.id === card.id)
+    const index = this.state.run8.findIndex((c) => c.id === card.id)
 
     if (index === -1) {
       showToast({
@@ -47,7 +47,7 @@ export class Phase4Store {
       return
     }
 
-    const [target] = this.state.run7.splice(index, 1)
+    const [target] = this.state.run8.splice(index, 1)
     this.root.game.myCards.push(target)
   }
 
@@ -67,9 +67,9 @@ export class Phase4Store {
     }
 
     try {
-      validatePhase4({ run7: this.state.run7 })
+      validatePhase5({ run8: this.state.run8 })
     } catch (err) {
-      console.log('Error validating phase 4:', err)
+      console.log('Error validating phase 5:', err)
       showToast({
         message: 'Something’s not right with your run!',
         type: 'error'
@@ -79,25 +79,6 @@ export class Phase4Store {
 
     this.root.game.state.playingPhase = true
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/phase10/v1/phase4/play`, {
-      body: JSON.stringify({
-        gameId: this.root.game.state.game.id,
-        phase: {
-          run7: this.state.run7.map(({ color, value }) => ({ color, value })),
-        } as Phase<4>,
-        userId: this.root.home.userId,
-      }),
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      method: 'POST',
-      mode: 'cors'
-    })
-
-    if (!response.ok) {
-      showToast({
-        message: 'There was an error playing phase 4',
-        type: 'error',
-      })
-    }
+    // TODO: Fire off the request and show a toast if it's not ok.
   }
 }
