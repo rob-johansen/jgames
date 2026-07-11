@@ -8,6 +8,7 @@ import { Phase2Store } from '@/components/phase10/phases/Phase2/Store'
 import { Phase3Store } from '@/components/phase10/phases/Phase3/Store'
 import { Phase4Store } from '@/components/phase10/phases/Phase4/Store'
 import { Phase5Store } from '@/components/phase10/phases/Phase5/Store'
+import { Phase6Store } from '@/components/phase10/phases/Phase6/Store'
 
 export class RootStore {
   game: GameStore
@@ -18,6 +19,7 @@ export class RootStore {
   phase3: Phase3Store
   phase4: Phase4Store
   phase5: Phase5Store
+  phase6: Phase6Store
 
   constructor() {
     // Other stores depend on HomeStore, so it's instantiated first.
@@ -30,6 +32,7 @@ export class RootStore {
     this.phase3 = new Phase3Store(this)
     this.phase4 = new Phase4Store(this)
     this.phase5 = new Phase5Store(this)
+    this.phase6 = new Phase6Store(this)
     makeAutoObservable(this)
   }
 }

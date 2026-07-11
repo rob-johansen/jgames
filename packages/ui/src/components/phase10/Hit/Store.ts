@@ -386,6 +386,9 @@ export class HitStore {
     } else if ((player.played as Phase<5>).run8) {
       const phase = player.played as Phase<5>
       if (phase.run8.length > 0) this.state.cards = phase.run8
+    } else if ((player.played as Phase<6>).run9) {
+      const phase = player.played as Phase<6>
+      if (phase.run9.length > 0) this.state.cards = phase.run9
     }
   }
 }
