@@ -1,0 +1,127 @@
+import { makeAutoObservable } from 'mobx'
+
+import { showToast } from '@/components/Toast'
+import { validatePhase7 } from '@jgames/validations'
+import type { Card, Phase } from '@jgames/types'
+import type { RootStore } from '@/providers/phase10/RootStore'
+
+type State = {
+  left: boolean
+  set1: Card[]
+  set2: Card[]
+}
+
+export class Phase7Store {
+  root: RootStore
+  state: State
+
+  constructor(root: RootStore) {
+    this.root = root
+    this.state = {
+      left: true,
+      set1: [],
+      set2: [],
+    }
+    makeAutoObservable(this)
+  }
+
+  addCardFromHand = (card: Card, index: number) => {
+    const set = this.state.left ? this.state.set1 : this.state.set2
+
+    if (set.length === 4) {
+      showToast({
+        message: 'You already have 4 cards in that set!',
+        type: 'error'
+      })
+      this.root.game.myCards.splice(index, 0, card)
+    } else {
+      set.push(card)
+    }
+  }
+
+  onClickCard = (card: Card) => {
+    if (this.root.game.state.playingPhase) return
+
+    let index = this.state.set1.findIndex((c) => c.id === card.id)
+    let set: Card[] = []
+
+    if (index !== -1) {
+      set = this.state.set1
+    } else {
+      index = this.state.set2.findIndex((c) => c.id === card.id)
+      if (index !== -1) {
+        set = this.state.set2
+      }
+    }
+
+    if (set.length === 0) {
+      showToast({
+        message: 'There was a problem moving that card.',
+        type: 'error'
+      })
+      return
+    }
+
+    const [target] = set.splice(index, 1)
+    this.root.game.myCards.push(target)
+  }
+
+  onClickClose = () => {
+    this.root.game.state.showPhase = false
+  }
+
+  onClickLeft = () => {
+    this.state.left = true
+  }
+
+  onClickPlay = async () => {
+    if (!this.root.game.myTurn) {
+      this.root.game.state.showNotTurnModal = true
+      return
+    }
+
+    if (this.root.game.mustDraw) {
+      this.root.game.state.showDrawModal = true
+      return
+    }
+
+    try {
+      validatePhase7({ set4a: this.state.set1, set4b: this.state.set2 })
+    } catch (err) {
+      console.log('Error validating phase 7:', err)
+      showToast({
+        message: 'That’s not two sets of 4!',
+        type: 'error'
+      })
+      return
+    }
+
+    this.root.game.state.playingPhase = true
+
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/phase10/v1/phase7/play`, {
+      body: JSON.stringify({
+        gameId: this.root.game.state.game.id,
+        phase: {
+          set4a: this.state.set1.map(({ color, value }) => ({ color, value })),
+          set4b: this.state.set2.map(({ color, value }) => ({ color, value })),
+        } as Phase<7>,
+        userId: this.root.home.userId,
+      }),
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      method: 'POST',
+      mode: 'cors'
+    })
+
+    if (!response.ok) {
+      showToast({
+        message: 'There was an error playing phase 7',
+        type: 'error',
+      })
+    }
+  }
+
+  onClickRight = () => {
+    this.state.left = false
+  }
+}
