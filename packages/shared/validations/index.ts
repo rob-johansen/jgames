@@ -347,3 +347,29 @@ export const validatePhase7 = (phase?: Phase<7>): Phase<7> => {
 
   throw new ClientError('Invalid phase 7')
 }
+
+export const validatePhase8 = (phase?: Phase<8>): Phase<8> => {
+  if (!phase || !Array.isArray(phase.color7) || phase.color7.length !== 7) {
+    throw new ClientError('Invalid phase 8')
+  }
+
+  let color = ''
+
+  for (const card of phase.color7) {
+    if (card.value === WILD) continue
+
+    if (color) {
+      if (card.color !== color) {
+        throw new ClientError('Invalid phase 8')
+      }
+    } else {
+      color = card.color
+    }
+  }
+
+  if (color) {
+    return phase
+  }
+
+  throw new ClientError('Phase 8 must have more than just WILD cards.')
+}
