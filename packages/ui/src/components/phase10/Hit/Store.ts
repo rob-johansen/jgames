@@ -82,6 +82,8 @@ export class HitStore {
       this.addCardToRun(card, index)
     } else if ((player.played as Phase<6>).run9) {
       this.addCardToRun(card, index)
+    } else if ((player.played as Phase<7>).set4a) {
+      this.addCardToSet(card, index)
     }
   }
 
@@ -297,6 +299,9 @@ export class HitStore {
     } else if ((player.played as Phase<6>).run9) {
       api = 'phase6'
       body = { added, run9: this.state.cards.map((c) => ({ color: c.color, value: c.value })) }
+    } else if ((player.played as Phase<7>).set4a) {
+      api = 'phase7'
+      body = this.state.phaseIndex === 0 ? { set4a: added } : { set4b: added }
     }
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/phase10/v1/${api}/hit`, {
