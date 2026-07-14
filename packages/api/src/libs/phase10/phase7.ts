@@ -1,6 +1,52 @@
 import { logger } from '@/logger'
 import type { Card, Phase, Player } from '@jgames/types'
 
+type HitProps = {
+  cards: Card[]
+  hitteeId: string
+  hitterId: string
+  players: Player[]
+  phasePart: number
+}
+
+export const hit = ({ cards, hitteeId, hitterId, players, phasePart }: HitProps): boolean => {
+  const hitter = players.find((p) => p.id === hitterId)
+  if (!hitter) {
+    logger.error('Error hitting phase 7 (hitter not found)')
+    return false
+  }
+
+  const hittee = players.find((p) => p.id === hitteeId)
+  if (!hittee) {
+    logger.error('Error hitting phase 7 (hittee not found)')
+    return false
+  }
+
+  const hitterCards = hitter.cards as Card[]
+  const hitteeCards = phasePart === 1 ? (hittee.played as Phase<7>).set4a : (hittee.played as Phase<7>).set4b
+
+  for (let i = hitterCards.length - 1; i >= 0; i--) {
+    const handCard = hitterCards[i]
+
+    for (let j = cards.length - 1; j >= 0; j--) {
+      const hitCard = cards[j]
+
+      if (handCard.color === hitCard.color && handCard.value === hitCard.value) {
+        hitterCards.splice(i, 1)
+        hitteeCards.push(...cards.splice(j, 1))
+        break
+      }
+    }
+  }
+
+  if (cards.length !== 0) {
+    logger.error('Error hitting phase 7 (card move problem)')
+    return false
+  }
+
+  return true
+}
+
 export const play = (phase: Phase<7>, userId: string, players: Player[]): boolean => {
   const player = players.find((p) => p.id === userId)
   if (!player) {
