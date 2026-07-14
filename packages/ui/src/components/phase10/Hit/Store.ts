@@ -405,6 +405,9 @@ export class HitStore {
       const phase = player.played as Phase<7>
       if (phaseIndex === 0 && phase.set4a.length > 0) this.state.cards = phase.set4a
       if (phaseIndex === 1 && phase.set4b.length > 0) this.state.cards = phase.set4b
+    } else if ((player.played as Phase<8>).color7) {
+      const phase = player.played as Phase<8>
+      if (phase.color7.length > 0) this.state.cards = phase.color7
     }
   }
 }
