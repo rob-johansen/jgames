@@ -265,8 +265,9 @@ export class HitStore {
     const phase2 = (player.played as Phase<2>).set3?.length > 0 && (player.played as Phase<2>).run4?.length > 0
     const phase3 = (player.played as Phase<3>).set4?.length > 0 && (player.played as Phase<3>).run4?.length > 0
     const phase7 = (player.played as Phase<7>).set4a?.length > 0
+    const phase9 = (player.played as Phase<9>).set2?.length > 0
 
-    if (phase1 || phase2 || phase3 || phase7) {
+    if (phase1 || phase2 || phase3 || phase7 || phase9) {
       if (this.state.phaseIndex === 1) {
         return this.setCards(this.state.playerIndex, 0)
       }
@@ -366,8 +367,9 @@ export class HitStore {
     const phase2 = (player.played as Phase<2>).set3?.length > 0 && (player.played as Phase<2>).run4?.length > 0
     const phase3 = (player.played as Phase<3>).set4?.length > 0 && (player.played as Phase<3>).run4?.length > 0
     const phase7 = (player.played as Phase<7>).set4a?.length > 0
+    const phase9 = (player.played as Phase<9>).set2?.length > 0
 
-    if (phase1 || phase2 || phase3 || phase7) {
+    if (phase1 || phase2 || phase3 || phase7 || phase9) {
       if (this.state.phaseIndex === 0) {
         return this.setCards(this.state.playerIndex, 1)
       }
@@ -436,6 +438,10 @@ export class HitStore {
     } else if ((player.played as Phase<8>).color7) {
       const phase = player.played as Phase<8>
       if (phase.color7.length > 0) this.state.cards = phase.color7
+    } else if ((player.played as Phase<9>).set2) {
+      const phase = player.played as Phase<9>
+      if (phaseIndex === 0 && phase.set5.length > 0) this.state.cards = phase.set5
+      if (phaseIndex === 1 && phase.set2.length > 0) this.state.cards = phase.set2
     }
   }
 }

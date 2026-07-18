@@ -178,6 +178,8 @@ export class GameStore {
         this.root.phase7.addCardFromHand(target, index)
       } else if (this.me.phase === 8) {
         this.root.phase8.addCardFromHand(target, index)
+      } else if (this.me.phase === 9) {
+        this.root.phase9.addCardFromHand(target, index)
       }
     } else if (this.state.showHit) {
       if (this.state.hitting) return
@@ -647,6 +649,10 @@ export class GameStore {
     } else if ((player.played as Phase<8>).color7) {
       const phaze = player.played as Phase<8>
       for (const card of phaze.color7) { card.id = uuid() }
+    } else if ((player.played as Phase<9>).set2) {
+      const phaze = player.played as Phase<9>
+      for (const card of phaze.set5) { card.id = uuid() }
+      for (const card of phaze.set2) { card.id = uuid() }
     }
 
     if (this.state.game.turn === this.me.id) {
