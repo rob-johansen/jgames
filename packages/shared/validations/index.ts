@@ -373,3 +373,21 @@ export const validatePhase8 = (phase?: Phase<8>): Phase<8> => {
 
   throw new ClientError('Phase 8 must have more than just WILD cards.')
 }
+
+export const validatePhase9 = (phase?: Phase<9>): Phase<9> => {
+  if (!phase || !Array.isArray(phase.set5) || !Array.isArray(phase.set2) || phase.set5.length !== 5 || phase.set2.length !== 2) {
+    throw new ClientError('Invalid phase 9')
+  }
+
+  const set1 = new Set(phase.set5.map(c => c.value))
+  const set2 = new Set(phase.set2.map(c => c.value))
+
+  if (
+    (set1.size === 1 || (set1.size === 2 && set1.has(WILD))) &&
+    (set2.size === 1 || (set2.size === 2 && set2.has(WILD)))
+  ) {
+    return phase
+  }
+
+  throw new ClientError('Invalid phase 9')
+}
