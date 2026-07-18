@@ -584,6 +584,12 @@ export class GameStore {
           card.id = uuid()
           played.push(card)
         }
+      } else if (phase === 8) {
+        const played = (hittee.played as Phase<8>).color7
+        for (const card of cards) {
+          card.id = uuid()
+          played.push(card)
+        }
       }
     }
 

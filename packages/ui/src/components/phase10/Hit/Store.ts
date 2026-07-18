@@ -84,7 +84,32 @@ export class HitStore {
       this.addCardToRun(card, index)
     } else if ((player.played as Phase<7>).set4a) {
       this.addCardToSet(card, index)
+    } else if ((player.played as Phase<8>).color7) {
+      this.addCardToColor(card, index)
     }
+  }
+
+  addCardToColor = (card: Card, index: number) => {
+    let add = card.value === WILD
+
+    if (!add) {
+      for (const played of this.state.cards) {
+        if (card.color === played.color) {
+          add = true
+          break
+        }
+      }
+    }
+
+    if (!add) {
+      // The card doesn't match the color, so we put it right back into the
+      // player's hand (making it look like they weren't able to click it).
+      this.root.game.myCards.splice(index, 0, card)
+      return
+    }
+
+    this.state.added.push(card)
+    this.state.cards.push(card)
   }
 
   addCardToRun = (card: Card, index: number) => {
@@ -302,6 +327,9 @@ export class HitStore {
     } else if ((player.played as Phase<7>).set4a) {
       api = 'phase7'
       body = this.state.phaseIndex === 0 ? { set4a: added } : { set4b: added }
+    } else if ((player.played as Phase<8>).color7) {
+      api = 'phase8'
+      body = { color7: added }
     }
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/phase10/v1/${api}/hit`, {
