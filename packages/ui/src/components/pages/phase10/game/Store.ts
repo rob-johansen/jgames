@@ -592,6 +592,12 @@ export class GameStore {
           card.id = uuid()
           played.push(card)
         }
+      } else if (phase === 9) {
+        const played = phasePart === 1 ? (hittee.played as Phase<9>).set5 : (hittee.played as Phase<9>).set2
+        for (const card of cards) {
+          card.id = uuid()
+          played.push(card)
+        }
       }
     }
 
