@@ -101,11 +101,12 @@ export class HomeStore {
       }
 
       if (message.type === MessageType.ROUND_END) {
+        const autoSkip = message.data.autoSkip as boolean
         const game = message.data.game as Game
         const userId = message.data.userId as string
 
         runInAction(() => {
-          this.root.game.updateAfterRoundEnd(userId, game)
+          this.root.game.updateAfterRoundEnd(userId, game, autoSkip)
         })
       }
 

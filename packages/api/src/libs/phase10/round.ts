@@ -2,9 +2,11 @@ import { DECK, shuffle } from '@/libs/phase10/card'
 import { SKIP, WILD } from '@jgames/types'
 import type { Card, Game, Phase } from '@jgames/types'
 
-export const endRound = (game: Game) => {
+export const endRound = (game: Game): boolean => {
   const deck = DECK.map((card) => card)
   shuffle(deck)
+
+  let autoSkip = false
   let turnNumber = 0
 
   for (const player of game.players) {
@@ -35,9 +37,12 @@ export const endRound = (game: Game) => {
   turnNumber++
   if (turnNumber > game.players.length) turnNumber = 1
 
+  let token = ''
   let turn = ''
+
   for (const player of game.players) {
     if (player.number === turnNumber) {
+      token = player.id
       turn = player.id
     }
   }
@@ -50,9 +55,21 @@ export const endRound = (game: Game) => {
 
   const pile = [deck.shift() as Card]
 
+  pile[0].color = '' // TODO: Delete me when testing is done.
+  pile[0].value = SKIP // TODO: Delete me when testing is done.
+
+  if (pile[0].value === SKIP) {
+    autoSkip = true
+    let index = game.players.findIndex((player) => turn === player.id)
+    index = index + 1 < game.players.length ? index + 1 : 0
+    turn = game.players[index].id
+  }
+
   game.deck = deck
   game.draw = true
   game.pile = pile
-  game.token = turn
+  game.token = token
   game.turn = turn
+
+  return autoSkip
 }

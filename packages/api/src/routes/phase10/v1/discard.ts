@@ -45,10 +45,11 @@ router.post('/', async (
 
     const player = removeCard(card, userId, game.players)
     const roundOver = (player.cards as Card[]).length === 0
+    let autoSkip = false
 
     try {
       if (roundOver) {
-        endRound(game)
+        autoSkip = endRound(game)
         commit = await updateGame(game, client)
       } else {
         commit = await discard({ card, client, game, turn })
@@ -67,6 +68,7 @@ router.post('/', async (
       for (const playa of game.players) {
         wss.sendToPlayer(playa.id, {
           data: {
+            autoSkip,
             game: {
               draw: game.draw,
               id: game.id,

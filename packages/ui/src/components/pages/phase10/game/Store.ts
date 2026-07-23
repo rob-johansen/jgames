@@ -9,6 +9,7 @@ import type { RootStore } from '@/providers/phase10/RootStore'
 type State = {
   arranging: boolean
   arrangingCard?: string
+  autoSkip: boolean
   choosingSkip: boolean
   discarding: boolean
   discardingCard?: Card
@@ -37,6 +38,7 @@ export class GameStore {
     this.state = {
       arranging: false,
       arrangingCard: '',
+      autoSkip: false,
       choosingSkip: false,
       discarding: false,
       discardLoading: false,
@@ -683,7 +685,7 @@ export class GameStore {
     }
   }
 
-  updateAfterRoundEnd = (userId: string, game: Game) => {
+  updateAfterRoundEnd = (userId: string, game: Game, autoSkip: boolean) => {
     const player = game.players.find((player) => player.id === this.root.home.userId)
 
     if (!player) {
@@ -698,6 +700,7 @@ export class GameStore {
       card.id = uuid()
     }
 
+    this.state.autoSkip = autoSkip
     this.state.discarding = false
     this.state.discardingCard = undefined
     this.state.discardLoading = false
