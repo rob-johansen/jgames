@@ -45,10 +45,11 @@ router.post('/', async (
 
     const player = removeCard({ color: '', value: SKIP }, userId, game.players)
     const roundOver = (player.cards as Card[]).length === 0
+    let autoSkip = false
 
     if (roundOver) {
       try {
-        endRound(game)
+        autoSkip = endRound(game)
         commit = await updateGame(game, client)
       } catch (err) {
         logger.error('Error ending round after SKIP: %O', err)
@@ -77,6 +78,7 @@ router.post('/', async (
       for (const playa of game.players) {
         wss.sendToPlayer(playa.id, {
           data: {
+            autoSkip,
             game: {
               draw: game.draw,
               id: game.id,
