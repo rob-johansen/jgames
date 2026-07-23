@@ -116,10 +116,11 @@ export class HomeStore {
       }
 
       if (message.type === MessageType.START) {
+        const autoSkip = message.data.autoSkip as boolean
         const game = message.data.game as Game
 
         runInAction(() => {
-          this.root.game.setGame(game)
+          this.root.game.startGame(game, autoSkip)
           this.state.hasGame = true
           this.state.loading = false
         })

@@ -395,15 +395,24 @@ export class GameStore {
     }
   }
 
-  setGame = (game: Game): void => {
+  showArranging = (id?: string): boolean => {
+    return id === this.state.arrangingCard
+  }
+
+  startGame = (game: Game, autoSkip: boolean): void => {
     this.state.game = game
     for (const card of this.myCards) {
       card.id = uuid()
     }
-  }
 
-  showArranging = (id?: string): boolean => {
-    return id === this.state.arrangingCard
+    if (autoSkip) {
+      const player = game.players[0]
+      showToast({
+        duration: 7500,
+        message: `The discard pile started with a SKIP, so ${player.name} was skipped!`,
+        type: 'info',
+      })
+    }
   }
 
   toggleArranging = (): void => {

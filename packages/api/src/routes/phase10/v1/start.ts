@@ -8,6 +8,7 @@ import { endTxn, startTxn } from '@/data/db'
 import { insertGame } from '@/data/queries/phase10/game'
 import { MessageType } from '@jgames/types'
 import { RequestError } from '@jgames/types'
+import { SKIP } from '@jgames/types'
 import { wss } from '@/wss/wss'
 import type { Card, Game, Phase, PostRequest } from '@jgames/types'
 
@@ -28,13 +29,19 @@ router.post('/', async (
 
     const deck = DECK.map((card) => card)
     shuffle(deck)
+
+    let autoSkip = false
+    let token = ''
     let turn = ''
 
     for (let i = 1; i <= 10; i++) {
       let number = 1
 
       for (const player of players) {
-        if (number === 1) turn = player.id
+        if (number === 1) {
+          token = player.id
+          turn = player.id
+        }
 
         if (!Array.isArray(player.cards)) {
           player.cards = []
@@ -50,13 +57,18 @@ router.post('/', async (
 
     const pile = [deck.shift() as Card]
 
+    if (pile[0].value === SKIP) {
+      autoSkip = true
+      turn = players[1].id
+    }
+
     const game: Omit<Game, 'id'> = {
       deck,
       draw: true,
       pile,
       players,
       results: [],
-      token: turn,
+      token,
       turn,
     }
 
@@ -69,6 +81,7 @@ router.post('/', async (
     for (const player of players) {
       wss.sendToPlayer(player.id, {
         data: {
+          autoSkip,
           game: {
             draw: game.draw,
             id,
