@@ -29,12 +29,11 @@ export const endRound = (game: Game): boolean => {
     if (player.phase === 10) player.played = { set5: [], set3: [] } as Phase<10>
     player.skipped = false
 
-    if (game.turn === player.id) {
-      turnNumber = player.number
+    if (game.token === player.id) {
+      turnNumber = player.number + 1
     }
   }
 
-  turnNumber++
   if (turnNumber > game.players.length) turnNumber = 1
 
   let token = ''
@@ -54,9 +53,6 @@ export const endRound = (game: Game): boolean => {
   }
 
   const pile = [deck.shift() as Card]
-
-  pile[0].color = '' // TODO: Delete me when testing is done.
-  pile[0].value = SKIP // TODO: Delete me when testing is done.
 
   if (pile[0].value === SKIP) {
     autoSkip = true
