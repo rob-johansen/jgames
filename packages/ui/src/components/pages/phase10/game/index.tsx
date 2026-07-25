@@ -8,6 +8,7 @@ import { Card } from '@/components/phase10/Card'
 import { ChooseSkip } from '@/components/phase10/modals/ChooseSkip'
 import { Hit } from '@/components/phase10/Hit'
 import { Icon, ChevronLeft, ChevronRight } from '@/components/icon'
+import { isIpad } from '@/libs/browser'
 import { Modal } from '@/components/Modal'
 import { Phase1 } from '@/components/phase10/phases/Phase1'
 import { Phase2 } from '@/components/phase10/phases/Phase2'
@@ -100,7 +101,7 @@ export const GamePage = observer(() => {
           <Skipped/>
         </div>
       )}
-      <div className="absolute bottom-[60px] flex h-[225px] left-0 m-auto right-0" style={{ width: store.myCards.length * 117 }}>
+      <div className="absolute bottom-[60px] flex h-[225px] left-0 m-auto right-0" style={{ width: store.myCards.length * (isIpad() && store.myCards.length === 11 ? 106 : 116) }}>
         {(store.myCards).map((card, index) => {
           return (
             <Card
@@ -110,11 +111,11 @@ export const GamePage = observer(() => {
               key={card.id}
               onClick={() => store.onClickCard(card)}
               scaling={store.scaling}
-              style={{ left: index * 114 }}
+              style={{ left: isIpad() && store.myCards.length === 11 ? index * 102 : index * 112 }}
             />
           )
         })}
-        <div className="absolute bottom-[-48px] flex gap-x-[8px] right-[0]">
+        <div className="absolute bottom-[-48px] flex gap-x-[8px] right-[4px]">
           {store.state.arranging && (
             <div className="flex gap-x-[2px]">
               <Button
