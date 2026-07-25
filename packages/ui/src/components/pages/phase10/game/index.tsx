@@ -7,6 +7,7 @@ import { Button } from '@/components/button/Button'
 import { Card } from '@/components/phase10/Card'
 import { ChooseSkip } from '@/components/phase10/modals/ChooseSkip'
 import { Hit } from '@/components/phase10/Hit'
+import { Icon, ChevronLeft, ChevronRight } from '@/components/icon'
 import { Modal } from '@/components/Modal'
 import { Phase1 } from '@/components/phase10/phases/Phase1'
 import { Phase2 } from '@/components/phase10/phases/Phase2'
@@ -114,6 +115,24 @@ export const GamePage = observer(() => {
           )
         })}
         <div className="absolute bottom-[-48px] flex gap-x-[8px] right-[0]">
+          {store.state.arranging && (
+            <div className="flex gap-x-[2px]">
+              <Button
+                className="px-0 w-[36px]"
+                disabled={!store.state.arrangingCard}
+                onClick={() => store.moveCard('left')}
+              >
+                <Icon source={ChevronLeft} />
+              </Button>
+              <Button
+                className="px-0 w-[36px]"
+                disabled={!store.state.arrangingCard}
+                onClick={() => store.moveCard('right')}
+              >
+                <Icon source={ChevronRight} />
+              </Button>
+            </div>
+          )}
           <Button
             className="whitespace-nowrap"
             disabled={store.state.drawPileLoading}

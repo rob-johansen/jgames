@@ -116,6 +116,42 @@ export class GameStore {
     }
   }
 
+  moveCard = (direction: 'left' | 'right') => {
+    if (!this.state.arrangingCard) return
+
+    const cards = this.myCards
+    let currentIndex = -1
+    let newIndex = -1
+
+    for (let i = 0; i < cards.length; i++) {
+      if (cards[i].id === this.state.arrangingCard) {
+        currentIndex = i
+        break
+      }
+    }
+
+    if (direction === 'left') {
+      newIndex = currentIndex - 1
+    } else if (direction === 'right') {
+      newIndex = currentIndex + 1
+    } else {
+      return
+    }
+
+    if (currentIndex >= 0) {
+      if (newIndex === -1) {
+        newIndex = cards.length - 1
+      } else if (newIndex === cards.length) {
+        newIndex = 0
+      }
+    }
+
+    if (currentIndex >= 0 && newIndex >= 0) {
+      const [card] = this.myCards.splice(currentIndex, 1)
+      this.myCards.splice(newIndex, 0, card)
+    }
+  }
+
   notifyDeckDraw = () => {
     if (this.state.game.turn !== this.me.id) {
       const player = this.state.game.players.find((player) => player.id === this.state.game.turn)
@@ -361,39 +397,11 @@ export class GameStore {
     }
   }
 
-  onKeyDown = (event: KeyboardEvent): void => {
-    if (!this.state.arrangingCard) return
-
-    const cards = this.myCards
-    let currentIndex = -1
-    let newIndex = -1
-
-    for (let i = 0; i < cards.length; i++) {
-      if (cards[i].id === this.state.arrangingCard) {
-        currentIndex = i
-        break
-      }
-    }
-
+  onKeyDown = (event: KeyboardEvent) => {
     if (event.key === 'ArrowLeft') {
-      newIndex = currentIndex - 1
+      this.moveCard('left')
     } else if (event.key === 'ArrowRight') {
-      newIndex = currentIndex + 1
-    } else {
-      return
-    }
-
-    if (currentIndex >= 0) {
-      if (newIndex === -1) {
-        newIndex = cards.length - 1
-      } else if (newIndex === cards.length) {
-        newIndex = 0
-      }
-    }
-
-    if (currentIndex >= 0 && newIndex >= 0) {
-      const [card] = this.myCards.splice(currentIndex, 1)
-      this.myCards.splice(newIndex, 0, card)
+      this.moveCard('right')
     }
   }
 
