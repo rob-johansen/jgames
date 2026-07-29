@@ -21,6 +21,7 @@ import { Phase8 } from '@/components/phase10/phases/Phase8'
 import { Phase9 } from '@/components/phase10/phases/Phase9'
 import { RoundEnded } from '@/components/phase10/modals/RoundEnded'
 import { Skipped } from '@/components/phase10/Skipped'
+import { Status } from '@/components/phase10/Status'
 import { StoreContext } from '@/providers/phase10/StoreContext'
 
 export const GamePage = observer(() => {
@@ -34,6 +35,7 @@ export const GamePage = observer(() => {
 
   return (
     <div className="flex h-dvh relative">
+      <Status />
       {store.state.showPhase ? (
         <>
           {store.me.phase === 1 && <Phase1 />}
