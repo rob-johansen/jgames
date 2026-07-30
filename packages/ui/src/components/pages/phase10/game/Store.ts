@@ -110,9 +110,21 @@ export class GameStore {
     const cards = me.cards as Card[]
     const pileCard = this.state.game.pile.shift() as Card
 
-    if (this.state.game.turn === me.id) {
+    if (this.myTurn) {
       pileCard.id = uuid()
       cards.push(pileCard)
+    } else {
+      const player = this.state.game.players.find((player) => player.id === this.state.game.turn)
+
+      if (!player) {
+        showToast({
+          message: 'There was a player error (pile draw)',
+          type: 'error',
+        })
+        return
+      }
+
+      (player.cards as number) += 1
     }
   }
 
@@ -153,8 +165,9 @@ export class GameStore {
   }
 
   notifyDeckDraw = () => {
-    if (this.state.game.turn !== this.me.id) {
+    if (!this.myTurn) {
       const player = this.state.game.players.find((player) => player.id === this.state.game.turn)
+
       if (!player) {
         showToast({
           message: 'There was a player error (deck draw)',
@@ -162,6 +175,8 @@ export class GameStore {
         })
         return
       }
+
+      (player.cards as number) += 1
 
       showToast({
         duration: 7500,
@@ -510,6 +525,20 @@ export class GameStore {
   }
 
   updateAfterDiscard = (card: Card, turn: string) => {
+    if (!this.myTurn) {
+      const player = this.state.game.players.find((player) => player.id === this.state.game.turn)
+
+      if (!player) {
+        showToast({
+          message: `There was a player error (after discard)`,
+          type: 'error',
+        })
+        return
+      }
+
+      (player.cards as number) -= 1
+    }
+
     card.id = uuid()
     this.state.game.draw = true
     this.state.game.pile.unshift(card)
@@ -553,7 +582,7 @@ export class GameStore {
       return
     }
 
-    if (this.state.game.turn !== this.me.id) {
+    if (!this.myTurn) {
       if (phase === 1) {
         const played = phasePart === 1 ? (hittee.played as Phase<1>).set3a : (hittee.played as Phase<1>).set3b
         for (const card of cards) {
@@ -620,10 +649,12 @@ export class GameStore {
       }
     }
 
-    if (this.state.game.turn === this.me.id) {
+    if (this.myTurn) {
       this.root.hit.state.added = []
       this.state.hitting = false
     } else {
+      (hitter.cards as number) -= cards.length
+
       showToast({
         duration: 7500,
         message: `${hitter.name} hit ${hittee.name}’s cards!`,
@@ -650,37 +681,46 @@ export class GameStore {
       const phaze = player.played as Phase<1>
       for (const card of phaze.set3a) { card.id = uuid() }
       for (const card of phaze.set3b) { card.id = uuid() }
+      if (!this.myTurn) player.cards = 5
     } else if ((player.played as Phase<2>).set3 && (player.played as Phase<2>).run4) {
       const phaze = player.played as Phase<2>
       for (const card of phaze.set3) { card.id = uuid() }
       for (const card of phaze.run4) { card.id = uuid() }
+      if (!this.myTurn) player.cards = 4
     } else if ((player.played as Phase<3>).set4 && (player.played as Phase<2>).run4) {
       const phaze = player.played as Phase<3>
       for (const card of phaze.set4) { card.id = uuid() }
       for (const card of phaze.run4) { card.id = uuid() }
+      if (!this.myTurn) player.cards = 3
     } else if ((player.played as Phase<4>).run7) {
       const phaze = player.played as Phase<4>
       for (const card of phaze.run7) { card.id = uuid() }
+      if (!this.myTurn) player.cards = 4
     } else if ((player.played as Phase<5>).run8) {
       const phaze = player.played as Phase<5>
       for (const card of phaze.run8) { card.id = uuid() }
+      if (!this.myTurn) player.cards = 3
     } else if ((player.played as Phase<6>).run9) {
       const phaze = player.played as Phase<6>
       for (const card of phaze.run9) { card.id = uuid() }
+      if (!this.myTurn) player.cards = 2
     } else if ((player.played as Phase<7>).set4a) {
       const phaze = player.played as Phase<7>
       for (const card of phaze.set4a) { card.id = uuid() }
       for (const card of phaze.set4b) { card.id = uuid() }
+      if (!this.myTurn) player.cards = 3
     } else if ((player.played as Phase<8>).color7) {
       const phaze = player.played as Phase<8>
       for (const card of phaze.color7) { card.id = uuid() }
+      if (!this.myTurn) player.cards = 4
     } else if ((player.played as Phase<9>).set2) {
       const phaze = player.played as Phase<9>
       for (const card of phaze.set5) { card.id = uuid() }
       for (const card of phaze.set2) { card.id = uuid() }
+      if (!this.myTurn) player.cards = 4
     }
 
-    if (this.state.game.turn === this.me.id) {
+    if (this.myTurn) {
       this.state.playedPhase = true
       this.state.playingPhase = false
       this.state.showPhase = false
@@ -694,18 +734,31 @@ export class GameStore {
   }
 
   updateAfterRoundEnd = (userId: string, game: Game, autoSkip: boolean) => {
-    const player = game.players.find((player) => player.id === this.root.home.userId)
+    const me = game.players.find((player) => player.id === this.root.home.userId)
+    const ender = this.state.game.players.find((player) => player.id === userId)
 
-    if (!player) {
+    if (!me) {
       showToast({
-        message: `There was a player error (round end)`,
+        message: `There was a player error (66)`,
         type: 'error',
       })
       return
     }
 
-    for (const card of player.cards as Card[]) {
+    if (!ender) {
+      showToast({
+        message: `There was a player error (88)`,
+        type: 'error',
+      })
+      return
+    }
+
+    for (const card of me.cards as Card[]) {
       card.id = uuid()
+    }
+
+    if (ender.id !== me.id) {
+      ender.cards = 0
     }
 
     this.state.autoSkip = autoSkip
@@ -718,6 +771,20 @@ export class GameStore {
   }
 
   updateAfterSkip = (skipId: string, turn: string) => {
+    if (!this.myTurn) {
+      const player = this.state.game.players.find((player) => player.id === this.state.game.turn)
+
+      if (!player) {
+        showToast({
+          message: `There was a player error (after skip)`,
+          type: 'error',
+        })
+        return
+      }
+
+      (player.cards as number) -= 1
+    }
+
     this.state.game.draw = true
     this.state.game.turn = turn
 
