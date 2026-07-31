@@ -22,7 +22,7 @@ export const Status = observer(() => {
           <span className="font-bold">&nbsp;</span>
           <span className="font-bold pr-[16px]">Name</span>
           <span className="font-bold pr-[8px] text-center">Phase</span>
-          <span className="font-bold text-center">Score</span>
+          <span className="font-bold text-center">Points</span>
           <span className="font-bold text-center">Hand</span>
           {store.players.map((player) => {
             return (

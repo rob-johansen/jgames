@@ -70,11 +70,12 @@ export class HomeStore {
 
       if (message.type === MessageType.HIT) {
         const cards = message.data.cards as Card[]
+        const hitCount = message.data.hitCount as number
         const hitteeId = message.data.hitteeId as string
         const hitterId = message.data.hitterId as string
         const phase = message.data.phase as number
         const phasePart = message.data.phasePart as number
-        this.root.game.updateAfterHit({ cards, hitteeId, hitterId, phase, phasePart })
+        this.root.game.updateAfterHit({ cards, hitCount, hitteeId, hitterId, phase, phasePart })
       }
 
       if (message.type === MessageType.JOIN) {

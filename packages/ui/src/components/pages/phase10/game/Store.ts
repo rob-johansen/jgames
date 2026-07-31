@@ -562,7 +562,7 @@ export class GameStore {
   }
 
   updateAfterHit = (props: HitMessage) => {
-    const { cards, hitteeId, hitterId, phase, phasePart } = props
+    const { cards, hitCount, hitteeId, hitterId, phase, phasePart } = props
     const hitter = this.state.game.players.find((player) => player.id === hitterId)
     const hittee = this.state.game.players.find((player) => player.id === hitteeId)
 
@@ -653,7 +653,7 @@ export class GameStore {
       this.root.hit.state.added = []
       this.state.hitting = false
     } else {
-      (hitter.cards as number) -= cards.length
+      (hitter.cards as number) -= hitCount
 
       showToast({
         duration: 7500,

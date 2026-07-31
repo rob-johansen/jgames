@@ -42,6 +42,7 @@ router.post('/hit', async (
 
   let client: PoolClient | undefined
   let commit = false
+  const hitCount = cards.length
 
   try {
     client = await startTxn()
@@ -63,6 +64,7 @@ router.post('/hit', async (
     wss.sendToAll({
       data: {
         cards,
+        hitCount,
         hitteeId,
         hitterId,
         phase: 1,
