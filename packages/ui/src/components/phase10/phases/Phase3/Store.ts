@@ -1,5 +1,6 @@
 import { makeAutoObservable } from 'mobx'
 
+import { getFunnyMessage } from '@/libs/phase10/messages'
 import { showToast } from '@/components/Toast'
 import { validatePhase3 } from '@jgames/validations'
 import type { Card, Phase } from '@jgames/types'
@@ -92,6 +93,11 @@ export class Phase3Store {
       showToast({
         message: 'There was an error playing phase 3',
         type: 'error',
+      })
+    } else {
+      showToast({
+        message: `${getFunnyMessage()} you played phase 3!`,
+        type: 'success',
       })
     }
   }

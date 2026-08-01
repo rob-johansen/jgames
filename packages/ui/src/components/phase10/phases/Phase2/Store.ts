@@ -104,6 +104,11 @@ export class Phase2Store {
         message: 'There was an error playing phase 2',
         type: 'error',
       })
+    } else {
+      showToast({
+        message: 'Second phase...',
+        type: 'success',
+      })
     }
   }
 
