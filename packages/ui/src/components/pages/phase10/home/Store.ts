@@ -108,6 +108,7 @@ export class HomeStore {
 
         runInAction(() => {
           this.root.game.updateAfterRoundEnd(userId, game, autoSkip)
+          this.root.resetPhases()
         })
       }
 

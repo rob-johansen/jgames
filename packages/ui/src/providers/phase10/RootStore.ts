@@ -45,4 +45,17 @@ export class RootStore {
 
     makeAutoObservable(this)
   }
+
+  resetPhases = () => {
+    this.phase1 = new Phase1Store(this)
+    this.phase2 = new Phase2Store(this)
+    this.phase3 = new Phase3Store(this)
+    this.phase4 = new Phase4Store(this)
+    this.phase5 = new Phase5Store(this)
+    this.phase6 = new Phase6Store(this)
+    this.phase7 = new Phase7Store(this)
+    this.phase8 = new Phase8Store(this)
+    this.phase9 = new Phase9Store(this)
+    // TODO: Don't forget to reset the phase 10 store here when the round ends.
+  }
 }
