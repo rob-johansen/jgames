@@ -1,5 +1,6 @@
 import { makeAutoObservable } from 'mobx'
 
+import { getHitMessage } from '@/libs/phase10/messages'
 import { showToast } from '@/components/Toast'
 import { WILD } from '@jgames/types'
 import type { Card, Phase, Player } from '@jgames/types'
@@ -355,6 +356,11 @@ export class HitStore {
       showToast({
         message: 'There was an error hitting',
         type: 'error',
+      })
+    } else {
+      showToast({
+        message: getHitMessage(),
+        type: 'success',
       })
     }
   }
