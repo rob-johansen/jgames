@@ -530,10 +530,23 @@ export class GameStore {
 
       if (!player) {
         showToast({
-          message: `There was a player error (after discard)`,
+          message: 'There was a player error (after discard)',
           type: 'error',
         })
         return
+      } else {
+        let cardType = `${card.color} ${card.value}`
+        
+        if (card.value === SKIP) {
+          cardType = 'SKIP'
+        } else if (card.value === WILD) {
+          cardType = 'WILD'
+        }
+
+        showToast({
+          message: `${player.name} discarded a ${cardType}`,
+          type: 'info',
+        })
       }
 
       (player.cards as number) -= 1
