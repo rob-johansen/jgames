@@ -536,7 +536,7 @@ export class GameStore {
         return
       } else {
         let cardType = `${card.color} ${card.value}`
-        
+
         if (card.value === SKIP) {
           cardType = 'SKIP'
         } else if (card.value === WILD) {
@@ -784,18 +784,33 @@ export class GameStore {
   }
 
   updateAfterSkip = (skipId: string, turn: string) => {
+    const target = this.state.game.players.find((player) => player.id === skipId)
+
+    if (!target) {
+      showToast({
+        message: 'There was a player error (33)',
+        type: 'error',
+      })
+      return
+    }
+
     if (!this.myTurn) {
       const player = this.state.game.players.find((player) => player.id === this.state.game.turn)
 
       if (!player) {
         showToast({
-          message: `There was a player error (after skip)`,
+          message: 'There was a player error (55)',
           type: 'error',
         })
         return
       }
 
       (player.cards as number) -= 1
+
+      showToast({
+        message: `${player.name} skipped ${target.name}`,
+        type: 'info',
+      })
     }
 
     this.state.game.draw = true
@@ -806,11 +821,6 @@ export class GameStore {
     this.state.discardingCard = undefined
     this.state.discardLoading = false
 
-    for (const player of this.state.game.players) {
-      if (player.id === skipId) {
-        player.skipped = true
-        break
-      }
-    }
+    target.skipped = true
   }
 }
