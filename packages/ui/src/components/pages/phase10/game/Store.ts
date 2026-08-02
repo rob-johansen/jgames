@@ -569,6 +569,12 @@ export class GameStore {
     for (const player of this.state.game.players) {
       if (player.id === userId) {
         player.skipped = false
+
+        showToast({
+          message: `${player.name} discarded a SKIP`,
+          type: 'info',
+        })
+
         break
       }
     }
