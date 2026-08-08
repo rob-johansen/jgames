@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite'
 import { Fragment, useContext, useState } from 'react'
 
-import { Icon, Plus } from '@/components/icon'
+import { Icon, Ban, Plus } from '@/components/icon'
 import { StatusStore } from './Store'
 import { StoreContext } from '@/providers/phase10/StoreContext'
 
@@ -33,6 +33,9 @@ export const Status = observer(() => {
                       <span className="absolute animate-ping bg-[#6a0dad] h-full inline-flex opacity-50 rounded-full w-full"></span>
                       <span className="bg-[#6a0dad] inline-flex relative rounded-full size-[12px]"></span>
                     </>
+                  )}
+                  {player.skipped && (
+                    <Icon className="relative top-[-2px]" source={Ban} />
                   )}
                 </span>
                 <span className="pr-[16px]">{player.name}</span>
