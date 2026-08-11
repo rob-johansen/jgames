@@ -13,6 +13,7 @@ type State = {
   name: string
   nameError: string
   players: string[]
+  showPhases: boolean
   waiting: boolean
 }
 
@@ -31,6 +32,7 @@ export class HomeStore {
       name: '',
       nameError: '',
       players: [],
+      showPhases: false,
       waiting: false,
     }
     this.userId = ''
@@ -197,5 +199,9 @@ export class HomeStore {
         this.state.loading = false
       })
     }
+  }
+
+  togglePhases = (open: boolean) => {
+    this.state.showPhases = open
   }
 }

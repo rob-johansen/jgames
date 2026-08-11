@@ -5,7 +5,7 @@ import { ButtonLink } from '@/components/button-link/ButtonLink'
 export default function Home(): React.JSX.Element {
   return (
     <div className="absolute bg-phase10-cover-blue flex flex-col font-quicksand h-[386px] inset-0 items-center m-auto overflow-hidden rounded-[8px] text-white w-[300px]">
-      <div className='flex flex-col font-bold items-center relative rotate-[-6deg] text-[3rem] top-[-8px]'>
+      <div className="flex flex-col font-bold items-center relative rotate-[-6deg] text-[3rem] top-[-8px]">
         <span>Phase</span>
         <span className="relative top-[-32px]">10</span>
       </div>

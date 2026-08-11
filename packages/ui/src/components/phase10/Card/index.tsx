@@ -32,10 +32,10 @@ export const Card = observer((props: Props) => {
       </div>
       {card.value === SKIP || card.value === WILD ? (
         <div className="relative">
-          <div className="bg-phase10-card-red h-[24px] mt-[-2px] skew-y-[-7deg] w-full"/>
-          <div className="bg-phase10-card-blue h-[24px] mt-[5px] relative skew-y-[-7deg] w-full"/>
-          <div className="bg-phase10-card-green h-[24px] mt-[5px] relative skew-y-[-7deg] w-full"/>
-          <div className="bg-phase10-card-purple h-[24px] mt-[5px] relative skew-y-[-7deg] w-full"/>
+          <div className="bg-phase10-card-red h-[24px] mt-[-2px] skew-y-[-7deg] w-full" />
+          <div className="bg-phase10-card-blue h-[24px] mt-[5px] relative skew-y-[-7deg] w-full" />
+          <div className="bg-phase10-card-green h-[24px] mt-[5px] relative skew-y-[-7deg] w-full" />
+          <div className="bg-phase10-card-purple h-[24px] mt-[5px] relative skew-y-[-7deg] w-full" />
           <div className="absolute font-black h-fit inset-0 m-auto phase10-skip-wild-shadow skew-y-[-7deg] text-[2.875rem] text-phase10-card-black w-fit">
             {card.value === SKIP ? 'SKIP' : 'WILD'}
           </div>

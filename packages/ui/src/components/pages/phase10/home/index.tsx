@@ -5,6 +5,7 @@ import { observer } from 'mobx-react-lite'
 
 import { Button } from '@/components/button/Button'
 import { GamePage } from '@/components/pages/phase10/game'
+import { Phases } from '@/components/phase10/modals/Phases'
 import { StoreContext } from '@/providers/phase10/StoreContext'
 import { TextField } from '@/components/text-field/TextField'
 import { Toast } from '@/components/Toast'
@@ -19,11 +20,20 @@ export const Home = observer(() => {
 
   return (
     <div className="font-quicksand">
-      <h1 className="absolute font-bold font-quicksand right-[30px] text-[2rem] top-[20px]">
+      <button
+        className="absolute enabled:hover:text-[#6a0dad] font-bold font-quicksand right-[30px] text-[2rem] top-[20px] z-50"
+        disabled={!store.state.hasGame}
+        onClick={() => store.togglePhases(true)}
+      >
         Phase 10
-      </h1>
+      </button>
       {store.state.hasGame ? (
-        <GamePage />
+        <>
+          <GamePage />
+          {store.state.showPhases && (
+            <Phases onEscape={store.togglePhases} />
+          )}
+        </>
       ) : (
         <div className="absolute h-[150px] inset-0 m-auto w-[300px]">
           {store.state.waiting ? (
