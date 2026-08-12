@@ -17,6 +17,7 @@ type State = {
   drawDeckLoading: boolean
   drawPileLoading: boolean
   game: Game
+  hiding: boolean
   hitting: boolean
   playedPhase: boolean
   playingPhase: boolean
@@ -45,6 +46,7 @@ export class GameStore {
       drawDeckLoading: false,
       drawPileLoading: false,
       game: {} as Game,
+      hiding: false,
       hitting: false,
       playedPhase: false,
       playingPhase: false,
@@ -508,6 +510,10 @@ export class GameStore {
     this.state.discarding = false
     this.state.showHit = !this.state.showHit
     this.state.showPhase = false
+  }
+
+  toggleHiding = () => {
+    this.state.hiding = !this.state.hiding
   }
 
   togglePhase = () => {

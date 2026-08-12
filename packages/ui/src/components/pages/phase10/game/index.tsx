@@ -109,6 +109,7 @@ export const GamePage = observer(() => {
             <Card
               arranging={store.showArranging(card.id)}
               card={card}
+              hiding={store.state.hiding}
               inHand={true}
               key={card.id}
               onClick={() => store.onClickCard(card)}
@@ -118,6 +119,12 @@ export const GamePage = observer(() => {
           )
         })}
         <div className="absolute bottom-[-48px] flex gap-x-[8px] right-[4px]">
+          <Button
+            className="whitespace-nowrap"
+            onClick={store.toggleHiding}
+          >
+            {store.state.hiding ? 'Show' : 'Hide'}
+          </Button>
           {store.state.arranging && (
             <div className="flex gap-x-[2px]">
               <Button

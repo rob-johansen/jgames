@@ -10,17 +10,36 @@ import type { Card as CardType } from '@jgames/types'
 type Props = HTMLProps<HTMLDivElement> & {
   arranging?: boolean
   card: CardType
+  hiding?: boolean
   inHand: boolean
   onClick?: (card: CardType) => void
   scaling?: boolean
 }
 
 export const Card = observer((props: Props) => {
-  const { arranging, card, className, inHand, onClick, scaling, style } = props
+  const { arranging, card, className, hiding, inHand, onClick, scaling, style } = props
+
+  if (hiding) {
+    return (
+      <div
+        className={twMerge(`${inHand ? 'absolute bottom-0' : 'relative'} bg-phase10-cover-blue drop-shadow-lg font-quicksand h-[225px] overflow-hidden rounded-[8px] select-none text-white w-[150px]`, className)}
+        style={style}
+      >
+        <div className='flex flex-col font-bold items-center left-[8px] relative rotate-[80deg] text-[3rem] top-[45px]'>
+          <span>Phase</span>
+          <span className="relative top-[-32px]">10</span>
+        </div>
+        <div className="bg-phase10-card-red h-[10px] left-[-84px] relative rotate-[80deg] top-[-40px] w-[240px]" />
+        <div className="bg-phase10-card-blue h-[10px] left-[-98px] relative rotate-[80deg] top-[-40px] w-[240px]" />
+        <div className="bg-phase10-card-green h-[10px] left-[-112px] relative rotate-[80deg] top-[-40px] w-[240px]" />
+        <div className="bg-phase10-card-purple h-[10px] left-[-126px] relative rotate-[80deg] top-[-40px] w-[240px]" />
+      </div>
+    )
+  }
 
   return (
     <div
-      className={twMerge(`${inHand ? 'absolute bottom-0' : 'relative'} bg-white border border-[#aaaaaa] h-[225px] drop-shadow-lg p-[8px] rounded-[8px] select-none text-white w-[150px] ${scaling && 'cursor-pointer hover:scale-110'}`, className)}
+      className={twMerge(`${inHand ? 'absolute bottom-0' : 'relative'} bg-white border border-[#aaaaaa] drop-shadow-lg h-[225px] p-[8px] rounded-[8px] select-none text-white w-[150px] ${scaling && 'cursor-pointer hover:scale-110'}`, className)}
       onClick={() => {
         if (onClick) onClick(card)
       }}
