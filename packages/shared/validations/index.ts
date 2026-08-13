@@ -391,3 +391,21 @@ export const validatePhase9 = (phase?: Phase<9>): Phase<9> => {
 
   throw new ClientError('Invalid phase 9')
 }
+
+export const validatePhase10 = (phase?: Phase<10>): Phase<10> => {
+  if (!phase || !Array.isArray(phase.set5) || !Array.isArray(phase.set3) || phase.set5.length !== 5 || phase.set3.length !== 3) {
+    throw new ClientError('Invalid phase 10')
+  }
+
+  const set1 = new Set(phase.set5.map(c => c.value))
+  const set2 = new Set(phase.set3.map(c => c.value))
+
+  if (
+    (set1.size === 1 || (set1.size === 2 && set1.has(WILD))) &&
+    (set2.size === 1 || (set2.size === 2 && set2.has(WILD)))
+  ) {
+    return phase
+  }
+
+  throw new ClientError('Invalid phase 10')
+}
