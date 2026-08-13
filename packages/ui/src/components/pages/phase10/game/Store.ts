@@ -235,6 +235,8 @@ export class GameStore {
         this.root.phase8.addCardFromHand(target, index)
       } else if (this.me.phase === 9) {
         this.root.phase9.addCardFromHand(target, index)
+      } else if (this.me.phase === 10) {
+        this.root.phase10.addCardFromHand(target, index)
       }
     } else if (this.state.showHit) {
       if (this.state.hitting) return
@@ -743,6 +745,11 @@ export class GameStore {
       for (const card of phaze.set5) { card.id = uuid() }
       for (const card of phaze.set2) { card.id = uuid() }
       if (!this.myTurn) player.cards = 4
+    } else if ((player.played as Phase<10>).set5 && (player.played as Phase<10>).set3) {
+      const phaze = player.played as Phase<10>
+      for (const card of phaze.set5) { card.id = uuid() }
+      for (const card of phaze.set3) { card.id = uuid() }
+      if (!this.myTurn) player.cards = 3
     }
 
     if (this.myTurn) {

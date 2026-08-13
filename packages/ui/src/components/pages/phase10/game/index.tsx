@@ -19,6 +19,7 @@ import { Phase6 } from '@/components/phase10/phases/Phase6'
 import { Phase7 } from '@/components/phase10/phases/Phase7'
 import { Phase8 } from '@/components/phase10/phases/Phase8'
 import { Phase9 } from '@/components/phase10/phases/Phase9'
+import { Phase10 } from '@/components/phase10/phases/Phase10'
 import { RoundEnded } from '@/components/phase10/modals/RoundEnded'
 import { Skipped } from '@/components/phase10/Skipped'
 import { Status } from '@/components/phase10/Status'
@@ -47,6 +48,7 @@ export const GamePage = observer(() => {
           {store.me.phase === 7 && <Phase7 />}
           {store.me.phase === 8 && <Phase8 />}
           {store.me.phase === 9 && <Phase9 />}
+          {store.me.phase === 10 && <Phase10 />}
         </>
       ) : (
         <>
