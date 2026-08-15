@@ -5,6 +5,7 @@ import type { Response } from 'express'
 import { endRound } from '@/libs/phase10/round'
 import { endTxn, startTxn } from '@/data/db'
 import { getNextTurn, skipPlayer } from '@/libs/phase10/turn'
+import { isGameOver } from '@/libs/phase10/game'
 import { logger } from '@/logger'
 import { MessageType } from '@jgames/types'
 import { removeCard } from '@/libs/phase10/hand'
@@ -50,6 +51,11 @@ router.post('/', async (
     if (roundOver) {
       try {
         autoSkip = endRound(game)
+
+        if (isGameOver(game)) {
+          logger.info('The game is over!')
+        }
+
         commit = await updateGame(game, client)
       } catch (err) {
         logger.error('Error ending round after SKIP: %O', err)
