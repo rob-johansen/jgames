@@ -263,9 +263,24 @@ export class GameStore {
       const [target] = cards.splice(index, 1)
 
       if (target.value === SKIP) {
-        // SKIP can't be added to a hit area. If the player clicked a SKIP with a hit area visible, we
-        // just put it back in their hand at the same spot (so it looks like the click had no effect).
+        // SKIP can't be added to a hit area. If the player clicked a SKIP with a hit area
+        // visible, we just put it back in their hand at the same spot (so it looks like
+        // the click had no effect).
         cards.splice(index, 0, target)
+        return
+      }
+
+      if (cards.length === 0) {
+        // The player has no cards left to discard. If we allowed them to hit they would
+        // have no way to end their turn, so we just put the card back in their hand at
+        // the same spot (so it looks like the click had no effect), and show a toast.
+        cards.splice(index, 0, target)
+
+        showToast({
+          message: `Your last card must be discarded (not hit).`,
+          type: 'error'
+        })
+
         return
       }
 
