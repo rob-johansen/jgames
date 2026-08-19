@@ -6,7 +6,7 @@ import { discard, discardSkip } from '@/data/queries/phase10/discard'
 import { endRound } from '@/libs/phase10/round'
 import { endTxn, startTxn } from '@/data/db'
 import { getNextTurn } from '@/libs/phase10/turn'
-import { isGameOver } from '@/libs/phase10/game'
+import { isGameOver, setResults } from '@/libs/phase10/game'
 import { logger } from '@/logger'
 import { MessageType } from '@jgames/types'
 import { removeCard } from '@/libs/phase10/hand'
@@ -53,7 +53,7 @@ router.post('/', async (
         autoSkip = endRound(game)
 
         if (isGameOver(game)) {
-          logger.info('The game is over!')
+          setResults(game)
         }
 
         commit = await updateGame(game, client)

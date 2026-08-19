@@ -1,5 +1,6 @@
 import type { Card } from './Card'
 import type { Player } from './Player'
+import type { Result } from './Result'
 
 export type Game = {
   deck?: Card[]
@@ -7,7 +8,7 @@ export type Game = {
   id: string
   pile: Card[]
   players: Player[]
-  results?: string[]
+  results: Result[]
   turn: string
   token: string
 }

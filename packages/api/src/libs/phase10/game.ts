@@ -1,4 +1,4 @@
-import type { Game, Player } from '@jgames/types'
+import type { Game, Player, Result } from '@jgames/types'
 
 /*
   Returns `true` if one or more players is on phase 11, and exactly one of those
@@ -24,4 +24,30 @@ export const isGameOver = (game: Game): boolean => {
   }
 
   return points.size !== 1
+}
+
+/*
+  Sets the results on `game`, when the game is known to be over.
+ */
+export const setResults = (game: Game) => {
+  const results: Result[] = []
+
+  for (const player of game.players) {
+    results.push({
+      name: player.name,
+      phase: player.phase,
+      points: player.points
+    })
+  }
+
+  results.sort((a, b) => {
+    // Sort by phase (higher comes first).
+    if (a.phase > b.phase) return -1
+    if (a.phase < b.phase) return 1
+
+    // The phases were equal, so we sort by points (lower comes first).
+    return a.points - b.points
+  })
+
+  game.results = results
 }
