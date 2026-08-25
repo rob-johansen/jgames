@@ -6,6 +6,7 @@ import { observer } from 'mobx-react-lite'
 import { Button } from '@/components/button/Button'
 import { GamePage } from '@/components/pages/phase10/game'
 import { Phases } from '@/components/phase10/modals/Phases'
+import { Results } from '@/components/phase10/modals/Results'
 import { StoreContext } from '@/providers/phase10/StoreContext'
 import { TextField } from '@/components/text-field/TextField'
 import { Toast } from '@/components/Toast'
@@ -29,9 +30,15 @@ export const Home = observer(() => {
       </button>
       {store.state.hasGame ? (
         <>
-          <GamePage />
-          {store.state.showPhases && (
-            <Phases onEscape={store.togglePhases} />
+          {store.gameOver ? (
+            <Results />
+          ) : (
+            <>
+              <GamePage />
+              {store.state.showPhases && (
+                <Phases onEscape={store.togglePhases} />
+              )}
+            </>
           )}
         </>
       ) : (

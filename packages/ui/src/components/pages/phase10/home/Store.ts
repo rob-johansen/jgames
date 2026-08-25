@@ -3,7 +3,7 @@ import { makeAutoObservable, runInAction } from 'mobx'
 import { isBrowser } from '@/libs/browser'
 import { MessageType } from '@jgames/types'
 import { showToast } from '@/components/Toast'
-import type { Card, Game, Phase, WebSocketMessage } from '@jgames/types'
+import type { Card, Game, Phase, Result, WebSocketMessage } from '@jgames/types'
 import type { RootStore } from '@/providers/phase10/RootStore'
 
 type State = {
@@ -13,6 +13,7 @@ type State = {
   name: string
   nameError: string
   players: string[]
+  results: Result[]
   showPhases: boolean
   waiting: boolean
 }
@@ -32,6 +33,7 @@ export class HomeStore {
       name: '',
       nameError: '',
       players: [],
+      results: [],
       showPhases: false,
       waiting: false,
     }
@@ -46,6 +48,10 @@ export class HomeStore {
     }
 
     makeAutoObservable(this, { ws: false })
+  }
+
+  get gameOver(): boolean {
+    return this.state.results.length > 0
   }
 
   createWebSocket = (id: string): void => {
@@ -68,6 +74,10 @@ export class HomeStore {
         const userId = message.data.userId as string
         const turn = message.data.turn as string
         this.root.game.updateAfterDiscardSkip(userId, turn)
+      }
+
+      if (message.type === MessageType.GAME_OVER) {
+        this.state.results = message.data.results as Result[]
       }
 
       if (message.type === MessageType.HIT) {

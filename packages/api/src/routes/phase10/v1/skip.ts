@@ -23,7 +23,6 @@ export const router: Router = Router()
   NOTE: This API is very similar to the /discard API. This API does
         a bit more however, so in the spirit of WET, it lives here.
  */
-
 router.post('/', async (
   req: PostRequest<{ gameId: string, skipId: string, userId: string }>,
   res: Response<void>,
@@ -46,13 +45,15 @@ router.post('/', async (
 
     const player = removeCard({ color: '', value: SKIP }, userId, game.players)
     const roundOver = (player.cards as Card[]).length === 0
+    let gameOver = false
     let autoSkip = false
 
     if (roundOver) {
       try {
         autoSkip = endRound(game)
+        gameOver = isGameOver(game)
 
-        if (isGameOver(game)) {
+        if (gameOver) {
           setResults(game)
         }
 
@@ -80,7 +81,12 @@ router.post('/', async (
 
     res.status(204).end()
 
-    if (roundOver) {
+    if (gameOver) {
+      wss.sendToAll({
+        data: { results: game.results },
+        type: MessageType.GAME_OVER
+      })
+    } else if (roundOver) {
       for (const playa of game.players) {
         wss.sendToPlayer(playa.id, {
           data: {

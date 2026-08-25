@@ -36,7 +36,8 @@ export const setResults = (game: Game) => {
     results.push({
       name: player.name,
       phase: player.phase,
-      points: player.points
+      points: player.points,
+      rank: 0,
     })
   }
 
@@ -48,6 +49,22 @@ export const setResults = (game: Game) => {
     // The phases were equal, so we sort by points (lower comes first).
     return a.points - b.points
   })
+
+  for (let i = 0; i < results.length; i++) {
+    const prevPlayer = results[i - 1]
+    const thisPlayer = results[i]
+
+    if (i === 0) {
+      thisPlayer.rank = 1
+      continue
+    }
+
+    if (thisPlayer.phase === prevPlayer.phase && thisPlayer.points === prevPlayer.points) {
+      thisPlayer.rank = prevPlayer.rank
+    } else {
+      thisPlayer.rank = prevPlayer.rank + 1
+    }
+  }
 
   game.results = results
 }
