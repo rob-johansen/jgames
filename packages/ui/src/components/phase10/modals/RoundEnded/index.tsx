@@ -15,8 +15,8 @@ export const RoundEnded = observer(() => {
       <div className="flex flex-col gap-y-[4px]">
         {store.players.map((player) => {
           return (
-            <div className="grid grid-cols-5" key={player.id}>
-              <span className="col-span-1 font-bold">{player.name}:</span>
+            <div className="grid grid-cols-7" key={player.id}>
+              <span className="col-span-3 font-bold text-end">{player.name}:</span>
               <span className="col-span-4 max-w-[80px] tabular-nums text-right">{store.getRoundPoints(player)} points</span>
             </div>
           )

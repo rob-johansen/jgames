@@ -279,7 +279,7 @@ export class HitStore {
       }
     }
 
-    return this.setCards(this.nextPlayerIndex, 1)
+    return this.setCards(this.previousPlayerIndex, 1)
   }
 
   onClickCard = (card: Card) => {
