@@ -66,8 +66,16 @@ export const validatePhase1 = (phase?: Phase<1>): Phase<1> => {
 }
 
 export const validatePhase2 = (phase?: Phase<2>): Phase<2> => {
-  if (!phase || !Array.isArray(phase.set3) || !Array.isArray(phase.run4) || phase.set3.length !== 3 || phase.run4.length !== 4) {
+  if (!phase || !Array.isArray(phase.set3) || !Array.isArray(phase.run4)) {
     throw new ClientError('Invalid phase 2')
+  }
+
+  if (phase.set3.length !== 3) {
+    throw new ClientError('Your set must have 3 cards.')
+  }
+
+  if (phase.run4.length !== 4) {
+    throw new ClientError('Your run must have 4 cards.')
   }
 
   const set = new Set(phase.set3.map(c => c.value))
@@ -109,6 +117,8 @@ export const validatePhase2 = (phase?: Phase<2>): Phase<2> => {
       (num4 === num1 + 3 || num4 === WILD)
     ) {
       return phase
+    } else  {
+      throw new ClientError('Your run is out of order.')
     }
   }
 
@@ -116,8 +126,16 @@ export const validatePhase2 = (phase?: Phase<2>): Phase<2> => {
 }
 
 export const validatePhase3 = (phase?: Phase<3>): Phase<3> => {
-  if (!phase || !Array.isArray(phase.set4) || !Array.isArray(phase.run4) || phase.set4.length !== 4 || phase.run4.length !== 4) {
+  if (!phase || !Array.isArray(phase.set4) || !Array.isArray(phase.run4)) {
     throw new ClientError('Invalid phase 3')
+  }
+
+  if (phase.set4.length !== 4) {
+    throw new ClientError('Your set must have 4 cards.')
+  }
+
+  if (phase.run4.length !== 4) {
+    throw new ClientError('Your run must have 4 cards.')
   }
 
   const set = new Set(phase.set4.map(c => c.value))
@@ -159,6 +177,8 @@ export const validatePhase3 = (phase?: Phase<3>): Phase<3> => {
       (num4 === num1 + 3 || num4 === WILD)
     ) {
       return phase
+    } else {
+      throw new ClientError('Your run is out of order.')
     }
   }
 
@@ -166,8 +186,12 @@ export const validatePhase3 = (phase?: Phase<3>): Phase<3> => {
 }
 
 export const validatePhase4 = (phase?: Phase<4>): Phase<4> => {
-  if (!phase || !Array.isArray(phase.run7) || phase.run7.length !== 7) {
+  if (!phase || !Array.isArray(phase.run7)) {
     throw new ClientError('Invalid phase 4')
+  }
+
+  if (phase.run7.length !== 7) {
+    throw new ClientError('Your run must have 7 cards.')
   }
 
   const run = phase.run7.map(c => c.value)
@@ -215,12 +239,16 @@ export const validatePhase4 = (phase?: Phase<4>): Phase<4> => {
     return phase
   }
 
-  throw new ClientError('Invalid phase 4')
+  throw new ClientError('Your run is out of order.')
 }
 
 export const validatePhase5 = (phase?: Phase<5>): Phase<5> => {
-  if (!phase || !Array.isArray(phase.run8) || phase.run8.length !== 8) {
+  if (!phase || !Array.isArray(phase.run8)) {
     throw new ClientError('Invalid phase 5')
+  }
+
+  if (phase.run8.length !== 8) {
+    throw new ClientError('Your run must have 8 cards.')
   }
 
   const run = phase.run8.map(c => c.value)
@@ -270,12 +298,16 @@ export const validatePhase5 = (phase?: Phase<5>): Phase<5> => {
     return phase
   }
 
-  throw new ClientError('Invalid phase 5')
+  throw new ClientError('Your run is out of order.')
 }
 
 export const validatePhase6 = (phase?: Phase<6>): Phase<6> => {
-  if (!phase || !Array.isArray(phase.run9) || phase.run9.length !== 9) {
+  if (!phase || !Array.isArray(phase.run9)) {
     throw new ClientError('Invalid phase 6')
+  }
+
+  if (phase.run9.length !== 9) {
+    throw new ClientError('Your run must have 9 cards.')
   }
 
   const run = phase.run9.map(c => c.value)
@@ -327,7 +359,7 @@ export const validatePhase6 = (phase?: Phase<6>): Phase<6> => {
     return phase
   }
 
-  throw new ClientError('Invalid phase 6')
+  throw new ClientError('Your run is out of order.')
 }
 
 export const validatePhase7 = (phase?: Phase<7>): Phase<7> => {
@@ -349,8 +381,12 @@ export const validatePhase7 = (phase?: Phase<7>): Phase<7> => {
 }
 
 export const validatePhase8 = (phase?: Phase<8>): Phase<8> => {
-  if (!phase || !Array.isArray(phase.color7) || phase.color7.length !== 7) {
+  if (!phase || !Array.isArray(phase.color7)) {
     throw new ClientError('Invalid phase 8')
+  }
+
+  if (phase.color7.length !== 7) {
+    throw new ClientError('Your phase must have 7 cards.')
   }
 
   let color = ''
@@ -360,7 +396,7 @@ export const validatePhase8 = (phase?: Phase<8>): Phase<8> => {
 
     if (color) {
       if (card.color !== color) {
-        throw new ClientError('Invalid phase 8')
+        throw new ClientError('Your cards must be the same color.')
       }
     } else {
       color = card.color

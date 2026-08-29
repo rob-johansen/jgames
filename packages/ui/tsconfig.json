@@ -26,7 +26,8 @@
       "@/*": [
         "./src/*"
       ]
-    }
+    },
+    "useUnknownInCatchVariables": false
   },
   "include": [
     "next-env.d.ts",

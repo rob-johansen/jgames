@@ -40,7 +40,7 @@ export const Modal = ({ children, className, onEscape, title }: Props) => {
         >
           <FloatingFocusManager context={context}>
             <div
-              className={twMerge('bg-white max-w-[500px] min-w-[350px] my-[32px] relative rounded-[8px] shadow-md', className)}
+              className={twMerge('bg-white font-quicksand max-w-[500px] min-w-[350px] my-[32px] relative rounded-[8px] shadow-md', className)}
               ref={setFloating}
               {...getFloatingProps()}
             >

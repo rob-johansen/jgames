@@ -66,7 +66,7 @@ export class Phase3Store {
     } catch (err) {
       console.log('Error validating phase 3:', err)
       showToast({
-        message: 'Something’s not right with your set or run!',
+        message: err.message,
         type: 'error'
       })
       return

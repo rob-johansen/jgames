@@ -39,7 +39,7 @@ export const Card = observer((props: Props) => {
 
   return (
     <div
-      className={twMerge(`${inHand ? 'absolute bottom-0' : 'relative'} bg-white border border-[#aaaaaa] drop-shadow-lg h-[225px] p-[8px] rounded-[8px] select-none text-white w-[150px] ${scaling && 'cursor-pointer hover:scale-110'}`, className)}
+      className={twMerge(`${inHand ? 'absolute bottom-0' : 'relative'} bg-white border border-[#aaaaaa] drop-shadow-lg font-quicksand h-[225px] p-[8px] rounded-[8px] select-none text-white w-[150px] ${scaling && 'cursor-pointer hover:scale-110'}`, className)}
       onClick={() => {
         if (onClick) onClick(card)
       }}

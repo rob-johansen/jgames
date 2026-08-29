@@ -96,7 +96,7 @@ export class Phase9Store {
     } catch (err) {
       console.log('Error validating phase 9:', err)
       showToast({
-        message: 'That’s not a sets of 5 and a set of 2!',
+        message: 'That’s not a set of 5 and a set of 2.',
         type: 'error'
       })
       return
