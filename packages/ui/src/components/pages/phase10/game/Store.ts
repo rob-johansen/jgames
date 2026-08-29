@@ -127,6 +127,12 @@ export class GameStore {
       }
 
       (player.cards as number) += 1
+
+      showToast({
+        duration: 7500,
+        message: `${player.name} drew a card from the pile`,
+        type: 'info',
+      })
     }
   }
 
