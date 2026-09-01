@@ -102,7 +102,7 @@ export const GamePage = observer(() => {
       )}
       {store.me.skipped && (
         <div className="absolute bottom-[264px] left-0 m-auto right-0 w-[150px]">
-          <Skipped/>
+          <Skipped />
         </div>
       )}
       <div className="absolute bottom-[60px] flex h-[225px] left-0 m-auto right-0" style={{ width: store.myCards.length * (isIpad() && store.myCards.length === 11 ? 106 : 116) }}>

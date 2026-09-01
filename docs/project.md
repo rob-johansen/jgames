@@ -18,7 +18,9 @@ add its `id` to this query:
 DELETE FROM phase10.games
 WHERE id NOT IN (
   'a2872148-3270-40fb-9151-a47bc78632e9',
-  'cf03e6e7-6736-4669-ac06-dde6c35ce5c7'
+  'cf03e6e7-6736-4669-ac06-dde6c35ce5c7',
+  '1a037cc5-9c5d-40f7-9701-4635f9027a6b',
+  'df9ce767-5cef-48e4-8341-21c1e43042f5'
 );
 ```
 

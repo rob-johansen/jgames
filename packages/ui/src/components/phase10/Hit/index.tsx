@@ -11,7 +11,7 @@ export const Hit = observer(() => {
   const { hit: store } = useContext(StoreContext)
 
   return (
-    <div className="absolute border border-slate-300 shadow-phase h-fit left-0 mt-[70px] mx-auto right-0 rounded-[8px] w-[1000px]">
+    <div className="absolute bg-white border border-slate-300 shadow-phase h-fit left-0 mt-[70px] mx-auto right-0 rounded-[8px] w-[1000px] z-20">
       <div className="flex h-[265px] items-center justify-center px-[24px] py-[20px] relative">
         {store.state.cards.length > 0 ? (
           <>

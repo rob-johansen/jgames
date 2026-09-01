@@ -10,7 +10,7 @@ export const Phase1 = observer(() => {
   const { phase1: store } = useContext(StoreContext)
 
   return (
-    <div className="absolute border border-slate-300 shadow-phase h-fit left-0 mt-[40px] mx-auto pb-[32px] right-0 rounded-[8px] w-[728px]">
+    <div className="absolute bg-white border border-slate-300 shadow-phase h-fit left-0 mt-[40px] mx-auto pb-[32px] right-0 rounded-[8px] w-[728px] z-20">
       <div className="flex gap-x-[24px]">
         <div className="border-b border-b-slate-300 border-r border-r-slate-300 flex h-[273px] items-center justify-center px-[24px] py-[20px] relative rounded-br-[8px] w-[298px]">
           <span className="absolute text-[2.25rem] text-slate-400">
