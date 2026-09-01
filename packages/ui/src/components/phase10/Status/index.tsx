@@ -20,7 +20,7 @@ export const Status = observer(() => {
       {store.state.open && (
         <div className="bg-white border border-[#6a0dad] grid grid-cols-[1fr_2fr_2fr_2fr_2fr] items-center left-[16px] px-[12px] py-[8px] relative rounded-[5px] top-[-16px] z-30">
           <span className="font-bold">&nbsp;</span>
-          <span className="font-bold pr-[16px]">Name</span>
+          <span className="font-bold pr-[12px]">Name</span>
           <span className="font-bold pr-[8px] text-center">Phase</span>
           <span className="font-bold text-center">Points</span>
           <span className="font-bold text-center">Hand</span>
@@ -38,7 +38,7 @@ export const Status = observer(() => {
                     <Icon className="relative top-[-2px]" source={Ban} />
                   )}
                 </span>
-                <span className="pr-[16px]">{player.name}</span>
+                <span className="pr-[12px]">{player.name}</span>
                 <span className="pr-[8px] text-center">{player.phase}</span>
                 <span className="pr-[8px] text-center">{player.points}</span>
                 <span className="text-center">{store.hand(player)}</span>
