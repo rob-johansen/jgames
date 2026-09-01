@@ -20,7 +20,7 @@ class WebSocketServer {
 
   constructor() {
     // Listen for `connection` events after the HTTP upgrade.
-    this.wss.on('connection', async (socket: WebSocket, _req: IncomingMessage, game: string, userId: string) => {
+    this.wss.on('connection', async (socket: WebSocket, _req: IncomingMessage, game: string, userId: string, rejoin: boolean) => {
       let connection: Connection | null = {
         alive: true,
         socket
@@ -41,12 +41,14 @@ class WebSocketServer {
 
       // TODO: Eventually you'll need to use `game` to determine which waiting players to look up.
 
-      this.sendToAll({
-        data: {
-          players: (await getWaitingPlayers()).map(({ name }) => name)
-        },
-        type: MessageType.JOIN
-      })
+      if (!rejoin) {
+        this.sendToAll({
+          data: {
+            players: (await getWaitingPlayers()).map(({ name }) => name)
+          },
+          type: MessageType.JOIN
+        })
+      }
     })
 
     // Start the interval timer for pinging clients every 30 seconds.
@@ -73,6 +75,7 @@ class WebSocketServer {
         const url = new URL(req.url || '', `http://${req.headers.host}`)
         const game = url.searchParams.get('game')
         const userId = url.searchParams.get('userId')
+        const rejoin = url.searchParams.get('rejoin') === 'true'
 
         if (game && userId) {
           // Check if there's an open websocket connection already for this user.
@@ -82,7 +85,7 @@ class WebSocketServer {
             return
           }
           this.wss.handleUpgrade(req, socket, head, (socket): void => {
-            this.wss.emit('connection', socket, req, game, userId)
+            this.wss.emit('connection', socket, req, game, userId, rejoin)
           })
         }
       } catch (err) {

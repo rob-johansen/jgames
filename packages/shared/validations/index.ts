@@ -2,7 +2,6 @@ import { ClientError, SKIP, WILD } from '@jgames/types'
 import type { Card, Phase } from '@jgames/types'
 
 export const MAX_NAME_LENGTH = 25
-export const PHASE_CARDS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, WILD]
 export const UUID_LENGTH = 36
 
 export const validateCard = (card?: Card): Card => {

@@ -1,5 +1,6 @@
 import type { PoolClient, QueryResult } from 'pg'
 
+import { query } from '@/data/db'
 import type { Game } from '@jgames/types'
 
 export const insertGame = async (game: Omit<Game, 'id'>, client: PoolClient): Promise<string> => {
@@ -17,6 +18,18 @@ export const insertGame = async (game: Omit<Game, 'id'>, client: PoolClient): Pr
 
   const result: QueryResult<{ id: string }> = await client.query(sql, [deck, game.draw, pile, players, results, game.token, game.turn])
   return result.rows[0].id
+}
+
+export const rejoinGame = async (playerId: string, playerName: string): Promise<Game | undefined> => {
+  const sql = `
+    SELECT *
+    FROM phase10.games
+    WHERE players @> $1::jsonb
+    AND results = '[]'::jsonb
+  `
+
+  const result: QueryResult<Game> = await query(sql, [JSON.stringify([{ id: playerId, name: playerName }])])
+  return result.rows[0]
 }
 
 export const selectGame = async (gameId: string, userId: string, client: PoolClient): Promise<Game | undefined> => {

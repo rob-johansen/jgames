@@ -29,7 +29,7 @@ export class HomeStore {
     this.state = {
       first: false,
       hasGame: false,
-      loading: false,
+      loading: true,
       name: '',
       nameError: '',
       players: [],
@@ -41,9 +41,15 @@ export class HomeStore {
     this.ws = {} as WebSocket
 
     if (isBrowser()) {
-      const name = localStorage.getItem('name')
-      if (name) {
-        this.state.name = name
+      const playerName = localStorage.getItem('name')
+      const playerId = localStorage.getItem('userId')
+
+      if (playerName) {
+        this.state.name = playerName
+      }
+
+      if (playerId && playerName) {
+        void this.tryRejoin(playerId, playerName)
       }
     }
 
@@ -54,8 +60,8 @@ export class HomeStore {
     return this.state.results.length > 0
   }
 
-  createWebSocket = (id: string): void => {
-    this.ws = new WebSocket(`${process.env.NEXT_PUBLIC_WS_HOST}?game=phase10&userId=${id}`)
+  createWebSocket = (id: string, rejoin = false) => {
+    this.ws = new WebSocket(`${process.env.NEXT_PUBLIC_WS_HOST}?game=phase10&userId=${id}&rejoin=${rejoin}`)
 
     this.ws.addEventListener('message', (event) => {
       const message: WebSocketMessage = JSON.parse(event.data)
@@ -143,12 +149,12 @@ export class HomeStore {
     })
   }
 
-  onChangeName = (value: string): void => {
+  onChangeName = (value: string) => {
     this.state.name = value
     this.state.nameError = ''
   }
 
-  onClickJoin = async (): Promise<void> => {
+  onClickJoin = async () => {
     if (this.state.name.length === 0) {
       this.state.nameError = 'Please enter your name'
       return
@@ -188,7 +194,7 @@ export class HomeStore {
     }
   }
 
-  onClickStartGame = async (): Promise<void> => {
+  onClickStartGame = async () => {
     this.state.loading = true
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/phase10/v1/start`, {
@@ -213,5 +219,30 @@ export class HomeStore {
 
   togglePhases = (open: boolean) => {
     this.state.showPhases = open
+  }
+
+  tryRejoin = async (playerId: string, playerName: string) => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/phase10/v1/rejoin`, {
+      body: JSON.stringify({ playerId, playerName }),
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      method: 'POST',
+      mode: 'cors'
+    })
+
+    if (response.ok) {
+      const json = await response.json()
+
+      runInAction(() => {
+        this.userId = playerId // This must be set before the game is passed to the GameStore!
+        this.root.game.startGame(json.game, false)
+        this.state.hasGame = true
+        this.createWebSocket(playerId, true)
+      })
+    } else {
+      runInAction(() => {
+        this.state.loading = false
+      })
+    }
   }
 }
