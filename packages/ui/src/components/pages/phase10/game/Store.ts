@@ -728,7 +728,7 @@ export class GameStore {
       return
     }
 
-    player.phase = number === 10 ? 10 : number + 1
+    player.phase = number + 1
     player.played = phase
 
     if ((player.played as Phase<1>).set3a) {

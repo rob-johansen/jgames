@@ -2,7 +2,7 @@ import { observer } from 'mobx-react-lite'
 import { Fragment, useContext, useState } from 'react'
 
 import { Button } from '@/components/button/Button'
-import { Icon, Bronze, Gold, Participation, Silver } from '@/components/icon'
+import { Icon, Bronze, Gold, Participation, Rocket, Silver } from '@/components/icon'
 import { Modal } from '@/components/Modal'
 import { ResultsStore } from './Store'
 import { StoreContext } from '@/providers/phase10/StoreContext'
@@ -35,7 +35,14 @@ export const Results = observer(() => {
                 <Fragment key={`${result.rank}-${result.name}`}>
                   <span className="pr-[16px]">{result.rank}</span>
                   <span className="pr-[8px]">{result.name}</span>
-                  <span className="pr-[8px] text-center">{result.phase < 10 ? result.phase : 10}</span>
+                  <span className="pr-[8px] text-center">
+                    {result.phase < 11 ? (
+                      <>{result.phase}</>
+                      ) : (
+                        <Icon className="inline-block" source={Rocket} />
+                      )
+                    }
+                  </span>
                   <span className=" text-center">{result.points}</span>
                 </Fragment>
               )

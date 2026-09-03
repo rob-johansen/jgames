@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite'
 import { Fragment, useContext, useState } from 'react'
 
-import { Icon, Ban, Plus } from '@/components/icon'
+import { Icon, Ban, Plus, Rocket } from '@/components/icon'
 import { StatusStore } from './Store'
 import { StoreContext } from '@/providers/phase10/StoreContext'
 
@@ -18,7 +18,7 @@ export const Status = observer(() => {
         <Icon className={`duration-200 ${store.state.open && 'rotate-[135deg]'} size-[24px] transition-transform`} source={Plus} />
       </button>
       {store.state.open && (
-        <div className="bg-white border border-[#6a0dad] grid grid-cols-[32px_minmax(0,120px)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)] items-center left-[16px] px-[12px] py-[8px] relative rounded-[5px] top-[-16px] z-30">
+        <div className="bg-white border border-[#6a0dad] grid grid-cols-[32px_minmax(0,80px)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)] items-center left-[16px] px-[12px] py-[8px] relative rounded-[5px] top-[-16px] z-30">
           <span className="font-bold">&nbsp;</span>
           <span className="font-bold pr-[12px]">Name</span>
           <span className="font-bold pr-[8px] text-center">Phase</span>
@@ -39,7 +39,13 @@ export const Status = observer(() => {
                   )}
                 </span>
                 <span className="pr-[12px] truncate">{player.name}</span>
-                <span className="pr-[8px] text-center">{player.phase}</span>
+                <span className="pr-[8px] text-center">
+                  {player.phase === 11 ? (
+                    <Icon className="inline-block" source={Rocket} />
+                  ) : (
+                    <>{player.phase}</>
+                  )}
+                </span>
                 <span className="pr-[8px] text-center">{player.points}</span>
                 <span className="text-center">{store.hand(player)}</span>
               </Fragment>
