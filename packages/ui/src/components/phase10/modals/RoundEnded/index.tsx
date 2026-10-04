@@ -4,7 +4,7 @@ import { useContext, useState } from 'react'
 import { Button } from '@/components/button/Button'
 import { Modal } from '@/components/Modal'
 import { RoundEndedStore } from './Store'
-import { StoreContext } from '@/providers/phase10/StoreContext'
+import { StoreContext } from '@/stores/phase10/StoreContext'
 
 export const RoundEnded = observer(() => {
   const root = useContext(StoreContext)

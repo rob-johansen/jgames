@@ -8,7 +8,7 @@ import { Error } from '@/components/Error'
 import { Modal } from '@/components/Modal'
 import { RadioButton } from '@/components/RadioButton'
 import { SKIP } from '@jgames/types'
-import { StoreContext } from '@/providers/phase10/StoreContext'
+import { StoreContext } from '@/stores/phase10/StoreContext'
 
 export const ChooseSkip = observer(() => {
   const root = useContext(StoreContext)

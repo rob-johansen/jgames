@@ -4,7 +4,7 @@ import { isBrowser } from '@/libs/browser'
 import { MessageType } from '@jgames/types'
 import { showToast } from '@/components/Toast'
 import type { Card, Game, Phase, Result, WebSocketMessage } from '@jgames/types'
-import type { RootStore } from '@/providers/phase10/RootStore'
+import type { RootStore } from '@/stores/phase10/RootStore'
 
 type State = {
   first: boolean
@@ -29,7 +29,7 @@ export class HomeStore {
     this.state = {
       first: false,
       hasGame: false,
-      loading: true,
+      loading: false,
       name: '',
       nameError: '',
       players: [],
@@ -222,6 +222,8 @@ export class HomeStore {
   }
 
   tryRejoin = async (playerId: string, playerName: string) => {
+    this.state.loading = true
+
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/phase10/v1/rejoin`, {
       body: JSON.stringify({ playerId, playerName }),
       credentials: 'include',

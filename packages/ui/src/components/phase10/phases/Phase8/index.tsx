@@ -3,7 +3,7 @@ import { useContext } from 'react'
 
 import { Button } from '@/components/button/Button'
 import { Card } from '@/components/phase10/Card'
-import { StoreContext } from '@/providers/phase10/StoreContext'
+import { StoreContext } from '@/stores/phase10/StoreContext'
 
 export const Phase8 = observer(() => {
   const { phase8: store } = useContext(StoreContext)

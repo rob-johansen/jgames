@@ -4,7 +4,7 @@ import { getHitMessage } from '@/libs/phase10/messages'
 import { showToast } from '@/components/Toast'
 import { WILD } from '@jgames/types'
 import type { Card, Phase, Player } from '@jgames/types'
-import type { RootStore } from '@/providers/phase10/RootStore'
+import type { RootStore } from '@/stores/phase10/RootStore'
 
 type State = {
   added: Card[]

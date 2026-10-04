@@ -5,7 +5,7 @@ import { Button } from '@/components/button/Button'
 import { Card } from '@/components/phase10/Card'
 import { Icon, ChevronLeft, ChevronRight } from '@/components/icon'
 import { Modal } from '@/components/Modal'
-import { StoreContext } from '@/providers/phase10/StoreContext'
+import { StoreContext } from '@/stores/phase10/StoreContext'
 
 export const Hit = observer(() => {
   const { hit: store } = useContext(StoreContext)

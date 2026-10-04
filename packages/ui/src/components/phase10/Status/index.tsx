@@ -3,7 +3,7 @@ import { Fragment, useContext, useState } from 'react'
 
 import { Icon, Ban, Plus, Rocket } from '@/components/icon'
 import { StatusStore } from './Store'
-import { StoreContext } from '@/providers/phase10/StoreContext'
+import { StoreContext } from '@/stores/phase10/StoreContext'
 
 export const Status = observer(() => {
   const root = useContext(StoreContext)

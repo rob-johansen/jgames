@@ -1,7 +1,7 @@
 import { makeAutoObservable } from 'mobx'
 
 import type { Player } from '@jgames/types'
-import type { RootStore } from '@/providers/phase10/RootStore'
+import type { RootStore } from '@/stores/phase10/RootStore'
 
 type State = {
   open: boolean

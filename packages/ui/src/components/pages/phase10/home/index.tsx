@@ -7,17 +7,19 @@ import { Button } from '@/components/button/Button'
 import { GamePage } from '@/components/pages/phase10/game'
 import { Phases } from '@/components/phase10/modals/Phases'
 import { Results } from '@/components/phase10/modals/Results'
-import { StoreContext } from '@/providers/phase10/StoreContext'
+import { StoreContext } from '@/stores/phase10/StoreContext'
 import { TextField } from '@/components/text-field/TextField'
 import { Toast } from '@/components/Toast'
 
 export const Home = observer(() => {
-  const { home: store } = useContext(StoreContext)
+  const root = useContext(StoreContext)
+  const store = root.home
   const nameInput = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     nameInput.current?.focus()
-  }, [])
+    root.sounds.init()
+  }, [root.sounds])
 
   return (
     <div className="font-quicksand">

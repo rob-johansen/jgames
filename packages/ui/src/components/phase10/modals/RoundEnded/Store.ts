@@ -2,7 +2,7 @@ import { makeAutoObservable } from 'mobx'
 
 import { showToast } from '@/components/Toast'
 import type { Game, Player } from '@jgames/types'
-import type { RootStore } from '@/providers/phase10/RootStore'
+import type { RootStore } from '@/stores/phase10/RootStore'
 
 export class RoundEndedStore {
   root: RootStore

@@ -4,7 +4,7 @@ import { useContext } from 'react'
 import { Button } from '@/components/button/Button'
 import { Card } from '@/components/phase10/Card'
 import { Icon, ChevronLeft, ChevronRight } from '@/components/icon'
-import { StoreContext } from '@/providers/phase10/StoreContext'
+import { StoreContext } from '@/stores/phase10/StoreContext'
 
 export const Phase9 = observer(() => {
   const { phase9: store } = useContext(StoreContext)

@@ -4,7 +4,7 @@ import { v4 as uuid } from 'uuid'
 import { showToast } from '@/components/Toast'
 import { SKIP, WILD } from '@jgames/types'
 import type { Card, Game, HitMessage, Phase, Player } from '@jgames/types'
-import type { RootStore } from '@/providers/phase10/RootStore'
+import type { RootStore } from '@/stores/phase10/RootStore'
 
 type State = {
   arranging: boolean
@@ -297,6 +297,8 @@ export class GameStore {
   onClickDrawFromDeck = async (): Promise<void> => {
     this.state.drawDeckLoading = true
 
+    await this.root.sounds.playCard()
+
     const params = new URLSearchParams({
       gameId: this.state.game.id,
       turnId: this.root.home.userId
@@ -330,6 +332,8 @@ export class GameStore {
 
   onClickDrawFromPile = async (): Promise<void> => {
     this.state.drawPileLoading = true
+
+    await this.root.sounds.playCard()
 
     const params = new URLSearchParams({
       gameId: this.state.game.id,
@@ -374,6 +378,9 @@ export class GameStore {
 
   onConfirmDiscard = async (): Promise<void> => {
     this.state.discardLoading = true
+
+    await this.root.sounds.playCard()
+
     const discardId = this.state.discardingCard?.id
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/phase10/v1/discard`, {

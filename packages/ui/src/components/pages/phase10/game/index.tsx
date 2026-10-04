@@ -23,7 +23,7 @@ import { Phase10 } from '@/components/phase10/phases/Phase10'
 import { RoundEnded } from '@/components/phase10/modals/RoundEnded'
 import { Skipped } from '@/components/phase10/Skipped'
 import { Status } from '@/components/phase10/Status'
-import { StoreContext } from '@/providers/phase10/StoreContext'
+import { StoreContext } from '@/stores/phase10/StoreContext'
 
 export const GamePage = observer(() => {
   const { game: store } = useContext(StoreContext)

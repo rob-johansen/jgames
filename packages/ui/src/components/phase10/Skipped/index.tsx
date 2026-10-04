@@ -5,7 +5,7 @@ import { Button } from '@/components/button/Button'
 import { Card } from '@/components/phase10/Card'
 import { SKIP } from '@jgames/types'
 import { SkippedStore } from './Store'
-import { StoreContext } from '@/providers/phase10/StoreContext'
+import { StoreContext } from '@/stores/phase10/StoreContext'
 
 export const Skipped = observer(() => {
   const root = useContext(StoreContext)

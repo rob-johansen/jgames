@@ -1,7 +1,7 @@
 import { makeAutoObservable } from 'mobx'
 
 import { showToast } from '@/components/Toast'
-import type { RootStore } from '@/providers/phase10/RootStore'
+import type { RootStore } from '@/stores/phase10/RootStore'
 
 type State = {
   loading: boolean
@@ -21,6 +21,8 @@ export class SkippedStore {
 
   onClickDiscard = async () => {
     this.state.loading = true
+
+    await this.root.sounds.playCard()
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/phase10/v1/discard/skip`, {
       body: JSON.stringify({

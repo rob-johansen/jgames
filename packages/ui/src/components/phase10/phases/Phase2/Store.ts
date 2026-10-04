@@ -3,7 +3,7 @@ import { makeAutoObservable } from 'mobx'
 import { showToast } from '@/components/Toast'
 import { validatePhase2 } from '@jgames/validations'
 import type { Card, Phase } from '@jgames/types'
-import type { RootStore } from '@/providers/phase10/RootStore'
+import type { RootStore } from '@/stores/phase10/RootStore'
 
 type State = {
   left: boolean

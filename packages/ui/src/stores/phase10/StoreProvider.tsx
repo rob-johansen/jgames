@@ -2,8 +2,8 @@
 
 import type { ReactNode } from 'react'
 
-import { RootStore } from '@/providers/phase10/RootStore'
-import { StoreContext } from '@/providers/phase10/StoreContext'
+import { RootStore } from '@/stores/phase10/RootStore'
+import { StoreContext } from '@/stores/phase10/StoreContext'
 
 type StoreProps = {
   children: ReactNode

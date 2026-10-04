@@ -5,7 +5,7 @@ import { Button } from '@/components/button/Button'
 import { Icon, Bronze, Gold, Participation, Rocket, Silver } from '@/components/icon'
 import { Modal } from '@/components/Modal'
 import { ResultsStore } from './Store'
-import { StoreContext } from '@/providers/phase10/StoreContext'
+import { StoreContext } from '@/stores/phase10/StoreContext'
 
 export const Results = observer(() => {
   const root = useContext(StoreContext)

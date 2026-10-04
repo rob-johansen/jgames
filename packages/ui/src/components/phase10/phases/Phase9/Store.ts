@@ -4,7 +4,7 @@ import { getPhaseMessage } from '@/libs/phase10/messages'
 import { showToast } from '@/components/Toast'
 import { validatePhase9 } from '@jgames/validations'
 import type { Card, Phase } from '@jgames/types'
-import type { RootStore } from '@/providers/phase10/RootStore'
+import type { RootStore } from '@/stores/phase10/RootStore'
 
 type State = Phase<9> & { left: boolean }
 

@@ -13,6 +13,7 @@ import { Phase7Store } from '@/components/phase10/phases/Phase7/Store'
 import { Phase8Store } from '@/components/phase10/phases/Phase8/Store'
 import { Phase9Store } from '@/components/phase10/phases/Phase9/Store'
 import { Phase10Store } from '@/components/phase10/phases/Phase10/Store'
+import { Sounds } from '@/stores/phase10/Sounds';
 
 export class RootStore {
   game: GameStore
@@ -28,6 +29,7 @@ export class RootStore {
   phase8: Phase8Store
   phase9: Phase9Store
   phase10: Phase10Store
+  sounds: Sounds
 
   constructor() {
     // Other stores depend on HomeStore, so it's instantiated first.
@@ -45,8 +47,9 @@ export class RootStore {
     this.phase8 = new Phase8Store(this)
     this.phase9 = new Phase9Store(this)
     this.phase10 = new Phase10Store(this)
+    this.sounds = new Sounds()
 
-    makeAutoObservable(this)
+    makeAutoObservable(this, { sounds: false })
   }
 
   resetPhases = () => {

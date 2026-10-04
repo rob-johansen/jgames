@@ -2,7 +2,7 @@ import { makeAutoObservable, runInAction } from 'mobx'
 
 import { showToast } from '@/components/Toast'
 import type { Player } from '@jgames/types'
-import type { RootStore } from '@/providers/phase10/RootStore'
+import type { RootStore } from '@/stores/phase10/RootStore'
 
 type State = {
   checked: string
@@ -46,6 +46,9 @@ export class ChooseSkipStore {
     }
 
     this.root.game.state.discardLoading = true
+
+    await this.root.sounds.playCard()
+
     const discardId = this.root.game.state.discardingCard?.id
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/phase10/v1/skip`, {
